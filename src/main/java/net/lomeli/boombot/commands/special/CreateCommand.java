@@ -27,8 +27,8 @@ public class CreateCommand extends Command {
                 cmd.sendMessage("Command name cannot be empty!");
             if (content.isEmpty())
                 cmd.sendMessage("Command cannot be empty!");
-            if (CommandRegistry.INSTANCE.addNewCommand(new Command(name, content))) {
-                cmd.sendMessage(String.format(getContent(), name, content));
+            if (CommandRegistry.INSTANCE.addCustomCommand(new Command(name, content))) {
+                cmd.sendMessage(String.format(getContent(), name, content.replaceAll("%s", "___")));
             } else
                 cmd.sendMessage(String.format("Command with name %s already exists!", name));
         } else

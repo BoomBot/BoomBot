@@ -1,5 +1,10 @@
 package net.lomeli.boombot.commands;
 
+import com.google.common.collect.Lists;
+import org.apache.commons.lang3.StringUtils;
+
+import java.util.List;
+
 import net.lomeli.boombot.lib.CommandInterface;
 
 public class Command {
@@ -12,7 +17,14 @@ public class Command {
     }
 
     public void executeCommand(CommandInterface cmd) {
-        cmd.sendMessage(String.format(getContent(), cmd.getArgs()));
+        String[] content = getContent().split("\n");
+        List<String> commandArgs = Lists.newArrayList(cmd.getArgs());
+        for (String str : content) {
+            int count = StringUtils.countMatches("%s", str);
+            cmd.sendMessage(str, commandArgs.toArray());
+            for (int i = 0; i < count; i++)
+                commandArgs.remove(0);
+        }
     }
 
     public String getName() {

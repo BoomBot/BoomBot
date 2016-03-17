@@ -21,10 +21,7 @@ public class BotPermissions {
             List<Role> botRoles = guild.getRolesForUser(BoomBot.jda.getSelfInfo());
             if (botRoles != null && botRoles.size() > 0) {
                 List<Permission> botPermissions = new ArrayList<>();
-                for (Role r : botRoles) {
-                    if (r != null && r.getPermissions() != null)
-                        botPermissions.addAll(r.getPermissions());
-                }
+                botRoles.stream().filter(r -> r != null && r.getPermissions() != null).forEach(r -> botPermissions.addAll(r.getPermissions()));
                 permissionCache.put(guild.getId(), botPermissions);
                 return botPermissions.contains(permission);
             }
