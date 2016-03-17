@@ -18,7 +18,6 @@ public class BoomBot {
     public static void main(String[] args) {
         try {
             if (args.length >= 2) {
-                Logger.info("%s %s", args[0], args[1]);
                 listener = new BoomListen();
                 jda = new JDABuilder(args[0], args[1]).addListener(listener).buildBlocking();
                 startTime = new Date();

@@ -34,3 +34,13 @@ jar {
         attributes 'Main-Class' : "$mainClass"
     }
 }
+
+task fatJar(type: Jar) {
+    manifest {
+        attributes 'Main-Class': "$mainClass"
+    }
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
+
+build.dependsOn fatJar
