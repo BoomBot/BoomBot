@@ -1,12 +1,12 @@
-package net.lomeli.boombot.commands.special;
+package net.lomeli.boombot.commands.special.create;
 
 import net.dv8tion.jda.Permission;
 import net.dv8tion.jda.entities.Role;
 
 import java.util.List;
 
+import net.lomeli.boombot.BoomBot;
 import net.lomeli.boombot.commands.Command;
-import net.lomeli.boombot.commands.CommandRegistry;
 import net.lomeli.boombot.lib.CommandInterface;
 
 public class CreateCommand extends Command {
@@ -27,9 +27,9 @@ public class CreateCommand extends Command {
                 cmd.sendMessage("Command name cannot be empty!");
             if (content.isEmpty())
                 cmd.sendMessage("Command cannot be empty!");
-            if (CommandRegistry.INSTANCE.addCustomCommand(new Command(name, content))) {
+            if (BoomBot.config.addGuildCommand(cmd.getGuild(), new Command(name, content)))
                 cmd.sendMessage(String.format(getContent(), name, content.replaceAll("%s", "___")));
-            } else
+            else
                 cmd.sendMessage(String.format("Command with name %s already exists!", name));
         } else
             cmd.sendMessage("Cannot create command! Missing arguments");

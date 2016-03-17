@@ -2,11 +2,13 @@ package net.lomeli.boombot.commands;
 
 import com.google.common.collect.Lists;
 
-import java.util.Iterator;
 import java.util.List;
 
 import net.lomeli.boombot.BoomBot;
 import net.lomeli.boombot.commands.special.*;
+import net.lomeli.boombot.commands.special.create.ClearCommand;
+import net.lomeli.boombot.commands.special.create.RemoveCommand;
+import net.lomeli.boombot.commands.special.create.CreateCommand;
 import net.lomeli.boombot.lib.CommandInterface;
 import net.lomeli.boombot.lib.Logger;
 
@@ -26,6 +28,10 @@ public enum CommandRegistry {
         addNewCommand(new KickCommand());
         addNewCommand(new RunningCommand());
         addNewCommand(new RemoveCommand());
+        addNewCommand(new ReloadConfigCommand());
+        addNewCommand(new ClearCommand());
+        //Debugging command
+        addNewCommand(new GuildIdCommand());
     }
 
     public boolean addNewCommand(Command command) {
@@ -39,36 +45,10 @@ public enum CommandRegistry {
         return true;
     }
 
-    public boolean addCustomCommand(Command command) {
-        if (addNewCommand(command)) {
-            BoomBot.config.customCommands.add(command);
-            BoomBot.configLoader.writeConfig();
-            return true;
-        }
-        return false;
-    }
-
-    public void clearCustomCommands() {
-        for (Command c : BoomBot.config.customCommands)
-            commands.remove(c);
-    }
-
-    public boolean removeCommand(String name) {
-        Iterator<Command> it = BoomBot.config.customCommands.listIterator();
-        while (it.hasNext()) {
-            Command c = it.next();
-            if (c.getName().equalsIgnoreCase(name)) {
-                it.remove();
-                commands.remove(c);
-                BoomBot.configLoader.writeConfig();
-                return true;
-            }
-        }
-        return false;
-    }
-
     public boolean executeCommand(CommandInterface cmd) {
-        for (Command c : commands) {
+        List<Command> fullList = Lists.newArrayList(commands);
+        fullList.addAll(BoomBot.config.getCommandsForGuild(cmd.getGuild()));
+        for (Command c : fullList) {
             if (c.getName().equalsIgnoreCase(cmd.getCommand())) {
                 if (c.canExecuteCommand(cmd)) {
                     Logger.info("%s used %s command.", cmd.getUser().getUsername(), cmd.getCommand());

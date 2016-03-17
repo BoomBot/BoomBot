@@ -8,7 +8,6 @@ import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.InputStreamReader;
 
-import net.lomeli.boombot.commands.CommandRegistry;
 import net.lomeli.boombot.lib.BoomConfig;
 
 public class ConfigLoader {
@@ -30,7 +29,6 @@ public class ConfigLoader {
                 BoomBot.config = gson.fromJson(configReader, BoomConfig.class);
                 configReader.close();
             }
-            BoomBot.config.customCommands.stream().filter(c -> c != null).forEach(c -> CommandRegistry.INSTANCE.addNewCommand(c));
         } catch (Exception e) {
             e.printStackTrace();
         }
