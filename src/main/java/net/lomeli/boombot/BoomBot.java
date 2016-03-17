@@ -10,7 +10,7 @@ import java.util.Date;
 import net.lomeli.boombot.lib.Logger;
 
 public class BoomBot {
-
+    public static BoomListen listener;
     public static JDA jda;
     public static boolean run = true;
     public static Date startTime;
@@ -19,10 +19,13 @@ public class BoomBot {
         try {
             if (args.length >= 2) {
                 Logger.info("%s %s", args[0], args[1]);
-                jda = new JDABuilder(args[0], args[1]).addListener(new BoomListen()).buildBlocking();
+                listener = new BoomListen();
+                jda = new JDABuilder(args[0], args[1]).addListener(listener).buildBlocking();
                 startTime = new Date();
                 Logger.info("Bot is ready");
                 while (run) {
+                    if (listener.coolDown <= listener.MAX_COOL)
+                        listener.coolDown++;
                 }
             }
         } catch (IllegalArgumentException e) {
