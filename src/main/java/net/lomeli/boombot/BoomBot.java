@@ -27,6 +27,8 @@ public class BoomBot {
                     if (listener.coolDown <= listener.MAX_COOL)
                         listener.coolDown++;
                 }
+            } else {
+                Logger.info("BoomBot requires a email and password to login as!");
             }
         } catch (IllegalArgumentException e) {
             System.out.println("The config was not populated. Please enter an email and password.");
