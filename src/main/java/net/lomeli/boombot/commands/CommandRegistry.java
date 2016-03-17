@@ -1,6 +1,7 @@
 package net.lomeli.boombot.commands;
 
-import java.util.ArrayList;
+import com.google.common.collect.Lists;
+
 import java.util.List;
 
 import net.lomeli.boombot.commands.special.CreateCommand;
@@ -16,7 +17,7 @@ public enum CommandRegistry {
     private List<Command> commands;
 
     CommandRegistry() {
-        commands = new ArrayList<>();
+        commands = Lists.newArrayList();
         registerBasicCommands();
     }
 

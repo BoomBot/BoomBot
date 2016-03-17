@@ -1,5 +1,6 @@
 package net.lomeli.boombot.lib;
 
+import com.google.common.collect.Maps;
 import net.dv8tion.jda.Permission;
 import net.dv8tion.jda.entities.Guild;
 import net.dv8tion.jda.entities.Role;
@@ -11,7 +12,7 @@ import java.util.List;
 import net.lomeli.boombot.BoomBot;
 
 public class BotPermissions {
-    private static HashMap<String, List<Permission>> permissionCache = new HashMap<>();
+    private static HashMap<String, List<Permission>> permissionCache = Maps.newHashMap();
 
     public static boolean hasPermissions(Permission permission, Guild guild) {
         if (permissionCache.containsKey(guild.getId()))
