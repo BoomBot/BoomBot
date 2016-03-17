@@ -30,6 +30,7 @@ public class KickCommand extends Command {
                 if (!reason.isEmpty())
                     reason = "Reason: " + reason;
                 cmd.getGuild().getManager().kick(user);
+                user.getPrivateChannel().sendMessage(String.format("You have been kicked from %s. %s", cmd.getGuild().getName(), reason));
                 cmd.sendMessage("%s has been kicked! %s", user.getUsername(), reason);
             } else
                 cmd.sendMessage("Cannot kick %s, as they DO NOT exist.", cmd.getArgs().get(0));

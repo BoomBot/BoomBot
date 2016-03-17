@@ -11,7 +11,7 @@ import net.lomeli.boombot.lib.CommandInterface;
 
 public class ClearCommand extends Command {
     public ClearCommand() {
-        super("clear-command", "All commands for server %s has been cleared by %s.");
+        super("clear-commands", "All commands for server %s has been cleared by %s.");
     }
 
     @Override

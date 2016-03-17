@@ -17,7 +17,8 @@ public class Command {
     }
 
     public void executeCommand(CommandInterface cmd) {
-        String[] content = getContent().split("\n");
+        String fullContent = getContent().replaceAll("%n", "\n");
+        String[] content = fullContent.split("\n");
         List<String> commandArgs = Lists.newArrayList(cmd.getArgs());
         for (String str : content) {
             int count = StringUtils.countMatches("%s", str);
