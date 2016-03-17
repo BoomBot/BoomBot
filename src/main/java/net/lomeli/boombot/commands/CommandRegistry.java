@@ -30,6 +30,7 @@ public enum CommandRegistry {
         addNewCommand(new RemoveCommand());
         addNewCommand(new ReloadConfigCommand());
         addNewCommand(new ClearCommand());
+        addNewCommand(new Command("about", "Hi, I'm BoomBot. I was made by @Lomeli12 as a fun little project.\nYou can find out more about me at https://github.com/Lomeli12/BoomBot"));
         //Debugging command
         addNewCommand(new GuildIdCommand());
     }
