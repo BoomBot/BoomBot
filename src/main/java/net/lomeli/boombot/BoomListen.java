@@ -1,5 +1,6 @@
 package net.lomeli.boombot;
 
+import net.dv8tion.jda.entities.Guild;
 import net.dv8tion.jda.entities.Message;
 import net.dv8tion.jda.events.ReadyEvent;
 import net.dv8tion.jda.events.message.guild.GenericGuildMessageEvent;
@@ -16,7 +17,8 @@ public class BoomListen extends ListenerAdapter implements EventListener {
 
     @Override
     public void onReady(ReadyEvent event) {
-        event.getJDA().getGuilds().get(0).getPublicChannel().sendMessage("BoomBot is ready!");
+        for (Guild guild : event.getJDA().getGuilds())
+            guild.getPublicChannel().sendMessage("BoomBot is ready!");
     }
 
     @Override
