@@ -6,8 +6,12 @@ import java.util.List;
 
 import net.lomeli.boombot.BoomBot;
 import net.lomeli.boombot.commands.special.*;
+import net.lomeli.boombot.commands.special.audio.JoinVoiceCommand;
+import net.lomeli.boombot.commands.special.audio.LeaveVoiceCommand;
+import net.lomeli.boombot.commands.special.audio.AddAudioCommand;
 import net.lomeli.boombot.commands.special.create.*;
 import net.lomeli.boombot.lib.CommandInterface;
+import net.lomeli.boombot.lib.GuildOptions;
 import net.lomeli.boombot.lib.Logger;
 
 public enum CommandRegistry {
@@ -31,6 +35,10 @@ public enum CommandRegistry {
         addNewCommand(new BanCommand());
         addNewCommand(new BanGuildCommand());
         addNewCommand(new RemoveGuildBanCommand());
+        addNewCommand(new JoinVoiceCommand());
+        addNewCommand(new LeaveVoiceCommand());
+        addNewCommand(new AddAudioCommand());
+        addNewCommand(new AllCommands());
         addNewCommand(new Command("about", "Hi, I'm BoomBot. I was made by @Lomeli12 as a fun little project.\nYou can find out more about me at https://github.com/Lomeli12/BoomBot"));
         //Debugging command
         addNewCommand(new GuildIdCommand());
@@ -47,10 +55,14 @@ public enum CommandRegistry {
         return true;
     }
 
+    public List<Command> getCommands() {
+        return commands;
+    }
+
     public boolean executeCommand(CommandInterface cmd) {
         Command exCommand = null;
-        GuildCommands guildCommands = BoomBot.config.getGuildCommands(cmd.getGuild());
-        if (guildCommands.isUserBanned(cmd.getUser())) {
+        GuildOptions guildOptions = BoomBot.config.getGuildOptions(cmd.getGuild());
+        if (guildOptions.isUserBanned(cmd.getUser())) {
             cmd.getUser().getPrivateChannel().sendMessage(String.format("You cannot use commands in %s.", cmd.getGuild().getName()));
             return false;
         }
@@ -68,7 +80,7 @@ public enum CommandRegistry {
         }
         // Check Guild Commands
         if (exCommand == null) {
-            for (Command c : guildCommands.getCommandList()) {
+            for (Command c : guildOptions.getCommandList()) {
                 if (c.getName().equalsIgnoreCase(cmd.getCommand())) {
                     if (c.canExecuteCommand(cmd)) {
                         exCommand = c;

@@ -7,8 +7,9 @@ import net.dv8tion.jda.entities.User;
 
 import java.util.List;
 
+import net.lomeli.boombot.BoomBot;
 import net.lomeli.boombot.commands.Command;
-import net.lomeli.boombot.lib.BotPermissions;
+import net.lomeli.boombot.helper.PermissionsHelper;
 import net.lomeli.boombot.lib.CommandInterface;
 import net.lomeli.boombot.lib.Logger;
 
@@ -22,6 +23,10 @@ public class KickCommand extends Command {
         if (cmd.getArgs().size() >= 1) {
             User user = getUser(cmd.getArgs().get(0), cmd.getGuild());
             if (user != null) {
+                if (user.getId().equals(BoomBot.jda.getSelfInfo().getId())) {
+                    cmd.sendMessage("Why would BoomBot kick itself?");
+                    return;
+                }
                 String reason = "";
                 if (cmd.getArgs().size() >= 2) {
                     for (int i = 1; i < cmd.getArgs().size(); i++)
@@ -48,17 +53,12 @@ public class KickCommand extends Command {
 
     @Override
     public boolean canExecuteCommand(CommandInterface cmd) {
-        List<Role> userRoles = cmd.getGuild().getRolesForUser(cmd.getUser());
-        if (!BotPermissions.hasPermissions(Permission.KICK_MEMBERS, cmd.getGuild())) {
+        if (!PermissionsHelper.hasPermissions(Permission.KICK_MEMBERS, cmd.getGuild())) {
             String s = "BoomBot does not have enough permissions to kick users. Please give BoomBot a role that can kick users to use this command.";
             Logger.info(s);
             cmd.sendMessage(s);
             return false;
         }
-        for (Role role : userRoles) {
-            if (role != null && role.getPermissions() != null && role.getPermissions().contains(Permission.KICK_MEMBERS))
-                return true;
-        }
-        return false;
+        return PermissionsHelper.userHasPermissions(cmd.getUser(), cmd.getGuild(), Permission.KICK_MEMBERS);
     }
 }

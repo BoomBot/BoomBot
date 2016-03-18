@@ -22,15 +22,16 @@ public class Command {
         List<String> commandArgs = Lists.newArrayList(cmd.getArgs());
         for (int j = 0; j < content.length; j++) {
             String str = content[j];
-            int count = StringUtils.countMatches("%s", str);
+            int count = StringUtils.countMatches(str, "%s");
             Object[] arg = commandArgs.toArray();
             if (count == 1 && j == (content.length - 1)) {
                 String trueArg = "";
                 for (Object o : commandArgs)
                     trueArg += o + " ";
+                trueArg = trueArg.substring(0, trueArg.length() - 1);
                 arg = new Object[]{trueArg};
             }
-            cmd.sendMessage(str, arg);
+            cmd.sendMessage(str.replaceAll("%u", cmd.getUser().getUsername()).replaceAll("%U", cmd.getUser().getUsername().toUpperCase()), arg);
             for (int i = 0; i < count; i++)
                 commandArgs.remove(0);
         }

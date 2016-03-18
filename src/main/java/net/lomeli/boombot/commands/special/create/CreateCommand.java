@@ -1,12 +1,10 @@
 package net.lomeli.boombot.commands.special.create;
 
 import net.dv8tion.jda.Permission;
-import net.dv8tion.jda.entities.Role;
-
-import java.util.List;
 
 import net.lomeli.boombot.BoomBot;
 import net.lomeli.boombot.commands.Command;
+import net.lomeli.boombot.helper.PermissionsHelper;
 import net.lomeli.boombot.lib.CommandInterface;
 
 public class CreateCommand extends Command {
@@ -27,21 +25,18 @@ public class CreateCommand extends Command {
                 cmd.sendMessage("Command name cannot be empty!");
             if (content.isEmpty())
                 cmd.sendMessage("Command cannot be empty!");
+            String safeName = name.replaceAll("%s", "% s").replaceAll("%S", "% S").replaceAll("%u", "<User>").replaceAll("%U", "<USER>");
+            String safeContent = content.replaceAll("%s", "(Blank)").replaceAll("%S", "(Blank)").replaceAll("%u", "<User>").replaceAll("%U", "<USER>");
             if (BoomBot.config.addGuildCommand(cmd.getGuild(), new Command(name, content)))
-                cmd.sendMessage(String.format(getContent(), name, content.replaceAll("%s", "___")));
+                cmd.sendMessage(String.format(getContent(), safeName, safeContent));
             else
-                cmd.sendMessage(String.format("Command with name %s already exists!", name));
+                cmd.sendMessage(String.format("Command with the name %s already exists!", safeName));
         } else
             cmd.sendMessage("Cannot create command! Missing arguments");
     }
 
     @Override
     public boolean canExecuteCommand(CommandInterface cmd) {
-        List<Role> userRoles = cmd.getGuild().getRolesForUser(cmd.getUser());
-        for (Role role : userRoles) {
-            if (role != null && role.getPermissions() != null && role.getPermissions().contains(Permission.MANAGE_CHANNEL))
-                return true;
-        }
-        return false;
+        return PermissionsHelper.userHasPermissions(cmd.getUser(), cmd.getGuild(), Permission.MANAGE_CHANNEL);
     }
 }

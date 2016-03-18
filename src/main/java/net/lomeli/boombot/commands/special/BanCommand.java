@@ -2,13 +2,11 @@ package net.lomeli.boombot.commands.special;
 
 import net.dv8tion.jda.Permission;
 import net.dv8tion.jda.entities.Guild;
-import net.dv8tion.jda.entities.Role;
 import net.dv8tion.jda.entities.User;
 
-import java.util.List;
-
+import net.lomeli.boombot.BoomBot;
 import net.lomeli.boombot.commands.Command;
-import net.lomeli.boombot.lib.BotPermissions;
+import net.lomeli.boombot.helper.PermissionsHelper;
 import net.lomeli.boombot.lib.CommandInterface;
 import net.lomeli.boombot.lib.Logger;
 
@@ -24,6 +22,10 @@ public class BanCommand extends Command {
             int daysDelete = parseString(cmd.getArgs().get(1));
             if (user == null) {
                 cmd.sendMessage("Cannot ban %s, as they DO NOT exist.", cmd.getArgs().get(0));
+                return;
+            }
+            if (user.getId().equals(BoomBot.jda.getSelfInfo().getId())) {
+                cmd.sendMessage("BoomBot probably shouldn't be banning itself...");
                 return;
             }
             if (daysDelete <= -1) {
@@ -67,17 +69,12 @@ public class BanCommand extends Command {
 
     @Override
     public boolean canExecuteCommand(CommandInterface cmd) {
-        List<Role> userRoles = cmd.getGuild().getRolesForUser(cmd.getUser());
-        if (!BotPermissions.hasPermissions(Permission.BAN_MEMBERS, cmd.getGuild())) {
+        if (!PermissionsHelper.hasPermissions(Permission.BAN_MEMBERS, cmd.getGuild())) {
             String s = "BoomBot does not have enough permissions to ban users. Please give BoomBot a role that can ban users to use this command.";
             Logger.info(s);
             cmd.sendMessage(s);
             return false;
         }
-        for (Role role : userRoles) {
-            if (role != null && role.getPermissions() != null && role.getPermissions().contains(Permission.BAN_MEMBERS))
-                return true;
-        }
-        return false;
+        return PermissionsHelper.userHasPermissions(cmd.getUser(), cmd.getGuild(), Permission.BAN_MEMBERS);
     }
 }

@@ -8,10 +8,9 @@ import java.util.List;
 
 import net.lomeli.boombot.BoomBot;
 import net.lomeli.boombot.commands.Command;
-import net.lomeli.boombot.commands.special.create.GuildCommands;
 
 public class BoomConfig {
-    public List<GuildCommands> guildCommands;
+    public List<GuildOptions> guildCommands;
     public int secondsDelay;
 
     public BoomConfig() {
@@ -20,43 +19,43 @@ public class BoomConfig {
     }
 
     public boolean addGuildCommand(Guild guild, Command command) {
-        GuildCommands guildCommands = getGuildCommands(guild);
-        boolean flag = guildCommands.addGuildCommand(command);
-        updateGuildCommand(guildCommands);
+        GuildOptions guildOptions = getGuildOptions(guild);
+        boolean flag = guildOptions.addGuildCommand(command);
+        updateGuildCommand(guildOptions);
         return flag;
     }
 
     public boolean removeGuildCommand(Guild guild, String name) {
-        GuildCommands guildCommands = getGuildCommands(guild);
-        boolean flag = guildCommands.removeGuildCommand(name);
-        updateGuildCommand(guildCommands);
+        GuildOptions guildOptions = getGuildOptions(guild);
+        boolean flag = guildOptions.removeGuildCommand(name);
+        updateGuildCommand(guildOptions);
         return flag;
     }
 
     public void clearGuildCommands(Guild guild) {
-        GuildCommands guildCommands = getGuildCommands(guild);
-        guildCommands.clearCommands();
-        updateGuildCommand(guildCommands);
+        GuildOptions guildOptions = getGuildOptions(guild);
+        guildOptions.clearCommands();
+        updateGuildCommand(guildOptions);
     }
 
     public boolean banUserCommands(Guild guild, User user) {
-        GuildCommands guildCommands = getGuildCommands(guild);
-        boolean flag = guildCommands.banCommandUser(user);
-        updateGuildCommand(guildCommands);
+        GuildOptions guildOptions = getGuildOptions(guild);
+        boolean flag = guildOptions.banCommandUser(user);
+        updateGuildCommand(guildOptions);
         return flag;
     }
 
     public boolean removeCommandBan(Guild guild, User user) {
-        GuildCommands guildCommands = getGuildCommands(guild);
-        boolean flag = guildCommands.removeBannedUser(user);
-        updateGuildCommand(guildCommands);
+        GuildOptions guildOptions = getGuildOptions(guild);
+        boolean flag = guildOptions.removeBannedUser(user);
+        updateGuildCommand(guildOptions);
         return flag;
     }
 
-    public void updateGuildCommand(GuildCommands guildCommand) {
+    public void updateGuildCommand(GuildOptions guildCommand) {
         int index = -1;
         for (int i = 0; i < this.guildCommands.size(); i++) {
-            GuildCommands c = this.guildCommands.get(i);
+            GuildOptions c = this.guildCommands.get(i);
             if (c != null && c.getGuildID().equalsIgnoreCase(guildCommand.getGuildID())) {
                 index = i;
                 break;
@@ -69,15 +68,15 @@ public class BoomConfig {
         BoomBot.configLoader.writeConfig();
     }
 
-    public GuildCommands getGuildCommands(Guild guild) {
-        for (GuildCommands commandList : guildCommands) {
+    public GuildOptions getGuildOptions(Guild guild) {
+        for (GuildOptions commandList : guildCommands) {
             if (commandList != null && commandList.getGuildID().equalsIgnoreCase(guild.getId()))
                 return commandList;
         }
-        return new GuildCommands(guild);
+        return new GuildOptions(guild);
     }
 
     public List<Command> getCommandsForGuild(Guild guild) {
-        return getGuildCommands(guild).getCommandList();
+        return getGuildOptions(guild).getCommandList();
     }
 }

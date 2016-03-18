@@ -5,7 +5,6 @@ import com.google.common.collect.Maps;
 import net.dv8tion.jda.entities.Guild;
 import net.dv8tion.jda.entities.Message;
 import net.dv8tion.jda.events.ReadyEvent;
-import net.dv8tion.jda.events.guild.GuildJoinEvent;
 import net.dv8tion.jda.events.message.guild.GenericGuildMessageEvent;
 import net.dv8tion.jda.hooks.ListenerAdapter;
 
@@ -14,7 +13,7 @@ import java.util.List;
 
 import net.lomeli.boombot.commands.CommandRegistry;
 import net.lomeli.boombot.lib.CommandInterface;
-import net.lomeli.boombot.lib.Logger;
+import net.lomeli.boombot.lib.GuildOptions;
 
 public class BoomListen extends ListenerAdapter {
     private HashMap<String, Long> guildTimers;
@@ -25,7 +24,13 @@ public class BoomListen extends ListenerAdapter {
 
     @Override
     public void onReady(ReadyEvent event) {
-        event.getJDA().getGuilds().stream().filter(g -> g != null).forEach(g -> g.getPublicChannel().sendMessage("BoomBot is ready!"));
+        for (Guild guild : event.getJDA().getGuilds()) {
+            if (guild != null) {
+                GuildOptions options = BoomBot.config.getGuildOptions(guild);
+                if (options != null && options.announceReady())
+                    guild.getPublicChannel().sendMessage("BoomBot is ready!");
+            }
+        }
     }
 
     @Override
