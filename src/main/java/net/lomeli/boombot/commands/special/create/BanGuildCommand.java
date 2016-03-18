@@ -49,7 +49,7 @@ public class BanGuildCommand extends Command {
     public boolean canExecuteCommand(CommandInterface cmd) {
         List<Role> userRoles = cmd.getGuild().getRolesForUser(cmd.getUser());
         for (Role role : userRoles) {
-            if (role != null && role.getPermissions() != null && role.getPermissions().contains(Permission.MANAGE_SERVER))
+            if (role != null && role.getPermissions() != null && role.getPermissions().contains(Permission.MANAGE_CHANNEL))
                 return true;
         }
         return false;
