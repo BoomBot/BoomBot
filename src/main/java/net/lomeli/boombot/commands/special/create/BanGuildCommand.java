@@ -1,4 +1,4 @@
-package net.lomeli.boombot.commands.special;
+package net.lomeli.boombot.commands.special.create;
 
 import net.dv8tion.jda.Permission;
 import net.dv8tion.jda.entities.Guild;
@@ -7,14 +7,13 @@ import net.dv8tion.jda.entities.User;
 
 import java.util.List;
 
+import net.lomeli.boombot.BoomBot;
 import net.lomeli.boombot.commands.Command;
-import net.lomeli.boombot.lib.BotPermissions;
 import net.lomeli.boombot.lib.CommandInterface;
-import net.lomeli.boombot.lib.Logger;
 
-public class KickCommand extends Command {
-    public KickCommand() {
-        super("kick", "%s has been kicked! %s");
+public class BanGuildCommand extends Command {
+    public BanGuildCommand() {
+        super("ban-command", "%s has been banned from using commands in %s! %s");
     }
 
     @Override
@@ -29,13 +28,13 @@ public class KickCommand extends Command {
                 }
                 if (!reason.isEmpty())
                     reason = "Reason: " + reason;
-                cmd.getGuild().getManager().kick(user);
-                user.getPrivateChannel().sendMessage(String.format("You have been kicked from %s. %s", cmd.getGuild().getName(), reason));
-                cmd.sendMessage(getContent(), user.getUsername(), reason);
+                BoomBot.config.banUserCommands(cmd.getGuild(), user);
+                user.getPrivateChannel().sendMessage(String.format("You have been banned from using commands in %s. %s", cmd.getGuild().getName(), reason));
+                cmd.sendMessage(getContent(), user.getUsername(), cmd.getGuild().getName(), reason);
             } else
-                cmd.sendMessage("Cannot kick %s, as they DO NOT exist.", cmd.getArgs().get(0));
+                cmd.sendMessage("Cannot ban %s from using commands, as they DO NOT exist.", cmd.getArgs().get(0));
         } else
-            cmd.sendMessage("Kick who?");
+            cmd.sendMessage("Ban who from using commands?");
     }
 
     private User getUser(String name, Guild guild) {
@@ -49,14 +48,8 @@ public class KickCommand extends Command {
     @Override
     public boolean canExecuteCommand(CommandInterface cmd) {
         List<Role> userRoles = cmd.getGuild().getRolesForUser(cmd.getUser());
-        if (!BotPermissions.hasPermissions(Permission.KICK_MEMBERS, cmd.getGuild())) {
-            String s = "BoomBot does not have enough permissions to kick users. Please give BoomBot a role that can kick users to use this command.";
-            Logger.info(s);
-            cmd.sendMessage(s);
-            return false;
-        }
         for (Role role : userRoles) {
-            if (role != null && role.getPermissions() != null && role.getPermissions().contains(Permission.KICK_MEMBERS))
+            if (role != null && role.getPermissions() != null && role.getPermissions().contains(Permission.MANAGE_SERVER))
                 return true;
         }
         return false;

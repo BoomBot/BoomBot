@@ -20,9 +20,17 @@ public class Command {
         String fullContent = getContent().replaceAll("%n", "\n");
         String[] content = fullContent.split("\n");
         List<String> commandArgs = Lists.newArrayList(cmd.getArgs());
-        for (String str : content) {
+        for (int j = 0; j < content.length; j++) {
+            String str = content[j];
             int count = StringUtils.countMatches("%s", str);
-            cmd.sendMessage(str, commandArgs.toArray());
+            Object[] arg = commandArgs.toArray();
+            if (count == 1 && j == (content.length - 1)) {
+                String trueArg = "";
+                for (Object o : commandArgs)
+                    trueArg += o + " ";
+                arg = new Object[]{trueArg};
+            }
+            cmd.sendMessage(str, arg);
             for (int i = 0; i < count; i++)
                 commandArgs.remove(0);
         }

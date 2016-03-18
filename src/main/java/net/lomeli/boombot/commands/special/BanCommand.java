@@ -14,7 +14,7 @@ import net.lomeli.boombot.lib.Logger;
 
 public class BanCommand extends Command {
     public BanCommand() {
-        super("ban", "%s has been banned from the guild");
+        super("ban", "%s has been banned! Their messages from the past %s day(s) have been deleted. %s");
     }
 
     @Override
@@ -39,7 +39,7 @@ public class BanCommand extends Command {
                 reason = "Reason: " + reason;
             cmd.getGuild().getManager().ban(user, daysDelete);
             user.getPrivateChannel().sendMessage(String.format("You have been banned from %s. Your messages from the past %s day(s) have been deleted. %s", cmd.getGuild().getName(), daysDelete, reason));
-            cmd.sendMessage("%s has been banned! Their messages from the past %s day(s) have been deleted. %s", user.getUsername(), daysDelete, reason);
+            cmd.sendMessage(getContent(), user.getUsername(), daysDelete, reason);
         } else {
             if (cmd.getArgs().size() == 1)
                 cmd.sendMessage("Please specify how many days back we go back to delete their messages. Must be at least 0.");

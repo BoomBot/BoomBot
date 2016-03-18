@@ -2,6 +2,7 @@ package net.lomeli.boombot.lib;
 
 import com.google.common.collect.Lists;
 import net.dv8tion.jda.entities.Guild;
+import net.dv8tion.jda.entities.User;
 
 import java.util.List;
 
@@ -19,20 +20,15 @@ public class BoomConfig {
     }
 
     public boolean addGuildCommand(Guild guild, Command command) {
-        boolean flag = false;
         GuildCommands guildCommands = getGuildCommands(guild);
-        if (guildCommands.addGuildCommand(command)) {
-            flag = true;
-        }
+        boolean flag = guildCommands.addGuildCommand(command);
         updateGuildCommand(guildCommands);
         return flag;
     }
 
     public boolean removeGuildCommand(Guild guild, String name) {
-        boolean flag = false;
         GuildCommands guildCommands = getGuildCommands(guild);
-        if (guildCommands.removeGuildCommand(name))
-            flag = true;
+        boolean flag = guildCommands.removeGuildCommand(name);
         updateGuildCommand(guildCommands);
         return flag;
     }
@@ -41,6 +37,20 @@ public class BoomConfig {
         GuildCommands guildCommands = getGuildCommands(guild);
         guildCommands.clearCommands();
         updateGuildCommand(guildCommands);
+    }
+
+    public boolean banUserCommands(Guild guild, User user) {
+        GuildCommands guildCommands = getGuildCommands(guild);
+        boolean flag = guildCommands.banCommandUser(user);
+        updateGuildCommand(guildCommands);
+        return flag;
+    }
+
+    public boolean removeCommandBan(Guild guild, User user) {
+        GuildCommands guildCommands = getGuildCommands(guild);
+        boolean flag = guildCommands.removeBannedUser(user);
+        updateGuildCommand(guildCommands);
+        return flag;
     }
 
     public void updateGuildCommand(GuildCommands guildCommand) {
