@@ -13,26 +13,20 @@ public class CommandInterface {
     private GuildOptions guildOptions;
     private Guild guild;
     private User user;
-    private String channelID, command;
+    private TextChannel channel;
+    private String command;
     private List<String> args;
 
-    public CommandInterface(Guild guild, User user, String channelID, String command, List<String> args) {
+    public CommandInterface(Guild guild, User user, TextChannel channel, String command, List<String> args) {
         this.guild = guild;
         this.user = user;
-        this.channelID = channelID;
+        this.channel = channel;
         this.command = command;
         this.args = args;
         this.guildOptions = BoomBot.config.getGuildOptions(guild);
     }
 
     public TextChannel getChannel() {
-        TextChannel channel = null;
-        for (TextChannel text : getGuild().getTextChannels()) {
-            if (text != null && text.getId().equals(getChannelID())) {
-                channel = text;
-                break;
-            }
-        }
         return channel;
     }
 
@@ -54,10 +48,6 @@ public class CommandInterface {
 
     public List<String> getArgs() {
         return args;
-    }
-
-    public String getChannelID() {
-        return channelID;
     }
 
     public String getCommand() {

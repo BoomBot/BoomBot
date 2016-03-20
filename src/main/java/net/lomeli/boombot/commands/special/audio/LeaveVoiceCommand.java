@@ -24,6 +24,8 @@ public class LeaveVoiceCommand extends Command {
                 AudioHandler.INSTANCE.getPlayer().stop();
             BoomBot.jda.getAudioManager().setSendingHandler(null);
             BoomBot.jda.getAudioManager().closeAudioConnection();
-        } catch (Exception e){}
+        } catch (Exception e){
+            e.printStackTrace();
+        }
     }
 }

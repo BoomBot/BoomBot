@@ -62,7 +62,7 @@ public class BanCommand extends Command {
         try {
             return Integer.parseInt(str);
         } catch (NumberFormatException e) {
-            e.printStackTrace();
+            Logger.error("Number format exception in Ban Command", e);
         }
         return 0;
     }

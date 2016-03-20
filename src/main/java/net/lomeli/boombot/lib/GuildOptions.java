@@ -7,6 +7,7 @@ import net.dv8tion.jda.entities.Guild;
 import net.dv8tion.jda.entities.TextChannel;
 import net.dv8tion.jda.entities.User;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -22,9 +23,14 @@ public class GuildOptions {
     private boolean announceReady;
     private boolean announceStopped;
     private int secondsDelay;
-    private transient Map<String, Long> channelDelay;
+    private transient HashMap<String, Long> channelDelay;
+
+    public GuildOptions() {
+        this.channelDelay = Maps.newHashMap();
+    }
 
     public GuildOptions(String guild) {
+        super();
         this.guildID = guild;
         this.commandList = Lists.newArrayList();
         this.banUsers = Lists.newArrayList();
@@ -32,7 +38,6 @@ public class GuildOptions {
         this.announceReady = true;
         this.announceStopped = true;
         this.secondsDelay = 2;
-        this.channelDelay = Maps.newHashMap();
     }
 
     public GuildOptions(Guild guild) {
@@ -105,7 +110,8 @@ public class GuildOptions {
     }
 
     public long getLastCommandUsedChannel(String id) {
-        if (Strings.isNullOrEmpty(id) || !channelDelay.containsKey(id)) return 0;
+        if (channelDelay == null) channelDelay = Maps.newHashMap();
+        if (id == null || Strings.isNullOrEmpty(id) || !channelDelay.containsKey(id)) return 0;
         return channelDelay.get(id);
     }
 
@@ -114,6 +120,7 @@ public class GuildOptions {
     }
 
     public void updateLastCommand(String id) {
+        if (channelDelay == null) channelDelay = Maps.newHashMap();
         if (!Strings.isNullOrEmpty(id))
             channelDelay.put(id, System.currentTimeMillis());
     }

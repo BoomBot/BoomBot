@@ -2,6 +2,7 @@ package net.lomeli.boombot.commands.special.create;
 
 import net.dv8tion.jda.Permission;
 
+import net.lomeli.boombot.BoomBot;
 import net.lomeli.boombot.commands.Command;
 import net.lomeli.boombot.helper.PermissionsHelper;
 import net.lomeli.boombot.lib.CommandInterface;
@@ -19,6 +20,7 @@ public class RestrictCommand extends Command {
         }
         cmd.getGuildOptions().restrictChannel(cmd.getChannel());
         cmd.sendMessage(getContent(), cmd.getChannel().getName());
+        BoomBot.configLoader.writeConfig();
     }
 
     @Override

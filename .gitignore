@@ -16,3 +16,4 @@ hs_err_pid*
 *.iml
 .gradle/
 *.mp3
+*.log

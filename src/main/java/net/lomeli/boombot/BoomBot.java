@@ -13,13 +13,14 @@ import net.lomeli.boombot.lib.Logger;
 public class BoomBot {
     public static BoomListen listener;
     public static JDA jda;
-    public static boolean run = true;
     public static Date startTime;
     public static BoomConfig config;
     public static ConfigLoader configLoader;
+    public static File logFile;
 
     public static void main(String[] args) {
         try {
+            logFile = new File((new Date() + ".log").replaceAll(":", "-").replaceAll(" ", "_"));
             config = new BoomConfig();
             configLoader = new ConfigLoader(new File("config.cfg"));
             configLoader.parseConfig();
@@ -32,12 +33,11 @@ public class BoomBot {
                 Logger.info("BoomBot requires a email and password to login as!");
             }
         } catch (IllegalArgumentException e) {
-            System.out.println("The config was not populated. Please enter an email and password.");
+            Logger.error("The config was not populated. Please enter an email and password.", e);
         } catch (LoginException e) {
-            System.out.println("The provided email / password combination was incorrect. Please provide valid details.");
+            Logger.error("The provided email / password combination was incorrect. Please provide valid details.", e);
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            Logger.error("An Exception occurred", e);
         }
-        configLoader.writeConfig();
     }
 }

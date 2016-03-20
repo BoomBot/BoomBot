@@ -29,8 +29,7 @@ public class StopBotCommand extends Command {
             }
         }
         Logger.info("BoomBot shutting down via command from %s...", cmd.getUser().getUsername());
-        BoomBot.run = false;
-        System.exit(0);
+        BoomBot.jda.shutdown();
     }
 
     @Override

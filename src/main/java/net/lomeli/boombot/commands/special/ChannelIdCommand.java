@@ -10,6 +10,6 @@ public class ChannelIdCommand extends Command {
 
     @Override
     public void executeCommand(CommandInterface cmd) {
-        cmd.sendMessage(getContent(), cmd.getChannel().getName(), cmd.getChannelID());
+        cmd.sendMessage(getContent(), cmd.getChannel().getName(), cmd.getChannel().getId());
     }
 }

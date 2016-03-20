@@ -10,10 +10,10 @@ import net.lomeli.boombot.BoomBot;
 import net.lomeli.boombot.commands.Command;
 
 public class BoomConfig {
-    public List<GuildOptions> guildCommands;
+    public List<GuildOptions> guildOptions;
 
     public BoomConfig() {
-        guildCommands = Lists.newArrayList();
+        guildOptions = Lists.newArrayList();
     }
 
     public boolean addGuildCommand(Guild guild, Command command) {
@@ -52,22 +52,22 @@ public class BoomConfig {
 
     public void updateGuildCommand(GuildOptions guildCommand) {
         int index = -1;
-        for (int i = 0; i < this.guildCommands.size(); i++) {
-            GuildOptions c = this.guildCommands.get(i);
+        for (int i = 0; i < this.guildOptions.size(); i++) {
+            GuildOptions c = this.guildOptions.get(i);
             if (c != null && c.getGuildID().equalsIgnoreCase(guildCommand.getGuildID())) {
                 index = i;
                 break;
             }
         }
-        if (index > -1 && index < this.guildCommands.size())
-            this.guildCommands.set(index, guildCommand);
+        if (index > -1 && index < this.guildOptions.size())
+            this.guildOptions.set(index, guildCommand);
         else
-            this.guildCommands.add(guildCommand);
+            this.guildOptions.add(guildCommand);
         BoomBot.configLoader.writeConfig();
     }
 
     public GuildOptions getGuildOptions(Guild guild) {
-        for (GuildOptions commandList : guildCommands) {
+        for (GuildOptions commandList : guildOptions) {
             if (commandList != null && commandList.getGuildID().equalsIgnoreCase(guild.getId()))
                 return commandList;
         }
