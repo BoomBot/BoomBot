@@ -12,9 +12,9 @@ import net.lomeli.boombot.commands.Command;
 import net.lomeli.boombot.helper.PermissionsHelper;
 import net.lomeli.boombot.lib.CommandInterface;
 
-public class RemoveGuildBanCommand extends Command {
-    public RemoveGuildBanCommand() {
-        super("remove-ban-command", "%s can use commands in %s again.");
+public class UnBanUseCommand extends Command {
+    public UnBanUseCommand() {
+        super("unban-use", "%s can use commands in %s again.");
     }
 
     @Override
@@ -23,7 +23,7 @@ public class RemoveGuildBanCommand extends Command {
             for (int i = 0; i < cmd.getArgs().size(); i++) {
                 User user = getUser(cmd.getArgs().get(i), cmd.getGuild());
                 if (user != null) {
-                    BoomBot.config.removeCommandBan(cmd.getGuild(), user);
+                    cmd.getGuildOptions().removeBannedUser(user);
                     user.getPrivateChannel().sendMessage(String.format("You can now user commands again in %s.", cmd.getGuild().getName()));
                     cmd.sendMessage(getContent(), user.getUsername(), cmd.getGuild().getName());
                 } else

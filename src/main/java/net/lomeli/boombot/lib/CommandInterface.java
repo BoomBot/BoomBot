@@ -5,8 +5,12 @@ import net.dv8tion.jda.entities.TextChannel;
 import net.dv8tion.jda.entities.User;
 
 import java.util.List;
+import java.util.Objects;
+
+import net.lomeli.boombot.BoomBot;
 
 public class CommandInterface {
+    private GuildOptions guildOptions;
     private Guild guild;
     private User user;
     private String channelID, command;
@@ -18,6 +22,7 @@ public class CommandInterface {
         this.channelID = channelID;
         this.command = command;
         this.args = args;
+        this.guildOptions = BoomBot.config.getGuildOptions(guild);
     }
 
     public TextChannel getChannel() {
@@ -43,6 +48,10 @@ public class CommandInterface {
         return user;
     }
 
+    public void sendUserMessage(String str, Object... args) {
+        user.getPrivateChannel().sendMessage(String.format(str, args));
+    }
+
     public List<String> getArgs() {
         return args;
     }
@@ -53,5 +62,9 @@ public class CommandInterface {
 
     public String getCommand() {
         return command;
+    }
+
+    public GuildOptions getGuildOptions() {
+        return guildOptions;
     }
 }

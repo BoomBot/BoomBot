@@ -9,9 +9,9 @@ import net.lomeli.boombot.commands.Command;
 import net.lomeli.boombot.helper.PermissionsHelper;
 import net.lomeli.boombot.lib.CommandInterface;
 
-public class BanGuildCommand extends Command {
-    public BanGuildCommand() {
-        super("ban-command", "%s has been banned from using commands in %s! %s");
+public class BanUseCommand extends Command {
+    public BanUseCommand() {
+        super("ban-use", "%s has been banned from using commands in %s! %s");
     }
 
     @Override

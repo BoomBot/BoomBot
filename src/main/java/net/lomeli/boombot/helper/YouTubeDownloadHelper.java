@@ -14,8 +14,6 @@ import java.io.InputStreamReader;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import net.lomeli.boombot.lib.Logger;
-
 public class YouTubeDownloadHelper {
     public static Pattern pattern = Pattern.compile("(?:youtube\\.com\\/(?:[^\\/]+\\/.+\\/|(?:v|e(?:mbed)?)\\/|.*[?&]v=)|youtu\\.be\\/)([^\"&?\\/ ]{11})",
             Pattern.CASE_INSENSITIVE);
@@ -47,15 +45,10 @@ public class YouTubeDownloadHelper {
         return vId;
     }
 
-    public static String youtubeDownloadURL(String videoID) {
-        return "http://www.youtubeinmp3.com/download/?video=https://www.youtube.com/watch?v=" + videoID;
-    }
-
-    public static String getTitle(String videoId) {
-        String title = "";
-        String result = "";
+    public static JSONObject getVideoInfo(String videoID) {
+        String result;
         HttpClient httpClient = HttpClientBuilder.create().build();
-        HttpGet request = new HttpGet("http://www.youtubeinmp3.com/fetch/?format=JSON&video=https://www.youtube.com/watch?v=" + videoId);
+        HttpGet request = new HttpGet("http://www.youtubeinmp3.com/fetch/?format=JSON&video=http://www.youtube.com/watch?v=" + videoID);
         HttpResponse response;
         try {
             response = httpClient.execute(request);
@@ -63,14 +56,13 @@ public class YouTubeDownloadHelper {
             if (entity != null) {
                 InputStream instream = entity.getContent();
                 result = convertStreamToString(instream);
-                JSONObject jsonObject = new JSONObject(result);
-                instream.close();
-                title = jsonObject.getString("title");
+                System.out.println(result);
+                return new JSONObject(result);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return title;
+        return null;
     }
 
     private static String convertStreamToString(InputStream is) {

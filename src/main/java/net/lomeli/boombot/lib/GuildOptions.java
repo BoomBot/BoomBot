@@ -1,7 +1,9 @@
 package net.lomeli.boombot.lib;
 
+import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import net.dv8tion.jda.entities.Guild;
+import net.dv8tion.jda.entities.TextChannel;
 import net.dv8tion.jda.entities.User;
 
 import java.util.Iterator;
@@ -13,6 +15,7 @@ import net.lomeli.boombot.commands.CommandRegistry;
 public class GuildOptions {
     private List<Command> commandList;
     private List<String> banUsers;
+    private List<String> restrictedChannels;
     private String guildID;
     private boolean announceReady;
     private boolean announceStopped;
@@ -21,6 +24,7 @@ public class GuildOptions {
         this.guildID = guild;
         this.commandList = Lists.newArrayList();
         this.banUsers = Lists.newArrayList();
+        this.restrictedChannels = Lists.newArrayList();
         this.announceReady = true;
         this.announceStopped = true;
     }
@@ -39,8 +43,7 @@ public class GuildOptions {
             if (c != null && c.getName().equalsIgnoreCase(command.getName()))
                 return false;
         }
-        commandList.add(command);
-        return true;
+        return commandList.add(command);
     }
 
     public boolean removeGuildCommand(String name) {
@@ -56,19 +59,39 @@ public class GuildOptions {
     }
 
     public boolean banCommandUser(User user) {
-        if (user != null && !banUsers.contains(user.getId())) {
-            banUsers.add(user.getId());
-            return true;
-        }
+        if (user != null && !banUsers.contains(user.getId()))
+            return banUsers.add(user.getId());
         return false;
     }
 
     public boolean removeBannedUser(User user) {
-        if (user != null && banUsers.contains(user.getId())) {
-            banUsers.remove(user.getId());
-            return true;
-        }
+        return user != null ? banUsers.remove(user.getId()) : false;
+    }
+
+    public boolean restrictChannel(String channelID) {
+        if (!Strings.isNullOrEmpty(channelID) && !restrictedChannels.contains(channelID))
+            return restrictedChannels.add(channelID);
         return false;
+    }
+
+    public boolean restrictChannel(TextChannel channel) {
+        return channel != null ? restrictChannel(channel.getId()) : false;
+    }
+
+    public boolean freeChannel(String channelID) {
+        return !Strings.isNullOrEmpty(channelID) ? restrictedChannels.remove(channelID) : false;
+    }
+
+    public boolean freeChannel(TextChannel channel) {
+        return channel != null ? freeChannel(channel.getId()) : false;
+    }
+
+    public boolean isChannelRestricted(String channelID) {
+        return restrictedChannels.contains(channelID);
+    }
+
+    public boolean isChannelRestricted(TextChannel channel) {
+        return channel != null ? isChannelRestricted(channel.getId()) : false;
     }
 
     public boolean isUserBanned(User user) {

@@ -39,7 +39,7 @@ public class BoomListen extends ListenerAdapter {
             return;
         if (!ready(event.getGuild().getId())) return;
         Message message = event.getMessage();
-        if (event.getAuthor().getUsername().equals(BoomBot.jda.getSelfInfo().getUsername()))
+        if (message.isEdited() || event.getAuthor().getUsername().equals(BoomBot.jda.getSelfInfo().getUsername()))
             return;
         String content = message.getContent();
         if (content.startsWith("!")) {

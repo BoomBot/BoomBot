@@ -23,7 +23,7 @@ public class Command {
         for (int j = 0; j < content.length; j++) {
             String str = content[j];
             int count = StringUtils.countMatches(str, "%s");
-            Object[] arg = commandArgs.toArray();
+            Object[] arg = new Object[count];
             if (count == 1 && j == (content.length - 1)) {
                 String trueArg = "";
                 for (Object o : commandArgs)

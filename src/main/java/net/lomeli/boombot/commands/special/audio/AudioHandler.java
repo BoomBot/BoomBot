@@ -1,5 +1,6 @@
 package net.lomeli.boombot.commands.special.audio;
 
+import com.github.axet.vget.VGet;
 import com.google.common.collect.Lists;
 import net.dv8tion.jda.audio.player.FilePlayer;
 import org.apache.commons.io.FileUtils;
@@ -9,6 +10,7 @@ import java.net.URL;
 import java.util.List;
 
 import net.lomeli.boombot.BoomBot;
+import net.lomeli.boombot.helper.YouTubeDownloadHelper;
 
 public enum AudioHandler {
     INSTANCE();
@@ -26,10 +28,15 @@ public enum AudioHandler {
         if (!fileList.isEmpty()) {
             try {
                 String url = fileList.get(0).getDownloadUrl();
-                URL website = new URL(url);
                 if (audioFile.exists())
                     audioFile.delete();
-                FileUtils.copyURLToFile(website, audioFile);
+                URL website = new URL(url);
+                if (YouTubeDownloadHelper.isYouTubeVideo(url)){
+                    VGet v = new VGet(website, audioFile);
+                    v.download();
+                } else {
+                    FileUtils.copyURLToFile(website, audioFile);
+                }
                 fileList.remove(0);
             } catch (Exception e) {
                 e.printStackTrace();

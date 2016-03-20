@@ -1,5 +1,6 @@
 package net.lomeli.boombot.commands.special.create;
 
+import com.google.common.base.Strings;
 import net.dv8tion.jda.Permission;
 
 import net.lomeli.boombot.BoomBot;
@@ -21,9 +22,9 @@ public class CreateCommand extends Command {
                 String st = cmd.getArgs().get(i);
                 content += st + " ";
             }
-            if (name.isEmpty())
+            if (Strings.isNullOrEmpty(name))
                 cmd.sendMessage("Command name cannot be empty!");
-            if (content.isEmpty())
+            if (Strings.isNullOrEmpty(content))
                 cmd.sendMessage("Command cannot be empty!");
             String safeName = name.replaceAll("%s", "% s").replaceAll("%S", "% S").replaceAll("%u", "<User>").replaceAll("%U", "<USER>");
             String safeContent = content.replaceAll("%s", "(Blank)").replaceAll("%S", "(Blank)").replaceAll("%u", "<User>").replaceAll("%U", "<USER>");

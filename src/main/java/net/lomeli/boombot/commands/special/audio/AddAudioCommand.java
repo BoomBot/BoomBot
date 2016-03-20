@@ -1,17 +1,17 @@
 package net.lomeli.boombot.commands.special.audio;
 
+import com.github.axet.vget.VGet;
 import net.dv8tion.jda.entities.VoiceChannel;
+import org.json.JSONObject;
 
-import java.util.regex.Pattern;
+import java.net.URL;
 
 import net.lomeli.boombot.BoomBot;
 import net.lomeli.boombot.commands.Command;
-import net.lomeli.boombot.lib.CommandInterface;
 import net.lomeli.boombot.helper.YouTubeDownloadHelper;
+import net.lomeli.boombot.lib.CommandInterface;
 
 public class AddAudioCommand extends Command {
-    private Pattern pattern;
-
     public AddAudioCommand() {
         super("add-audio", "");
     }
@@ -46,10 +46,15 @@ public class AddAudioCommand extends Command {
         String url = cmd.getArgs().get(1);
         if (YouTubeDownloadHelper.isYouTubeVideo(url)) {
             String videoID = YouTubeDownloadHelper.extractYTId(url);
-            String title = YouTubeDownloadHelper.getTitle(videoID);
-            String downloadURL = YouTubeDownloadHelper.youtubeDownloadURL(videoID);
-            AudioHandler.INSTANCE.addAudioToQueue(new AudioInfo(downloadURL, title));
-            cmd.sendMessage("Added %s to the queue.", title);
+            String downloadURL = "http://www.youtube.com/watch?v=" + videoID;
+            try {
+                VGet v = new VGet(new URL(downloadURL));
+                String title = v.getVideo().getTitle();
+                cmd.sendMessage("Adding %s to the queue.", title);
+                AudioHandler.INSTANCE.addAudioToQueue(new AudioInfo(downloadURL, title));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         } else {
             // Youtube search
         }

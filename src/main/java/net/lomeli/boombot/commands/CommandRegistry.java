@@ -1,15 +1,17 @@
 package net.lomeli.boombot.commands;
 
 import com.google.common.collect.Lists;
+import net.dv8tion.jda.Permission;
 
 import java.util.List;
 
 import net.lomeli.boombot.BoomBot;
 import net.lomeli.boombot.commands.special.*;
+import net.lomeli.boombot.commands.special.audio.AddAudioCommand;
 import net.lomeli.boombot.commands.special.audio.JoinVoiceCommand;
 import net.lomeli.boombot.commands.special.audio.LeaveVoiceCommand;
-import net.lomeli.boombot.commands.special.audio.AddAudioCommand;
 import net.lomeli.boombot.commands.special.create.*;
+import net.lomeli.boombot.helper.PermissionsHelper;
 import net.lomeli.boombot.lib.CommandInterface;
 import net.lomeli.boombot.lib.GuildOptions;
 import net.lomeli.boombot.lib.Logger;
@@ -25,23 +27,30 @@ public enum CommandRegistry {
     }
 
     private void registerBasicCommands() {
-        addNewCommand(new StopBotCommand());
-        addNewCommand(new CreateCommand());
-        addNewCommand(new KickCommand());
+        addNewCommand(new HelpCommand());
         addNewCommand(new RunningCommand());
-        addNewCommand(new RemoveCommand());
         addNewCommand(new ReloadConfigCommand());
+        addNewCommand(new Command("about", "Hi, I'm BoomBot. I was made by @Lomeli12 as a fun little project.\nYou can find out more about me at https://github.com/BoomBot/BoomBot"));
+        addNewCommand(new StopBotCommand());
+
+        addNewCommand(new CreateCommand());
+        addNewCommand(new RemoveCommand());
         addNewCommand(new ClearCommand());
+        addNewCommand(new BanUseCommand());
+        addNewCommand(new UnBanUseCommand());
+        addNewCommand(new DerestrictCommand());
+        addNewCommand(new RestrictCommand());
+
+        addNewCommand(new KickCommand());
         addNewCommand(new BanCommand());
-        addNewCommand(new BanGuildCommand());
-        addNewCommand(new RemoveGuildBanCommand());
+
         addNewCommand(new JoinVoiceCommand());
         addNewCommand(new LeaveVoiceCommand());
         addNewCommand(new AddAudioCommand());
-        addNewCommand(new AllCommands());
-        addNewCommand(new Command("about", "Hi, I'm BoomBot. I was made by @Lomeli12 as a fun little project.\nYou can find out more about me at https://github.com/Lomeli12/BoomBot"));
+
         //Debugging command
         addNewCommand(new GuildIdCommand());
+        addNewCommand(new ChannelIdCommand());
     }
 
     public boolean addNewCommand(Command command) {
@@ -63,7 +72,11 @@ public enum CommandRegistry {
         Command exCommand = null;
         GuildOptions guildOptions = BoomBot.config.getGuildOptions(cmd.getGuild());
         if (guildOptions.isUserBanned(cmd.getUser())) {
-            cmd.getUser().getPrivateChannel().sendMessage(String.format("You cannot use commands in %s.", cmd.getGuild().getName()));
+            cmd.sendUserMessage("You cannot use commands in %s.", cmd.getGuild().getName());
+            return false;
+        }
+        if (guildOptions.isChannelRestricted(cmd.getChannel()) && !PermissionsHelper.userHasPermissions(cmd.getUser(), cmd.getGuild(), Permission.MANAGE_CHANNEL)) {
+            cmd.sendUserMessage("%s is in restricted use mode.", cmd.getChannel().getName());
             return false;
         }
         // Check Built-In commands
