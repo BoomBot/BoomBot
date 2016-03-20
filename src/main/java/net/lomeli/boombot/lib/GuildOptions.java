@@ -2,12 +2,14 @@ package net.lomeli.boombot.lib;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import net.dv8tion.jda.entities.Guild;
 import net.dv8tion.jda.entities.TextChannel;
 import net.dv8tion.jda.entities.User;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import net.lomeli.boombot.commands.Command;
 import net.lomeli.boombot.commands.CommandRegistry;
@@ -19,6 +21,8 @@ public class GuildOptions {
     private String guildID;
     private boolean announceReady;
     private boolean announceStopped;
+    private int secondsDelay;
+    private transient Map<String, Long> channelDelay;
 
     public GuildOptions(String guild) {
         this.guildID = guild;
@@ -27,6 +31,8 @@ public class GuildOptions {
         this.restrictedChannels = Lists.newArrayList();
         this.announceReady = true;
         this.announceStopped = true;
+        this.secondsDelay = 2;
+        this.channelDelay = Maps.newHashMap();
     }
 
     public GuildOptions(Guild guild) {
@@ -98,6 +104,24 @@ public class GuildOptions {
         return user != null && banUsers.contains(user.getId());
     }
 
+    public long getLastCommandUsedChannel(String id) {
+        if (Strings.isNullOrEmpty(id) || !channelDelay.containsKey(id)) return 0;
+        return channelDelay.get(id);
+    }
+
+    public long getLastCommandUsedChannel(TextChannel channel) {
+        return channel != null ? getLastCommandUsedChannel(channel.getId()) : 0;
+    }
+
+    public void updateLastCommand(String id) {
+        if (!Strings.isNullOrEmpty(id))
+            channelDelay.put(id, System.currentTimeMillis());
+    }
+
+    public void updateLastCommand(TextChannel channel) {
+        if (channel != null) updateLastCommand(channel.getId());
+    }
+
     public void clearCommands() {
         commandList.clear();
     }
@@ -116,5 +140,13 @@ public class GuildOptions {
 
     public boolean announceStopped() {
         return announceStopped;
+    }
+
+    public int getSecondsDelay() {
+        return secondsDelay;
+    }
+
+    public Map<String, Long> getChannelDelay() {
+        return channelDelay;
     }
 }

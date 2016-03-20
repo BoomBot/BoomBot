@@ -11,10 +11,8 @@ import net.lomeli.boombot.commands.Command;
 
 public class BoomConfig {
     public List<GuildOptions> guildCommands;
-    public int secondsDelay;
 
     public BoomConfig() {
-        secondsDelay = 2;
         guildCommands = Lists.newArrayList();
     }
 
