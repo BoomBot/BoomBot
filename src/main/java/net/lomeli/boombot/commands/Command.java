@@ -1,6 +1,7 @@
 package net.lomeli.boombot.commands;
 
 import com.google.common.collect.Lists;
+import net.dv8tion.jda.entities.User;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
@@ -45,7 +46,29 @@ public class Command {
         return content;
     }
 
-    public boolean canExecuteCommand(CommandInterface cmd) {
+    public boolean canUserExecute(CommandInterface cmd) {
         return true;
+    }
+
+    public boolean canBoomBotExecute(CommandInterface cmd) {
+        return true;
+    }
+
+    public String cannotExecuteMessage(UserType userType, CommandInterface cmd) {
+        return "";
+    }
+
+    public enum UserType {
+        USER(false), BOOMBOT(true);
+
+        private final boolean boomBot;
+
+        UserType(boolean boomBot) {
+            this.boomBot = boomBot;
+        }
+
+        public boolean isBoomBot() {
+            return boomBot;
+        }
     }
 }

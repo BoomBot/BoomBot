@@ -24,7 +24,13 @@ public class DerestrictCommand extends Command {
     }
 
     @Override
-    public boolean canExecuteCommand(CommandInterface cmd) {
+    public boolean canUserExecute(CommandInterface cmd) {
         return PermissionsHelper.userHasPermissions(cmd.getUser(), cmd.getGuild(), Permission.MANAGE_CHANNEL);
+    }
+
+    @Override
+    public String cannotExecuteMessage(UserType userType, CommandInterface cmd) {
+        String permissionLang = "Channel Management";
+        return String.format("%s requires %s permissions to use %s", cmd.getUser().getUsername(), permissionLang, cmd.getCommand());
     }
 }

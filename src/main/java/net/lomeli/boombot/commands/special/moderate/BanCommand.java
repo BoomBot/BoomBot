@@ -68,7 +68,7 @@ public class BanCommand extends Command {
     }
 
     @Override
-    public boolean canExecuteCommand(CommandInterface cmd) {
+    public boolean canUserExecute(CommandInterface cmd) {
         if (!PermissionsHelper.hasPermissions(Permission.BAN_MEMBERS, cmd.getGuild())) {
             String s = "BoomBot does not have enough permissions to ban users. Please give BoomBot a role that can ban users to use this command.";
             Logger.info(s);
@@ -76,5 +76,22 @@ public class BanCommand extends Command {
             return false;
         }
         return PermissionsHelper.userHasPermissions(cmd.getUser(), cmd.getGuild(), Permission.BAN_MEMBERS);
+    }
+
+    @Override
+    public boolean canBoomBotExecute(CommandInterface cmd) {
+        return PermissionsHelper.hasPermissions(Permission.BAN_MEMBERS, cmd.getGuild());
+    }
+
+    @Override
+    public String cannotExecuteMessage(UserType userType, CommandInterface cmd) {
+        String permissionLang = "Banning";
+        String message = String.format("%s requires %s permissions to use %s", cmd.getUser().getUsername(), permissionLang, cmd.getCommand());
+        if (userType.isBoomBot()) {
+            String s = "%1$s does not have enough permissions to ban users. Please give %1$s a role that can ban users to use this command.";
+            Logger.info(s, BoomBot.jda.getSelfInfo().getUsername());
+            message = String.format("%s requires %s permissions to use %s", BoomBot.jda.getSelfInfo().getUsername(), permissionLang, cmd.getCommand());
+        }
+        return message;
     }
 }

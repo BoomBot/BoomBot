@@ -22,7 +22,15 @@ public class ClearCommand extends Command {
     }
 
     @Override
-    public boolean canExecuteCommand(CommandInterface cmd) {
+    public boolean canUserExecute(CommandInterface cmd) {
         return PermissionsHelper.userHasPermissions(cmd.getUser(), cmd.getGuild(), Permission.MANAGE_SERVER);
+    }
+
+    @Override
+    public String cannotExecuteMessage(UserType userType, CommandInterface cmd) {
+        String permissionLang = "Server Management";
+        return String.format("%s requires %s permissions to use %s",
+                (userType.isBoomBot() ? BoomBot.jda.getSelfInfo().getUsername() : cmd.getUser().getUsername()),
+                permissionLang, cmd.getCommand());
     }
 }

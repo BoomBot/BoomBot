@@ -10,7 +10,9 @@ import net.lomeli.boombot.commands.special.*;
 import net.lomeli.boombot.commands.special.audio.AddAudioCommand;
 import net.lomeli.boombot.commands.special.audio.JoinVoiceCommand;
 import net.lomeli.boombot.commands.special.audio.LeaveVoiceCommand;
-import net.lomeli.boombot.commands.special.create.*;
+import net.lomeli.boombot.commands.special.create.ClearCommand;
+import net.lomeli.boombot.commands.special.create.CreateCommand;
+import net.lomeli.boombot.commands.special.create.RemoveCommand;
 import net.lomeli.boombot.commands.special.moderate.*;
 import net.lomeli.boombot.helper.PermissionsHelper;
 import net.lomeli.boombot.lib.CommandInterface;
@@ -33,6 +35,7 @@ public enum CommandRegistry {
         addNewCommand(new ReloadConfigCommand());
         addNewCommand(new Command("about", "Hi, I'm BoomBot. I was made by @Lomeli12 as a fun little project.\nYou can find out more about me at https://github.com/BoomBot/BoomBot"));
         addNewCommand(new StopBotCommand());
+        addNewCommand(new ClearChatCommand());
 
         addNewCommand(new CreateCommand());
         addNewCommand(new RemoveCommand());
@@ -83,11 +86,16 @@ public enum CommandRegistry {
         // Check Built-In commands
         for (Command c : commands) {
             if (c.getName().equalsIgnoreCase(cmd.getCommand())) {
-                if (c.canExecuteCommand(cmd)) {
-                    exCommand = c;
+                if (c.canUserExecute(cmd)) {
+                    if (c.canBoomBotExecute(cmd))
+                        exCommand = c;
+                    else {
+                        cmd.sendMessage(c.cannotExecuteMessage(Command.UserType.BOOMBOT, cmd));
+                        return false;
+                    }
                     break;
                 } else {
-                    cmd.sendMessage("%s does not have enough permissions to use %s command!", cmd.getUser().getUsername(), cmd.getCommand());
+                    cmd.sendMessage(c.cannotExecuteMessage(Command.UserType.USER, cmd));
                     return false;
                 }
             }
@@ -96,11 +104,16 @@ public enum CommandRegistry {
         if (exCommand == null) {
             for (Command c : guildOptions.getCommandList()) {
                 if (c.getName().equalsIgnoreCase(cmd.getCommand())) {
-                    if (c.canExecuteCommand(cmd)) {
-                        exCommand = c;
+                    if (c.canUserExecute(cmd)) {
+                        if (c.canBoomBotExecute(cmd))
+                            exCommand = c;
+                        else {
+                            cmd.sendMessage(c.cannotExecuteMessage(Command.UserType.BOOMBOT, cmd));
+                            return false;
+                        }
                         break;
                     } else {
-                        cmd.sendMessage("%s does not have enough permissions to use %s command!", cmd.getUser().getUsername(), cmd.getCommand());
+                        cmd.sendMessage(c.cannotExecuteMessage(Command.UserType.USER, cmd));
                         return false;
                     }
                 }
