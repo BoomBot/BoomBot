@@ -23,11 +23,11 @@ archivesBaseName = "$archiveName"
 version = "$releaseVersion"
 
 dependencies {
-    compile "net.dv8tion:JDA:1.3.0_188"
-    compile "com.google.code.gson:gson:2.2.4"
-    compile "com.google.guava:guava:11.0.2"
-    compile "commons-io:commons-io:2.4"
-    compile "com.github.axet:vget:1.1.27"
+    compile "net.dv8tion:JDA:$jdaVersion"
+    compile "com.google.code.gson:gson:$gsonVersion"
+    compile "com.google.guava:guava:$guavaVersion"
+    compile "commons-io:commons-io:$commonsIOVersion"
+    compile "com.github.axet:vget:$vgetVersion"
 }
 
 jar {

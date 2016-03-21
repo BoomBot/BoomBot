@@ -16,11 +16,14 @@ public class BoomBot {
     public static Date startTime;
     public static BoomConfig config;
     public static ConfigLoader configLoader;
-    public static File logFile;
+    public static File logFolder, logFile;
 
     public static void main(String[] args) {
         try {
-            logFile = new File((new Date() + ".log").replaceAll(":", "-").replaceAll(" ", "_"));
+            logFolder = new File("logs");
+            if (!logFolder.exists())
+                logFolder.mkdir();
+            logFile = new File(logFolder, (new Date() + ".log").replaceAll(":", "-").replaceAll(" ", "_"));
             config = new BoomConfig();
             configLoader = new ConfigLoader(new File("config.cfg"));
             configLoader.parseConfig();

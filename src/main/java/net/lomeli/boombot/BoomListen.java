@@ -32,7 +32,6 @@ public class BoomListen extends ListenerAdapter {
     public void onGuildJoin(GuildJoinEvent event) {
         if (BoomBot.config.getGuildOptions(event.getGuild()) == null) {
             BoomBot.config.updateGuildCommand(new GuildOptions(event.getGuild()));
-            //BoomBot.configLoader.writeConfig();
         }
     }
 
@@ -53,7 +52,7 @@ public class BoomListen extends ListenerAdapter {
                 for (int i = 1; i < arr.length; i++) {
                     args.add(arr[i]);
                 }
-                CommandInterface cmd = new CommandInterface(event.getGuild(), event.getAuthor(), event.getChannel(), potentialCommand, args);
+                CommandInterface cmd = new CommandInterface(message, event.getGuild(), event.getAuthor(), event.getChannel(), potentialCommand, args);
                 if (CommandRegistry.INSTANCE.executeCommand(cmd))
                     cmd.getGuildOptions().updateLastCommand(event.getChannel());
             }
@@ -63,7 +62,7 @@ public class BoomListen extends ListenerAdapter {
     @Override
     public void onShutdown(ShutdownEvent event) {
         BoomBot.configLoader.writeConfig();
-        Logger.writeLogFile(BoomBot.logFile);
+        Logger.writeLogFile(BoomBot.logFolder, BoomBot.logFile);
     }
 
     private boolean ready(Guild guild, TextChannel channel) {

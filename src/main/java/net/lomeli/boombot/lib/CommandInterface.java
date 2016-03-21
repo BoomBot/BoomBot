@@ -1,6 +1,7 @@
 package net.lomeli.boombot.lib;
 
 import net.dv8tion.jda.entities.Guild;
+import net.dv8tion.jda.entities.Message;
 import net.dv8tion.jda.entities.TextChannel;
 import net.dv8tion.jda.entities.User;
 
@@ -14,11 +15,13 @@ public class CommandInterface {
     private Guild guild;
     private User user;
     private TextChannel channel;
+    private Message message;
     private String command;
     private List<String> args;
 
-    public CommandInterface(Guild guild, User user, TextChannel channel, String command, List<String> args) {
+    public CommandInterface(Message message, Guild guild, User user, TextChannel channel, String command, List<String> args) {
         this.guild = guild;
+        this.message = message;
         this.user = user;
         this.channel = channel;
         this.command = command;
@@ -56,5 +59,9 @@ public class CommandInterface {
 
     public GuildOptions getGuildOptions() {
         return guildOptions;
+    }
+
+    public Message getMessage() {
+        return message;
     }
 }

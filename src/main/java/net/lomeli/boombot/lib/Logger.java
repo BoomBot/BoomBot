@@ -38,8 +38,9 @@ public class Logger {
         logMsg.add(e.getLocalizedMessage());
     }
 
-    public static void writeLogFile(File file) {
+    public static void writeLogFile(File folder, File file) {
         try {
+            if (!folder.exists()) folder.mkdir();
             if (file == null || logMsg.isEmpty()) return;
             if (file.exists()) file.delete();
             FileWriter stream = new FileWriter(file);

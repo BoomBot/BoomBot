@@ -11,6 +11,7 @@ import net.lomeli.boombot.commands.special.audio.AddAudioCommand;
 import net.lomeli.boombot.commands.special.audio.JoinVoiceCommand;
 import net.lomeli.boombot.commands.special.audio.LeaveVoiceCommand;
 import net.lomeli.boombot.commands.special.create.*;
+import net.lomeli.boombot.commands.special.moderate.*;
 import net.lomeli.boombot.helper.PermissionsHelper;
 import net.lomeli.boombot.lib.CommandInterface;
 import net.lomeli.boombot.lib.GuildOptions;

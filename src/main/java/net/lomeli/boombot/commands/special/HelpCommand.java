@@ -1,4 +1,4 @@
-package net.lomeli.boombot.commands.special.create;
+package net.lomeli.boombot.commands.special;
 
 import net.dv8tion.jda.Permission;
 
