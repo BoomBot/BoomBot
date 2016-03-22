@@ -7,10 +7,11 @@ import net.lomeli.boombot.BoomBot;
 import net.lomeli.boombot.commands.Command;
 import net.lomeli.boombot.helper.PermissionsHelper;
 import net.lomeli.boombot.lib.CommandInterface;
+import net.lomeli.boombot.lib.GuildOptions;
 
 public class CreateCommand extends Command {
     public CreateCommand() {
-        super("create-command", "Creating command %s. Content: %s");
+        super("create-command", "boombot.command.createcommand");
     }
 
     @Override
@@ -23,17 +24,17 @@ public class CreateCommand extends Command {
                 content += st + " ";
             }
             if (Strings.isNullOrEmpty(name))
-                cmd.sendMessage("Command name cannot be empty!");
+                cmd.sendMessage(getContent() + ".name.empty");
             if (Strings.isNullOrEmpty(content))
-                cmd.sendMessage("Command cannot be empty!");
+                cmd.sendMessage(getContent() + ".content.empty");
             String safeName = name.replaceAll("%s", "% s").replaceAll("%S", "% S").replaceAll("%u", "<User>").replaceAll("%U", "<USER>");
             String safeContent = content.replaceAll("%s", "(Blank)").replaceAll("%S", "(Blank)").replaceAll("%u", "<User>").replaceAll("%U", "<USER>");
             if (BoomBot.config.addGuildCommand(cmd.getGuild(), new Command(name, content)))
-                cmd.sendMessage(String.format(getContent(), safeName, safeContent));
+                cmd.sendMessage(getContent(), safeName, safeContent);
             else
-                cmd.sendMessage(String.format("Command with the name %s already exists!", safeName));
+                cmd.sendMessage(getContent() + ".name.exists", safeName);
         } else
-            cmd.sendMessage("Cannot create command! Missing arguments");
+            cmd.sendMessage(getContent() + ".missing");
     }
 
     @Override
@@ -43,9 +44,8 @@ public class CreateCommand extends Command {
 
     @Override
     public String cannotExecuteMessage(UserType userType, CommandInterface cmd) {
-        String permissionLang = "Channel Management";
-        return String.format("%s requires %s permissions to use %s",
-                (userType.isBoomBot() ? BoomBot.jda.getSelfInfo().getUsername() : cmd.getUser().getUsername()),
-                permissionLang, cmd.getCommand());
+        GuildOptions options = cmd.getGuildOptions();
+        String permissionLang = options.translate("permissions.manage.channel");
+        return options.translate("boombot.command.permissions.user.missing", cmd.getUser().getUsername(), permissionLang, cmd.getCommand());
     }
 }

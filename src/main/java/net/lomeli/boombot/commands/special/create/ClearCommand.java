@@ -9,10 +9,11 @@ import net.lomeli.boombot.BoomBot;
 import net.lomeli.boombot.commands.Command;
 import net.lomeli.boombot.helper.PermissionsHelper;
 import net.lomeli.boombot.lib.CommandInterface;
+import net.lomeli.boombot.lib.GuildOptions;
 
 public class ClearCommand extends Command {
     public ClearCommand() {
-        super("clear-commands", "All commands for server %s has been cleared by %s.");
+        super("clear-commands", "boombot.command.clearcommand");
     }
 
     @Override
@@ -28,9 +29,8 @@ public class ClearCommand extends Command {
 
     @Override
     public String cannotExecuteMessage(UserType userType, CommandInterface cmd) {
-        String permissionLang = "Server Management";
-        return String.format("%s requires %s permissions to use %s",
-                (userType.isBoomBot() ? BoomBot.jda.getSelfInfo().getUsername() : cmd.getUser().getUsername()),
-                permissionLang, cmd.getCommand());
+        GuildOptions options = cmd.getGuildOptions();
+        String permissionLang = options.translate("permissions.manage.server");
+        return options.translate("boombot.command.permissions.user.missing", cmd.getUser().getUsername(), permissionLang, cmd.getCommand());
     }
 }

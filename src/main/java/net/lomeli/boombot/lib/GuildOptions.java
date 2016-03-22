@@ -14,14 +14,18 @@ import java.util.Map;
 
 import net.lomeli.boombot.commands.Command;
 import net.lomeli.boombot.commands.CommandRegistry;
+import net.lomeli.boombot.lang.LangRegistry;
 
 public class GuildOptions {
     private List<Command> commandList;
     private List<String> banUsers;
     private List<String> restrictedChannels;
     private String guildID;
+    private String lang;
     private boolean announceReady;
     private boolean announceStopped;
+    /** Requested by @Guard13007 since this could devastate channels*/
+    private boolean disableClearChat;
     private int secondsDelay;
     private transient HashMap<String, Long> channelDelay;
 
@@ -37,7 +41,9 @@ public class GuildOptions {
         this.restrictedChannels = Lists.newArrayList();
         this.announceReady = true;
         this.announceStopped = true;
+        this.disableClearChat = false;
         this.secondsDelay = 2;
+        this.lang = "en_US";
     }
 
     public GuildOptions(Guild guild) {
@@ -145,15 +151,49 @@ public class GuildOptions {
         return announceReady;
     }
 
+    public void setAnnounceReady(boolean announceReady) {
+        this.announceReady = announceReady;
+    }
+
     public boolean announceStopped() {
         return announceStopped;
+    }
+
+    public void setAnnounceStopped(boolean announceStopped) {
+        this.announceStopped = announceStopped;
     }
 
     public int getSecondsDelay() {
         return secondsDelay;
     }
 
+    public void setSecondsDelay(int secondsDelay) {
+        this.secondsDelay = secondsDelay;
+    }
+
+    public void setLang(String lang) {
+        this.lang = lang;
+    }
+
+    public String getLang() {
+        return lang;
+    }
+
     public Map<String, Long> getChannelDelay() {
         return channelDelay;
+    }
+
+    public boolean isClearChatDisabled() {
+        return disableClearChat;
+    }
+
+    public void setDisableClearChat(boolean flag) {
+        disableClearChat = flag;
+    }
+
+    public String translate(String key, Object... args) {
+        if (Strings.isNullOrEmpty(lang)) lang = "en_US";
+        LangRegistry.setCurrentLang(lang);
+        return LangRegistry.translate(key, args);
     }
 }

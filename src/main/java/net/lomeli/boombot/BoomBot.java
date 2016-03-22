@@ -7,6 +7,7 @@ import javax.security.auth.login.LoginException;
 import java.io.File;
 import java.util.Date;
 
+import net.lomeli.boombot.lang.LangRegistry;
 import net.lomeli.boombot.lib.BoomConfig;
 import net.lomeli.boombot.lib.Logger;
 
@@ -20,6 +21,7 @@ public class BoomBot {
 
     public static void main(String[] args) {
         try {
+            LangRegistry.initRegistry();
             logFolder = new File("logs");
             if (!logFolder.exists())
                 logFolder.mkdir();

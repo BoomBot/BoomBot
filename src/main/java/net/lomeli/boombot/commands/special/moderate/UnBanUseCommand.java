@@ -11,10 +11,11 @@ import net.lomeli.boombot.BoomBot;
 import net.lomeli.boombot.commands.Command;
 import net.lomeli.boombot.helper.PermissionsHelper;
 import net.lomeli.boombot.lib.CommandInterface;
+import net.lomeli.boombot.lib.GuildOptions;
 
 public class UnBanUseCommand extends Command {
     public UnBanUseCommand() {
-        super("unban-use", "%s can use commands in %s again.");
+        super("unban-use", "boombot.command.unbanuse");
     }
 
     @Override
@@ -24,13 +25,13 @@ public class UnBanUseCommand extends Command {
                 User user = getUser(cmd.getArgs().get(i), cmd.getGuild());
                 if (user != null) {
                     cmd.getGuildOptions().removeBannedUser(user);
-                    user.getPrivateChannel().sendMessage(String.format("You can now user commands again in %s.", cmd.getGuild().getName()));
+                    user.getPrivateChannel().sendMessage(cmd.getGuildOptions().translate(getContent() + ".message", cmd.getGuild().getName()));
                     cmd.sendMessage(getContent(), user.getUsername(), cmd.getGuild().getName());
                 } else
-                    cmd.sendMessage("% wasn't banned from using commands.", cmd.getArgs().get(i));
+                    cmd.sendMessage(getContent() + ".wasnt", cmd.getArgs().get(i));
             }
         } else
-            cmd.sendMessage("Ban who from using commands?");
+            cmd.sendMessage(getContent() + ".who");
     }
 
     private User getUser(String name, Guild guild) {
@@ -48,7 +49,8 @@ public class UnBanUseCommand extends Command {
 
     @Override
     public String cannotExecuteMessage(UserType userType, CommandInterface cmd) {
-        String permissionLang = "Channel Management";
-        return String.format("%s requires %s permissions to use %s", cmd.getUser().getUsername(), permissionLang, cmd.getCommand());
+        GuildOptions options = cmd.getGuildOptions();
+        String permissionLang = options.translate("permissions.manage.channel");
+        return options.translate("boombot.command.permissions.user.missing", cmd.getUser().getUsername(), permissionLang, cmd.getCommand());
     }
 }

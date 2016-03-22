@@ -24,7 +24,7 @@ public class BoomListen extends ListenerAdapter {
         event.getJDA().getGuilds().stream().filter(guild -> guild != null).forEach(guild -> {
             GuildOptions options = BoomBot.config.getGuildOptions(guild);
             if (options != null && options.announceReady())
-                guild.getPublicChannel().sendMessage("BoomBot is ready!");
+                guild.getPublicChannel().sendMessage(options.translate("boombot.ready"));
         });
     }
 

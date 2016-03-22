@@ -74,9 +74,8 @@ public class LangRegistry {
 
     public static List<String> getKeys() {
         List<String> keys = Lists.newArrayList();
-        if (!localizationList.isEmpty()) {
+        if (!localizationList.isEmpty())
             localizationList.keySet().stream().filter(key -> !Strings.isNullOrEmpty(key)).forEach(key -> keys.add(key));
-        }
         return keys;
     }
 }

@@ -11,14 +11,14 @@ import net.lomeli.boombot.lib.GuildOptions;
 
 public class HelpCommand extends Command {
     public HelpCommand() {
-        super("help", "Commands for %s: %s");
+        super("help", "boombot.command.help");
     }
 
     @Override
     public void executeCommand(CommandInterface cmd) {
         GuildOptions options = BoomBot.config.getGuildOptions(cmd.getGuild());
         if (options.isChannelRestricted(cmd.getChannel()) && !PermissionsHelper.userHasPermissions(cmd.getUser(), cmd.getGuild(), Permission.MANAGE_CHANNEL)) {
-            cmd.sendUserMessage("Custom commands are restricted in the %s channel", cmd.getChannel().getName());
+            cmd.sendUserMessage(getContent() + ".restricted", cmd.getChannel().getName());
             return;
         }
         String commandList = "";
@@ -26,7 +26,7 @@ public class HelpCommand extends Command {
             if (c != null)
                 commandList += "!" + c.getName() + ", ";
         }
-        cmd.sendMessage("Default Commands: %s", commandList.substring(0, commandList.length() - 2));
+        cmd.sendMessage(getContent() + ".default", commandList.substring(0, commandList.length() - 2));
         commandList = "";
         for (Command c : options.getCommandList()) {
             if (c != null)

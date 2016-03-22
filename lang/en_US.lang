@@ -1,0 +1,84 @@
+langfile.langauage=English (US)
+
+# Command Permissions
+boombot.command.permissions.user.missing=%s requires %s permissions to use %s
+boombot.ready=BoomBot is ready!
+
+## Commands
+# Reload Configs
+boombot.command.reloadconfig=Configs successfully reloaded!
+# Help
+boombot.command.help=Commands for %s: %s
+boombot.command.help.default=Default Commands: %s
+boombot.command.help.restricted=Custom commands are restricted in the %s channel
+# Running
+boombot.command.running=BoomBot has been running since %s
+boombot.command.running.timesince=It has been %s days, %s hours, %s minutes, and %s seconds since then!
+# Shut Boom Bot
+boombot.command.stopboombot=BoomBot is now shutting down...
+# Clear Chat
+boombot.command.clearchat.disabled=This command is currently disabled.
+# Ban Use
+boombot.command.banuse=%s has been banned from using commands in %s! %s
+boombot.command.banuse.message=You have been banned from using commands in %s. %s
+boombot.command.banuse.cannotban=Cannot ban %s from using commands, as they DO NOT exist.
+boombot.command.banuse.who=Ban who from using commands?
+boombot.command.banuse.reason=Reason: %s
+# UnBan Use
+boombot.command.unbanuse=%s can use commands in %s again.
+boombot.command.unbanuse.message=You can now use commands again in %s.
+boombot.command.unbanuse.wasnt=% wasn't banned from using commands.
+boombot.command.unbanuse.who=Ban who from using commands?
+# Restrict
+boombot.command.restrict=%s is in restricted use mode. Only channel managers can use commands.
+boombot.command.restrict.restricted=%s is already in restricted use mode.
+# Derestrict
+boombot.command.derestrict=Command restrictions have been lifted from %s.
+boombot.command.derestrict.notrestricted=%s isn't in restricted use mode.
+# Kick
+boombot.command.kick=%s has been kicked! %s
+boombot.command.kick.reason=Reason: %s
+boombot.command.kick.who=Kick who?
+boombot.command.kick.self=Why would BoomBot kick itself?
+boombot.command.kick.message=You have been kicked from %s. %s
+boombot.command.kick.cannot=Cannot kick %s, as they DO NOT exist.
+# Ban
+boombot.command.ban=%s has been banned! Their messages from the past %s day(s) have been deleted. %s
+boombot.command.ban.reason=Reason: %s
+boombot.command.ban.who=Ban who?
+boombot.command.ban.self=BoomBot probably shouldn't be banning itself...
+boombot.command.ban.message=You have been banned from %s. Your messages from the past %s day(s) have been deleted. %s
+boombot.command.ban.cannot=Cannot ban %s, as they DO NOT exist.
+boombot.command.ban.days.missing=Please specify how many days back we go back to delete their messages. Must be at least 0.
+boombot.command.ban.days.zero=Days worth of messages delete must be at least 0.
+# Clear Commands
+boombot.command.clearcommand=All commands for server %s has been cleared by %s.
+# Create Commands
+boombot.command.createcommand=Creating command %s. Content: %s
+boombot.command.createcommand.name.empty=Command name cannot be empty!
+boombot.command.createcommand.name.exists=Command with the name %s already exists!
+boombot.command.createcommand.content.empty=Command cannot be empty!
+boombot.command.createcommand.missing=Cannot create command! Missing arguments"
+# Remove Commands
+boombot.command.removecommand=%s has been removed by %s.
+boombot.command.removecommand.empty=Command name cannot be empty!
+boombot.command.removecommand.notexists=Command %s does NOT exist!
+boombot.command.removecommand.missing=Missing Argument: Command(s) name
+# Options Command
+boombot.command.options=Option %s has been changed to %s.
+boombot.command.options.args.toomany=Too Many Arguments. Only two needed: <option name> <option value>
+boombot.command.options.missing.all=Missing Arguments. Two needed: <option name> <option value>
+boombot.command.options.missing.name=Missing Argument: Option name
+boombot.command.options.missing.name.exist=Option %s does not exist.
+boombot.command.options.missing.value=Missing Argument: Option value
+boombot.command.options.valuetype.mismatch=Value type mismatch: Expected %s, Got %s
+boombot.command.options.valuetype.boolean=Boolean
+boombot.command.options.valuetype.integer=Integer
+boombot.command.options.valuetype.string=String
+
+# Permission Types
+permissions.manage.messages=Message Management
+permissions.manage.server=Server Management
+permissions.manage.channel=Channel Management
+permissions.abilities.kick=Kicking
+permissions.abilities.ban=Banning

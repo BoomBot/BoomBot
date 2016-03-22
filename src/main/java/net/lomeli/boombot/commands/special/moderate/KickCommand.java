@@ -11,11 +11,12 @@ import net.lomeli.boombot.BoomBot;
 import net.lomeli.boombot.commands.Command;
 import net.lomeli.boombot.helper.PermissionsHelper;
 import net.lomeli.boombot.lib.CommandInterface;
+import net.lomeli.boombot.lib.GuildOptions;
 import net.lomeli.boombot.lib.Logger;
 
 public class KickCommand extends Command {
     public KickCommand() {
-        super("kick", "%s has been kicked! %s");
+        super("kick", "boombot.command.kick");
     }
 
     @Override
@@ -24,7 +25,7 @@ public class KickCommand extends Command {
             User user = getUser(cmd.getArgs().get(0), cmd.getGuild());
             if (user != null) {
                 if (user.getId().equals(BoomBot.jda.getSelfInfo().getId())) {
-                    cmd.sendMessage("Why would BoomBot kick itself?");
+                    cmd.sendMessage(getContent() + ".self");
                     return;
                 }
                 String reason = "";
@@ -33,14 +34,14 @@ public class KickCommand extends Command {
                         reason += cmd.getArgs().get(i) + " ";
                 }
                 if (!reason.isEmpty())
-                    reason = "Reason: " + reason;
+                    reason = cmd.getGuildOptions().translate(getContent() + ".reason", reason);
                 cmd.getGuild().getManager().kick(user);
-                user.getPrivateChannel().sendMessage(String.format("You have been kicked from %s. %s", cmd.getGuild().getName(), reason));
+                user.getPrivateChannel().sendMessage(cmd.getGuildOptions().translate(getContent() + ".message", cmd.getGuild().getName(), reason));
                 cmd.sendMessage(getContent(), user.getUsername(), reason);
             } else
-                cmd.sendMessage("Cannot kick %s, as they DO NOT exist.", cmd.getArgs().get(0));
+                cmd.sendMessage(getContent() + ".cannot", cmd.getArgs().get(0));
         } else
-            cmd.sendMessage("Kick who?");
+            cmd.sendMessage(getContent() + ".who");
     }
 
     private User getUser(String name, Guild guild) {
@@ -63,12 +64,13 @@ public class KickCommand extends Command {
 
     @Override
     public String cannotExecuteMessage(UserType userType, CommandInterface cmd) {
-        String permissionLang = "Kicking";
-        String message = String.format("%s requires %s permissions to use %s", cmd.getUser().getUsername(), permissionLang, cmd.getCommand());
+        GuildOptions options = cmd.getGuildOptions();
+        String permissionLang = options.translate("permissions.abilities.kick");
+        String message = options.translate("boombot.command.permissions.user.missing", cmd.getUser().getUsername(), permissionLang, cmd.getCommand());
         if (userType.isBoomBot()) {
             String s = "%1$s does not have enough permissions to kick users. Please give %1$s a role that can kick users to use this command.";
             Logger.info(s, BoomBot.jda.getSelfInfo().getUsername());
-            message = String.format("%s requires %s permissions to use %s", BoomBot.jda.getSelfInfo().getUsername(), permissionLang, cmd.getCommand());
+            message = options.translate("boombot.command.permissions.user.missing", BoomBot.jda.getSelfInfo().getUsername(), permissionLang, cmd.getCommand());
         }
         return message;
     }

@@ -6,16 +6,17 @@ import net.lomeli.boombot.BoomBot;
 import net.lomeli.boombot.commands.Command;
 import net.lomeli.boombot.helper.PermissionsHelper;
 import net.lomeli.boombot.lib.CommandInterface;
+import net.lomeli.boombot.lib.GuildOptions;
 
 public class RestrictCommand extends Command {
     public RestrictCommand() {
-        super("restrict", "%s is in restricted use mode. Only channel managers can use commands.");
+        super("restrict", "boombot.command.restrict");
     }
 
     @Override
     public void executeCommand(CommandInterface cmd) {
         if (cmd.getGuildOptions().isChannelRestricted(cmd.getChannel())) {
-            cmd.sendMessage("%s is already in restricted use mode.", cmd.getChannel().getName());
+            cmd.sendMessage(getContent() + ".restricted", cmd.getChannel().getName());
             return;
         }
         cmd.getGuildOptions().restrictChannel(cmd.getChannel());
@@ -30,7 +31,8 @@ public class RestrictCommand extends Command {
 
     @Override
     public String cannotExecuteMessage(UserType userType, CommandInterface cmd) {
-        String permissionLang = "Channel Management";
-        return String.format("%s requires %s permissions to use %s", cmd.getUser().getUsername(), permissionLang, cmd.getCommand());
+        GuildOptions options = cmd.getGuildOptions();
+        String permissionLang = options.translate("permissions.manage.channel");
+        return options.translate("boombot.command.permissions.user.missing", cmd.getUser().getUsername(), permissionLang, cmd.getCommand());
     }
 }

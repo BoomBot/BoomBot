@@ -5,43 +5,43 @@ repositories {
 
 apply plugin: 'java'
 
-def loadProperties(String sourceFileName) {
-    def config = new Properties()
-    def propFile = new File(sourceFileName)
-    if (propFile.canRead()) {
-        config.load(new FileInputStream(propFile))
-        for (Map.Entry property in config) {
-            ext[property.key] = property.value;
-        }
-    }
+ext.configFile = file "build.properties"
+
+configFile.withReader {
+    def prop = new Properties()
+    prop.load(it)
+    project.ext.config = new ConfigSlurper().parse prop
 }
 
-loadProperties 'build.properties'
-
-group = "$group"
-archivesBaseName = "$archiveName"
-version = "$releaseVersion"
+group = "${config.group}"
+archivesBaseName = "${config.archiveName}"
+version = "${config.releaseVersion}"
 
 dependencies {
-    compile "net.dv8tion:JDA:$jdaVersion"
-    compile "com.google.code.gson:gson:$gsonVersion"
-    compile "com.google.guava:guava:$guavaVersion"
-    compile "commons-io:commons-io:$commonsIOVersion"
-    compile "com.github.axet:vget:$vgetVersion"
+    compile "net.dv8tion:JDA:${config.jdaVersion}"
+    compile "com.google.code.gson:gson:${config.gsonVersion}"
+    compile "com.google.guava:guava:${config.guavaVersion}"
+    compile "commons-io:commons-io:${config.commonsIOVersion}"
+    compile "com.github.axet:vget:${config.vgetVersion}"
 }
 
 jar {
     manifest  {
-        attributes 'Main-Class' : "$mainClass"
+        attributes 'Main-Class' : "${config.mainClass}"
     }
 }
 
 task fatJar(type: Jar) {
     manifest {
-        attributes 'Main-Class': "$mainClass"
+        attributes 'Main-Class': "${config.mainClass}"
     }
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
     with jar
 }
 
-build.dependsOn fatJar
+task copyLang(type: Copy) {
+    from 'lang'
+    into 'build/libs/lang'
+}
+
+build.dependsOn fatJar, copyLang

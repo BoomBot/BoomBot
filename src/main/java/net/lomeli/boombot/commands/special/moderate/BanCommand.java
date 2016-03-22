@@ -8,28 +8,29 @@ import net.lomeli.boombot.BoomBot;
 import net.lomeli.boombot.commands.Command;
 import net.lomeli.boombot.helper.PermissionsHelper;
 import net.lomeli.boombot.lib.CommandInterface;
+import net.lomeli.boombot.lib.GuildOptions;
 import net.lomeli.boombot.lib.Logger;
 
 public class BanCommand extends Command {
     public BanCommand() {
-        super("ban", "%s has been banned! Their messages from the past %s day(s) have been deleted. %s");
+        super("ban", "boombot.command.ban");
     }
 
     @Override
     public void executeCommand(CommandInterface cmd) {
         if (cmd.getArgs().size() >= 2) {
             User user = getUser(cmd.getArgs().get(0), cmd.getGuild());
-            int daysDelete = parseString(cmd.getArgs().get(1));
+            int daysDelete = parseInt(cmd.getArgs().get(1));
             if (user == null) {
-                cmd.sendMessage("Cannot ban %s, as they DO NOT exist.", cmd.getArgs().get(0));
+                cmd.sendMessage(getContent() + ".cannot", cmd.getArgs().get(0));
                 return;
             }
             if (user.getId().equals(BoomBot.jda.getSelfInfo().getId())) {
-                cmd.sendMessage("BoomBot probably shouldn't be banning itself...");
+                cmd.sendMessage(getContent() + ".self");
                 return;
             }
             if (daysDelete <= -1) {
-                cmd.sendMessage("Days worth of messages delete must be at least 0.");
+                cmd.sendMessage(getContent() + ".days.zero");
                 return;
             }
             String reason = "";
@@ -38,15 +39,15 @@ public class BanCommand extends Command {
                     reason += cmd.getArgs().get(i) + " ";
             }
             if (!reason.isEmpty())
-                reason = "Reason: " + reason;
+                reason = cmd.getGuildOptions().translate(getContent() + ".reason", reason);
             cmd.getGuild().getManager().ban(user, daysDelete);
-            user.getPrivateChannel().sendMessage(String.format("You have been banned from %s. Your messages from the past %s day(s) have been deleted. %s", cmd.getGuild().getName(), daysDelete, reason));
+            user.getPrivateChannel().sendMessage(cmd.getGuildOptions().translate(getContent() + ".message", cmd.getGuild().getName(), daysDelete, reason));
             cmd.sendMessage(getContent(), user.getUsername(), daysDelete, reason);
         } else {
             if (cmd.getArgs().size() == 1)
-                cmd.sendMessage("Please specify how many days back we go back to delete their messages. Must be at least 0.");
+                cmd.sendMessage(getContent() + ".days.missing");
             else
-                cmd.sendMessage("Ban who?");
+                cmd.sendMessage(getContent() + ".who");
         }
     }
 
@@ -58,7 +59,7 @@ public class BanCommand extends Command {
         return null;
     }
 
-    private int parseString(String str) {
+    private int parseInt(String str) {
         try {
             return Integer.parseInt(str);
         } catch (NumberFormatException e) {
@@ -69,12 +70,6 @@ public class BanCommand extends Command {
 
     @Override
     public boolean canUserExecute(CommandInterface cmd) {
-        if (!PermissionsHelper.hasPermissions(Permission.BAN_MEMBERS, cmd.getGuild())) {
-            String s = "BoomBot does not have enough permissions to ban users. Please give BoomBot a role that can ban users to use this command.";
-            Logger.info(s);
-            cmd.sendMessage(s);
-            return false;
-        }
         return PermissionsHelper.userHasPermissions(cmd.getUser(), cmd.getGuild(), Permission.BAN_MEMBERS);
     }
 
@@ -85,12 +80,13 @@ public class BanCommand extends Command {
 
     @Override
     public String cannotExecuteMessage(UserType userType, CommandInterface cmd) {
-        String permissionLang = "Banning";
-        String message = String.format("%s requires %s permissions to use %s", cmd.getUser().getUsername(), permissionLang, cmd.getCommand());
+        GuildOptions options = cmd.getGuildOptions();
+        String permissionLang = options.translate("permissions.abilities.ban");
+        String message = options.translate("boombot.command.permissions.user.missing", cmd.getUser().getUsername(), permissionLang, cmd.getCommand());
         if (userType.isBoomBot()) {
             String s = "%1$s does not have enough permissions to ban users. Please give %1$s a role that can ban users to use this command.";
             Logger.info(s, BoomBot.jda.getSelfInfo().getUsername());
-            message = String.format("%s requires %s permissions to use %s", BoomBot.jda.getSelfInfo().getUsername(), permissionLang, cmd.getCommand());
+            message = options.translate("boombot.command.permissions.user.missing", BoomBot.jda.getSelfInfo().getUsername(), permissionLang, cmd.getCommand());
         }
         return message;
     }

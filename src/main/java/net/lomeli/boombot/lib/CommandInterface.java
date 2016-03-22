@@ -34,7 +34,7 @@ public class CommandInterface {
     }
 
     public void sendMessage(String str, Object... args) {
-        getChannel().sendMessage(String.format(str, args));
+        getChannel().sendMessage(getGuildOptions().translate(str, args));
     }
 
     public Guild getGuild() {

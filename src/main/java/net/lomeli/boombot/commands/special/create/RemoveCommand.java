@@ -6,10 +6,11 @@ import net.lomeli.boombot.BoomBot;
 import net.lomeli.boombot.commands.Command;
 import net.lomeli.boombot.helper.PermissionsHelper;
 import net.lomeli.boombot.lib.CommandInterface;
+import net.lomeli.boombot.lib.GuildOptions;
 
 public class RemoveCommand extends Command {
     public RemoveCommand() {
-        super("remove-command", "%s has been removed by %s.");
+        super("remove-command", "boombot.command.removecommand");
     }
 
     @Override
@@ -18,14 +19,14 @@ public class RemoveCommand extends Command {
             for (int i = 0; i < cmd.getArgs().size(); i++) {
                 String name = cmd.getArgs().get(i);
                 if (name.isEmpty())
-                    cmd.sendMessage("Command name cannot be empty!");
+                    cmd.sendMessage(getContent() + ".empty");
                 if (BoomBot.config.removeGuildCommand(cmd.getGuild(), name))
                     cmd.sendMessage(getContent(), name, cmd.getUser().getUsername());
                 else
-                    cmd.sendMessage("Command %s does NOT exist!", name);
+                    cmd.sendMessage(getContent() + ".notexists", name);
             }
         } else
-            cmd.sendMessage("Missing Argument: Command(s) name");
+            cmd.sendMessage(getContent() + ".missing");
     }
 
     @Override
@@ -35,9 +36,8 @@ public class RemoveCommand extends Command {
 
     @Override
     public String cannotExecuteMessage(UserType userType, CommandInterface cmd) {
-        String permissionLang = "Channel Management";
-        return String.format("%s requires %s permissions to use %s",
-                (userType.isBoomBot() ? BoomBot.jda.getSelfInfo().getUsername() : cmd.getUser().getUsername()),
-                permissionLang, cmd.getCommand());
+        GuildOptions options = cmd.getGuildOptions();
+        String permissionLang = options.translate("permissions.manage.channel");
+        return options.translate("boombot.command.permissions.user.missing", cmd.getUser().getUsername(), permissionLang, cmd.getCommand());
     }
 }

@@ -6,17 +6,17 @@ import net.lomeli.boombot.lib.CommandInterface;
 
 public class RunningCommand extends Command {
     public RunningCommand() {
-        super("running", "");
+        super("running", "boombot.command.running");
     }
 
     @Override
     public void executeCommand(CommandInterface cmd) {
-        cmd.sendMessage("BoomBot has been running since %s", BoomBot.startTime);
+        cmd.sendMessage(getContent(), BoomBot.startTime);
         long diff = System.currentTimeMillis() - BoomBot.startTime.getTime();
         long diffSeconds = diff / 1000 % 60;
         long diffMinutes = diff / (60 * 1000) % 60;
         long diffHours = diff / (60 * 60 * 1000) % 24;
         long diffDays = diff / (24 * 60 * 60 * 1000);
-        cmd.sendMessage("It has been %s days, %s hours, %s minutes, and %s seconds since then!", diffDays, diffHours, diffMinutes, diffSeconds);
+        cmd.sendMessage(getContent() + ".timesince", diffDays, diffHours, diffMinutes, diffSeconds);
     }
 }

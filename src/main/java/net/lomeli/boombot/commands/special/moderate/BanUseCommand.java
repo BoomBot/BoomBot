@@ -8,14 +8,16 @@ import net.lomeli.boombot.BoomBot;
 import net.lomeli.boombot.commands.Command;
 import net.lomeli.boombot.helper.PermissionsHelper;
 import net.lomeli.boombot.lib.CommandInterface;
+import net.lomeli.boombot.lib.GuildOptions;
 
 public class BanUseCommand extends Command {
     public BanUseCommand() {
-        super("ban-use", "%s has been banned from using commands in %s! %s");
+        super("ban-use", "boombot.command.banuse");
     }
 
     @Override
     public void executeCommand(CommandInterface cmd) {
+        GuildOptions options = cmd.getGuildOptions();
         if (cmd.getArgs().size() >= 1) {
             User user = getUser(cmd.getArgs().get(0), cmd.getGuild());
             if (user != null) {
@@ -25,14 +27,14 @@ public class BanUseCommand extends Command {
                         reason += cmd.getArgs().get(i) + " ";
                 }
                 if (!reason.isEmpty())
-                    reason = "Reason: " + reason;
+                    reason = options.translate(getContent() + ".reason", reason);
                 BoomBot.config.banUserCommands(cmd.getGuild(), user);
-                user.getPrivateChannel().sendMessage(String.format("You have been banned from using commands in %s. %s", cmd.getGuild().getName(), reason));
+                user.getPrivateChannel().sendMessage(options.translate(getContent() + ".message", cmd.getGuild().getName(), reason));
                 cmd.sendMessage(getContent(), user.getUsername(), cmd.getGuild().getName(), reason);
             } else
-                cmd.sendMessage("Cannot ban %s from using commands, as they DO NOT exist.", cmd.getArgs().get(0));
+                cmd.sendMessage(getContent() + ".cannotban", cmd.getArgs().get(0));
         } else
-            cmd.sendMessage("Ban who from using commands?");
+            cmd.sendMessage(getContent() + ".who");
     }
 
     private User getUser(String name, Guild guild) {
@@ -50,7 +52,8 @@ public class BanUseCommand extends Command {
 
     @Override
     public String cannotExecuteMessage(UserType userType, CommandInterface cmd) {
-        String permissionLang = "Channel Management";
-        return String.format("%s requires %s permissions to use %s", cmd.getUser().getUsername(), permissionLang, cmd.getCommand());
+        GuildOptions options = cmd.getGuildOptions();
+        String permissionLang = options.translate("permissions.manage.channel");
+        return options.translate("boombot.command.permissions.user.missing", cmd.getUser().getUsername(), permissionLang, cmd.getCommand());
     }
 }

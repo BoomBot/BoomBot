@@ -10,6 +10,7 @@ import net.lomeli.boombot.commands.Command;
 import net.lomeli.boombot.helper.ChannelHelper;
 import net.lomeli.boombot.helper.PermissionsHelper;
 import net.lomeli.boombot.lib.CommandInterface;
+import net.lomeli.boombot.lib.GuildOptions;
 
 public class ClearChatCommand extends Command {
 
@@ -19,6 +20,10 @@ public class ClearChatCommand extends Command {
 
     @Override
     public void executeCommand(CommandInterface cmd) {
+        if (cmd.getGuildOptions().isClearChatDisabled()) {
+            cmd.sendMessage("boombot.command.clearchat.disabled");
+            return;
+        }
         List<Message> messageList = ChannelHelper.getChannelMessages(cmd.getChannel(), cmd.getMessage());
         if (messageList != null && !messageList.isEmpty())
             messageList.stream().filter(m -> m != null).forEach(m -> m.deleteMessage());
@@ -37,8 +42,9 @@ public class ClearChatCommand extends Command {
 
     @Override
     public String cannotExecuteMessage(UserType userType, CommandInterface cmd) {
-        String permissionLang = "Message Management";
-        return String.format("%s requires %s permissions to use %s",
+        GuildOptions options = cmd.getGuildOptions();
+        String permissionLang = options.translate("permissions.manage.messages");
+        return options.translate("boombot.command.permissions.user.missing",
                 (userType.isBoomBot() ? BoomBot.jda.getSelfInfo().getUsername() : cmd.getUser().getUsername()),
                 permissionLang, cmd.getCommand());
     }

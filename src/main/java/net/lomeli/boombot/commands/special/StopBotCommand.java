@@ -15,7 +15,7 @@ import net.lomeli.boombot.lib.Logger;
 public class StopBotCommand extends Command {
 
     public StopBotCommand() {
-        super("stop-boom-bot", "BoomBot is now shutting down...");
+        super("stop-boom-bot", "boombot.command.stopboombot");
     }
 
     @Override
@@ -39,7 +39,8 @@ public class StopBotCommand extends Command {
 
     @Override
     public String cannotExecuteMessage(UserType userType, CommandInterface cmd) {
-        String permissionLang = "Server Management";
-        return String.format("%s requires %s permissions to use %s", cmd.getUser().getUsername(), permissionLang, cmd.getCommand());
+        GuildOptions options = cmd.getGuildOptions();
+        String permissionLang = options.translate("permissions.manage.server");
+        return options.translate("boombot.command.permissions.user.missing", cmd.getUser().getUsername(), permissionLang, cmd.getCommand());
     }
 }

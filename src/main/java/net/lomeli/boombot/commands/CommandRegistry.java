@@ -36,6 +36,7 @@ public enum CommandRegistry {
         addNewCommand(new Command("about", "Hi, I'm BoomBot. I was made by @Lomeli12 as a fun little project.\nYou can find out more about me at https://github.com/BoomBot/BoomBot"));
         addNewCommand(new StopBotCommand());
         addNewCommand(new ClearChatCommand());
+        addNewCommand(new OptionsCommand());
 
         addNewCommand(new CreateCommand());
         addNewCommand(new RemoveCommand());
