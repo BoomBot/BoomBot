@@ -24,9 +24,6 @@ Commands            | Argument                                             | Res
 
 # How To Build BoomBot
 
-## Step 1: Setup JDK 8
-The Java JDK is used to compile BoomBot, specifically JDK 8.
-
 1. Download and install the Java JDK 8. (Skip to the next step if you already have it installed)
 	* [Windows/Mac download link](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html).  Scroll down, accept the `Oracle Binary Code License Agreement for Java SE`, and download it (if you have a 64-bit OS, please download the 64-bit version).
 	    * Windows: Set environment variables for the JDK.
