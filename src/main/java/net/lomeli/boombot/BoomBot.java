@@ -7,9 +7,11 @@ import javax.security.auth.login.LoginException;
 import java.io.File;
 import java.util.Date;
 
+import net.lomeli.boombot.commands.CommandRegistry;
 import net.lomeli.boombot.lang.LangRegistry;
 import net.lomeli.boombot.lib.BoomConfig;
 import net.lomeli.boombot.lib.Logger;
+import net.lomeli.boombot.lib.ShutdownHook;
 
 public class BoomBot {
     public static BoomListen listener;
@@ -18,6 +20,7 @@ public class BoomBot {
     public static BoomConfig config;
     public static ConfigLoader configLoader;
     public static File logFolder, logFile;
+    public static boolean debug;
 
     public static void main(String[] args) {
         try {
@@ -30,10 +33,26 @@ public class BoomBot {
             configLoader = new ConfigLoader(new File("config.cfg"));
             configLoader.parseConfig();
             if (args.length >= 2) {
+                if (args.length > 2) {
+                    for (int i = 2; i < args.length; i++) {
+                        String arg = args[i];
+                        switch (arg) {
+                            case "-d":
+                            case "--debug":
+                                debug = true;
+                                break;
+                            default:
+                                Logger.warn("Argument %s not recognized, ignoring.", arg);
+                        }
+                    }
+                }
                 listener = new BoomListen();
                 jda = new JDABuilder(args[0], args[1]).addListener(listener).buildBlocking();
                 startTime = new Date();
                 Logger.info("Bot is ready");
+                if (debug)
+                    Logger.info("BoomBot is in debug mode!");
+                CommandRegistry.INSTANCE.registerBasicCommands();
             } else {
                 Logger.info("BoomBot requires a email and password to login as!");
             }
@@ -44,5 +63,8 @@ public class BoomBot {
         } catch (InterruptedException e) {
             Logger.error("An Exception occurred", e);
         }
+        if (debug)
+            Logger.info("Adding Shutdown Hook");
+        Runtime.getRuntime().addShutdownHook(new ShutdownHook());
     }
 }

@@ -27,13 +27,21 @@ public class Logger {
         log(LogInfo.DEBUG, message, args);
     }
 
-    public static void warn(Object message, Exception e, Object... args) {
+    public static void warn(Object message, Object...args) {
         log(LogInfo.WARN, message, args);
+    }
+
+    public static void warn(Object message, Exception e, Object... args) {
+        warn(message, args);
         e.printStackTrace();
     }
 
-    public static void error(Object message, Exception e, Object... args) {
+    public static void error(Object message, Object...args) {
         log(LogInfo.ERROR, message, args);
+    }
+
+    public static void error(Object message, Exception e, Object... args) {
+        error(message, args);
         e.printStackTrace();
         logMsg.add(e.getLocalizedMessage());
     }

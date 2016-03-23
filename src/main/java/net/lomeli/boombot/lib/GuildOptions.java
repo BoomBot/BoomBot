@@ -18,24 +18,21 @@ import net.lomeli.boombot.lang.LangRegistry;
 
 public class GuildOptions {
     private List<Command> commandList;
-    private List<String> banUsers;
-    private List<String> restrictedChannels;
-    private String guildID;
-    private String lang;
-    private boolean announceReady;
-    private boolean announceStopped;
+    private List<String> banUsers, restrictedChannels;
+    private String guildID, lang, commandKey;
+    private boolean announceReady, announceStopped, allowMentions, allowTTS;
     /** Requested by @Guard13007 since this could devastate channels*/
     private boolean disableClearChat;
     private int secondsDelay;
     private transient HashMap<String, Long> channelDelay;
 
     public GuildOptions() {
-        this.channelDelay = Maps.newHashMap();
+        this("dummy");
     }
 
-    public GuildOptions(String guild) {
-        super();
-        this.guildID = guild;
+    public GuildOptions(String guildID) {
+        this.channelDelay = Maps.newHashMap();
+        this.guildID = guildID;
         this.commandList = Lists.newArrayList();
         this.banUsers = Lists.newArrayList();
         this.restrictedChannels = Lists.newArrayList();
@@ -43,6 +40,7 @@ public class GuildOptions {
         this.announceStopped = true;
         this.disableClearChat = false;
         this.secondsDelay = 2;
+        this.commandKey = "!";
         this.lang = "en_US";
     }
 
@@ -189,6 +187,29 @@ public class GuildOptions {
 
     public void setDisableClearChat(boolean flag) {
         disableClearChat = flag;
+    }
+
+    public String getCommandKey() {
+        return commandKey;
+    }
+
+    public void setCommandKey(String commandKey) {
+        this.commandKey = commandKey;
+    }
+
+    public boolean allowMentions() {
+        return allowMentions;
+    }
+
+    public void setAllowMentions(boolean value) {
+        allowMentions = value;
+    }
+    public boolean allowTTS() {
+        return allowTTS;
+    }
+
+    public void setAllowTTS(boolean value) {
+        allowTTS = value;
     }
 
     public String translate(String key, Object... args) {

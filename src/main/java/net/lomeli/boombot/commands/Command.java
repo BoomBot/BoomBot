@@ -1,14 +1,17 @@
 package net.lomeli.boombot.commands;
 
-import com.google.common.collect.Lists;
+import net.dv8tion.jda.entities.Guild;
 import net.dv8tion.jda.entities.User;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import net.lomeli.boombot.lib.CommandInterface;
+import net.lomeli.boombot.lib.GuildOptions;
 
 public class Command {
+    private static final Pattern MENTION_PATTER = Pattern.compile("<@((\\d){1,32})>");
     private String name;
     private String content;
 
@@ -18,24 +21,32 @@ public class Command {
     }
 
     public void executeCommand(CommandInterface cmd) {
+        GuildOptions options = cmd.getGuildOptions();
         String fullContent = getContent().replaceAll("%n", "\n");
-        String[] content = fullContent.split("\n");
-        List<String> commandArgs = Lists.newArrayList(cmd.getArgs());
-        for (int j = 0; j < content.length; j++) {
-            String str = content[j];
-            int count = StringUtils.countMatches(str, "%s");
-            Object[] arg = new Object[count];
-            if (count == 1 && j == (content.length - 1)) {
-                String trueArg = "";
-                for (Object o : commandArgs)
-                    trueArg += o + " ";
-                trueArg = trueArg.substring(0, trueArg.length() - 1);
-                arg = new Object[]{trueArg};
+        if (!options.allowMentions()) fullContent = stripMentions(fullContent, cmd.getGuild());
+        String user = options.allowMentions() ? ("<@" + cmd.getUser().getId() + ">") : cmd.getUser().getUsername();
+        cmd.sendMessage(fullContent.replaceAll("%u", user).replaceAll("%U", user), cmd.getArgs());
+    }
+
+    private String stripMentions(String raw, Guild guild) {
+        String out = raw;
+        Matcher matcher = MENTION_PATTER.matcher(raw);
+        List<User> userList = guild.getUsers();
+        while (matcher.find()) {
+            String group = matcher.group();
+            String id = group.substring(2, group.length() - 1);
+            User user = null;
+            userLoop:
+            for (User u : userList) {
+                if (u != null && u.getId().equalsIgnoreCase(id)) {
+                    user = u;
+                    break userLoop;
+                }
             }
-            cmd.sendMessage(str.replaceAll("%u", cmd.getUser().getUsername()).replaceAll("%U", cmd.getUser().getUsername().toUpperCase()), arg);
-            for (int i = 0; i < count; i++)
-                commandArgs.remove(0);
+            if (user != null)
+                out = out.replaceAll(group, "@" + user.getUsername());
         }
+        return out;
     }
 
     public String getName() {

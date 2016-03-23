@@ -9,6 +9,7 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 
+import net.lomeli.boombot.BoomBot;
 import net.lomeli.boombot.lib.Logger;
 
 /**
@@ -22,26 +23,27 @@ public class LangRegistry {
 
     public static void initRegistry() {
         localizationList = Maps.newHashMap();
-        try {
-            if (langFolder.exists()) {
-                File[] files = langFolder.listFiles();
-                if (files != null && files.length > 0) {
-                    for (File langFile : files) {
+        if (langFolder.exists()) {
+            File[] files = langFolder.listFiles();
+            if (files != null && files.length > 0) {
+                for (File langFile : files) {
+                    try {
                         if (FilenameUtils.getExtension(langFile.getAbsolutePath()).equals("lang")) {
                             Localization local = new Localization(langFile);
                             local.parseFile();
                             localizationList.put(FilenameUtils.getBaseName(langFile.getAbsolutePath()), local);
                             if (FilenameUtils.getBaseName(langFile.getAbsolutePath()).equals("en_US"))
                                 english = local;
-                            Logger.info("Loaded " + local.getLocalizationName() + " localization");
+                            if (BoomBot.debug)
+                                Logger.info("Loaded " + local.getLocalizationName() + " localization");
                         }
+                    } catch (Exception e) {
+                        Logger.error("Failed to load localization file %s", e, langFile.toString());
                     }
                 }
             }
-            currentLang = english;
-        } catch (Exception e) {
-            e.printStackTrace();
         }
+        currentLang = english;
     }
 
     public static void setCurrentLang(String id) {

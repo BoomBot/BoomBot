@@ -1,7 +1,6 @@
 package net.lomeli.boombot;
 
 import com.google.common.collect.Lists;
-import net.dv8tion.jda.entities.Guild;
 import net.dv8tion.jda.entities.Message;
 import net.dv8tion.jda.entities.TextChannel;
 import net.dv8tion.jda.events.ReadyEvent;
@@ -13,6 +12,7 @@ import net.dv8tion.jda.hooks.ListenerAdapter;
 import java.util.List;
 
 import net.lomeli.boombot.commands.CommandRegistry;
+import net.lomeli.boombot.helper.UserHelper;
 import net.lomeli.boombot.lib.CommandInterface;
 import net.lomeli.boombot.lib.GuildOptions;
 import net.lomeli.boombot.lib.Logger;
@@ -21,11 +21,12 @@ public class BoomListen extends ListenerAdapter {
 
     @Override
     public void onReady(ReadyEvent event) {
-        event.getJDA().getGuilds().stream().filter(guild -> guild != null).forEach(guild -> {
-            GuildOptions options = BoomBot.config.getGuildOptions(guild);
-            if (options != null && options.announceReady())
-                guild.getPublicChannel().sendMessage(options.translate("boombot.ready"));
-        });
+        if (!BoomBot.debug)
+            event.getJDA().getGuilds().stream().filter(guild -> guild != null).forEach(guild -> {
+                GuildOptions options = BoomBot.config.getGuildOptions(guild);
+                if (options != null && options.announceReady())
+                    guild.getPublicChannel().sendMessage(options.translate("boombot.ready"));
+            });
     }
 
     @Override
@@ -40,19 +41,24 @@ public class BoomListen extends ListenerAdapter {
         if (BoomBot.jda == null || BoomBot.jda.getSelfInfo() == null || event == null || event.getMessage() == null || event.getAuthor() == null)
             return;
         Message message = event.getMessage();
-        if (message.isEdited() || event.getAuthor().getUsername().equals(BoomBot.jda.getSelfInfo().getUsername()))
+        if (message.isEdited() || UserHelper.isUserBoomBot(event.getAuthor()))
             return;
-        if (!ready(event.getGuild(), event.getChannel())) return;
-        String content = message.getContent();
-        if (content.startsWith("!")) {
+        GuildOptions options = BoomBot.config.getGuildOptions(event.getGuild());
+        if (options == null)
+            options = new GuildOptions(event.getGuild().getId());
+
+        if (!ready(options, event.getChannel())) return;
+        String content = message.getRawContent();
+        String key = options.getCommandKey();
+        if (content.startsWith(key)) {
             String[] arr = content.split(" ");
             if (arr.length >= 1) {
-                String potentialCommand = arr[0].substring(1, arr[0].length());
+                String potentialCommand = arr[0].substring(key.length(), arr[0].length());
                 List<String> args = Lists.newArrayList();
                 for (int i = 1; i < arr.length; i++) {
                     args.add(arr[i]);
                 }
-                CommandInterface cmd = new CommandInterface(message, event.getGuild(), event.getAuthor(), event.getChannel(), potentialCommand, args);
+                CommandInterface cmd = new CommandInterface(message, options, event.getAuthor(), event.getChannel(), potentialCommand, args);
                 if (CommandRegistry.INSTANCE.executeCommand(cmd))
                     cmd.getGuildOptions().updateLastCommand(event.getChannel());
             }
@@ -65,11 +71,7 @@ public class BoomListen extends ListenerAdapter {
         Logger.writeLogFile(BoomBot.logFolder, BoomBot.logFile);
     }
 
-    private boolean ready(Guild guild, TextChannel channel) {
-        if (guild == null || channel == null) return false;
-        GuildOptions options = BoomBot.config.getGuildOptions(guild);
-        if (options == null)
-            return false;
+    private boolean ready(GuildOptions options, TextChannel channel) {
         return ((System.currentTimeMillis() - options.getLastCommandUsedChannel(channel)) / 1000 % 60) >= options.getSecondsDelay();
     }
 }

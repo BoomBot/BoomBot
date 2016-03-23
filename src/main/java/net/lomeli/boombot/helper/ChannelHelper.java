@@ -1,6 +1,7 @@
 package net.lomeli.boombot.helper;
 
 import com.google.common.collect.Lists;
+import net.dv8tion.jda.JDA;
 import net.dv8tion.jda.entities.Message;
 import net.dv8tion.jda.entities.TextChannel;
 import net.dv8tion.jda.entities.User;
@@ -18,7 +19,7 @@ public class ChannelHelper {
     public static List<Message> getChannelMessages(TextChannel channel, Message message) {
         List<Message> messages = Lists.newArrayList();
         String requestURL = String.format("https://discordapp.com/api/channels/%s/messages?before=%s", channel.getId(), message.getId());
-        JDAImpl api = (JDAImpl) channel.getJDA();
+        JDAImpl api = getChannelAPI(channel);
         try {
             JSONArray response = api.getRequester().getA(requestURL);
             Iterator<Object> it = response.iterator();
@@ -34,6 +35,14 @@ public class ChannelHelper {
             e.printStackTrace();
         }
         return messages;
+    }
+
+    public static JDAImpl getChannelAPI(TextChannel channel) {
+        if (channel == null) return null;
+        JDA jda = channel.getJDA();
+        if (jda instanceof JDAImpl)
+            return (JDAImpl) jda;
+        return null;
     }
 
     private static Message jsonToMessage(JDAImpl api, JSONObject json) {

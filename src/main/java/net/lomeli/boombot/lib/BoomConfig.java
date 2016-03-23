@@ -16,35 +16,30 @@ public class BoomConfig {
         guildOptions = Lists.newArrayList();
     }
 
-    public boolean addGuildCommand(Guild guild, Command command) {
-        GuildOptions guildOptions = getGuildOptions(guild);
+    public boolean addGuildCommand(GuildOptions guildOptions, Command command) {
         boolean flag = guildOptions.addGuildCommand(command);
         updateGuildCommand(guildOptions);
         return flag;
     }
 
-    public boolean removeGuildCommand(Guild guild, String name) {
-        GuildOptions guildOptions = getGuildOptions(guild);
+    public boolean removeGuildCommand(GuildOptions guildOptions, String name) {
         boolean flag = guildOptions.removeGuildCommand(name);
         updateGuildCommand(guildOptions);
         return flag;
     }
 
-    public void clearGuildCommands(Guild guild) {
-        GuildOptions guildOptions = getGuildOptions(guild);
+    public void clearGuildCommands(GuildOptions guildOptions) {
         guildOptions.clearCommands();
         updateGuildCommand(guildOptions);
     }
 
-    public boolean banUserCommands(Guild guild, User user) {
-        GuildOptions guildOptions = getGuildOptions(guild);
+    public boolean banUserCommands(GuildOptions guildOptions, User user) {
         boolean flag = guildOptions.banCommandUser(user);
         updateGuildCommand(guildOptions);
         return flag;
     }
 
-    public boolean removeCommandBan(Guild guild, User user) {
-        GuildOptions guildOptions = getGuildOptions(guild);
+    public boolean removeCommandBan(GuildOptions guildOptions, User user) {
         boolean flag = guildOptions.removeBannedUser(user);
         updateGuildCommand(guildOptions);
         return flag;
@@ -72,9 +67,5 @@ public class BoomConfig {
                 return commandList;
         }
         return new GuildOptions(guild);
-    }
-
-    public List<Command> getCommandsForGuild(Guild guild) {
-        return getGuildOptions(guild).getCommandList();
     }
 }

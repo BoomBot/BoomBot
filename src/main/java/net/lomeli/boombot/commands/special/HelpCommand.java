@@ -16,22 +16,24 @@ public class HelpCommand extends Command {
 
     @Override
     public void executeCommand(CommandInterface cmd) {
-        GuildOptions options = BoomBot.config.getGuildOptions(cmd.getGuild());
+        GuildOptions options = cmd.getGuildOptions();
         if (options.isChannelRestricted(cmd.getChannel()) && !PermissionsHelper.userHasPermissions(cmd.getUser(), cmd.getGuild(), Permission.MANAGE_CHANNEL)) {
             cmd.sendUserMessage(getContent() + ".restricted", cmd.getChannel().getName());
             return;
         }
+        String msg = "";
         String commandList = "";
         for (Command c : CommandRegistry.INSTANCE.getCommands()) {
             if (c != null)
                 commandList += "!" + c.getName() + ", ";
         }
-        cmd.sendMessage(getContent() + ".default", commandList.substring(0, commandList.length() - 2));
+        msg += options.translate(getContent() + ".default", commandList.substring(0, commandList.length() - 2));
         commandList = "";
         for (Command c : options.getCommandList()) {
             if (c != null)
                 commandList += "!" + c.getName() + ", ";
         }
-        cmd.sendMessage(getContent(), cmd.getGuild().getName(), commandList.substring(0, commandList.length() - 2));
+        msg += "\n" + options.translate(getContent(), cmd.getGuild().getName(), commandList.substring(0, commandList.length() - 2));
+        cmd.sendMessage(msg);
     }
 }

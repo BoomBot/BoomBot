@@ -8,6 +8,7 @@ import net.lomeli.boombot.helper.PermissionsHelper;
 import net.lomeli.boombot.lang.LangRegistry;
 import net.lomeli.boombot.lib.CommandInterface;
 import net.lomeli.boombot.lib.GuildOptions;
+import net.lomeli.boombot.lib.Logger;
 
 public class ReloadConfigCommand extends Command {
 
@@ -20,6 +21,8 @@ public class ReloadConfigCommand extends Command {
         super.executeCommand(cmd);
         BoomBot.configLoader.parseConfig();
         LangRegistry.initRegistry();
+        if (BoomBot.debug)
+            Logger.info("Config and lang files should've been reloaded!");
     }
 
     @Override

@@ -10,36 +10,40 @@ import java.util.List;
 import net.lomeli.boombot.BoomBot;
 import net.lomeli.boombot.commands.Command;
 import net.lomeli.boombot.helper.PermissionsHelper;
+import net.lomeli.boombot.helper.UserHelper;
 import net.lomeli.boombot.lib.CommandInterface;
 import net.lomeli.boombot.lib.GuildOptions;
 
 public class UnBanUseCommand extends Command {
     public UnBanUseCommand() {
-        super("unban-use", "boombot.command.unbanuse");
+        super("unbancom", "boombot.command.unbanuse");
     }
 
     @Override
     public void executeCommand(CommandInterface cmd) {
-        if (cmd.getArgs().size() >= 1) {
-            for (int i = 0; i < cmd.getArgs().size(); i++) {
-                User user = getUser(cmd.getArgs().get(i), cmd.getGuild());
-                if (user != null) {
-                    cmd.getGuildOptions().removeBannedUser(user);
-                    user.getPrivateChannel().sendMessage(cmd.getGuildOptions().translate(getContent() + ".message", cmd.getGuild().getName()));
-                    cmd.sendMessage(getContent(), user.getUsername(), cmd.getGuild().getName());
-                } else
-                    cmd.sendMessage(getContent() + ".wasnt", cmd.getArgs().get(i));
-            }
-        } else
+        GuildOptions options = cmd.getGuildOptions();
+        List<User> mentionedUsers = cmd.getMessage().getMentionedUsers();
+        if (mentionedUsers == null && mentionedUsers.isEmpty())
             cmd.sendMessage(getContent() + ".who");
-    }
-
-    private User getUser(String name, Guild guild) {
-        for (User user : guild.getUsers()) {
-            if (user != null && user.getUsername().equalsIgnoreCase(name))
-                return user;
+        else {
+            mentionedUsers.stream().forEach(user -> {
+                if (user == null) {
+                    cmd.sendMessage(getContent() + ".who");
+                    return;
+                }
+                if (UserHelper.isUserBoomBot(user)) {
+                    cmd.sendMessage(getContent() + ".self");
+                    return;
+                }
+                if (options.isUserBanned(user)) {
+                    cmd.sendMessage(getContent() + ".wasnt", user.getUsername());
+                    return;
+                }
+                BoomBot.config.removeCommandBan(cmd.getGuildOptions(), user);
+                user.getPrivateChannel().sendMessage(options.translate(getContent() + ".message", cmd.getGuild().getName()));
+                cmd.sendMessage(getContent(), user.getUsername(), cmd.getGuild().getName());
+            });
         }
-        return null;
     }
 
     @Override

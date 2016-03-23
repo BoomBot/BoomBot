@@ -10,6 +10,7 @@ import java.util.List;
 import net.lomeli.boombot.BoomBot;
 import net.lomeli.boombot.commands.Command;
 import net.lomeli.boombot.helper.PermissionsHelper;
+import net.lomeli.boombot.helper.UserHelper;
 import net.lomeli.boombot.lib.CommandInterface;
 import net.lomeli.boombot.lib.GuildOptions;
 import net.lomeli.boombot.lib.Logger;
@@ -21,11 +22,22 @@ public class KickCommand extends Command {
 
     @Override
     public void executeCommand(CommandInterface cmd) {
-        if (cmd.getArgs().size() >= 1) {
-            User user = getUser(cmd.getArgs().get(0), cmd.getGuild());
-            if (user != null) {
-                if (user.getId().equals(BoomBot.jda.getSelfInfo().getId())) {
+        GuildOptions options = cmd.getGuildOptions();
+        List<User> mentionedUsers = cmd.getMessage().getMentionedUsers();
+        if (mentionedUsers == null && mentionedUsers.isEmpty())
+            cmd.sendMessage(getContent() + ".who");
+        else {
+            mentionedUsers.stream().forEach(user -> {
+                if (user == null) {
+                    cmd.sendMessage(getContent() + ".cannot");
+                    return;
+                }
+                if (UserHelper.isUserBoomBot(user)) {
                     cmd.sendMessage(getContent() + ".self");
+                    return;
+                }
+                if (UserHelper.isOwner(user, cmd.getGuild())) {
+                    cmd.sendMessage(getContent() + ".owner");
                     return;
                 }
                 String reason = "";
@@ -36,20 +48,10 @@ public class KickCommand extends Command {
                 if (!reason.isEmpty())
                     reason = cmd.getGuildOptions().translate(getContent() + ".reason", reason);
                 cmd.getGuild().getManager().kick(user);
-                user.getPrivateChannel().sendMessage(cmd.getGuildOptions().translate(getContent() + ".message", cmd.getGuild().getName(), reason));
+                user.getPrivateChannel().sendMessage(options.translate(getContent() + ".message", cmd.getGuild().getName(), reason));
                 cmd.sendMessage(getContent(), user.getUsername(), reason);
-            } else
-                cmd.sendMessage(getContent() + ".cannot", cmd.getArgs().get(0));
-        } else
-            cmd.sendMessage(getContent() + ".who");
-    }
-
-    private User getUser(String name, Guild guild) {
-        for (User user : guild.getUsers()) {
-            if (user != null && user.getUsername().equalsIgnoreCase(name))
-                return user;
+            });
         }
-        return null;
     }
 
     @Override

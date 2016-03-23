@@ -13,13 +13,13 @@ import net.lomeli.boombot.lib.GuildOptions;
 
 public class ClearCommand extends Command {
     public ClearCommand() {
-        super("clear-commands", "boombot.command.clearcommand");
+        super("clearcoms", "boombot.command.clearcommand");
     }
 
     @Override
     public void executeCommand(CommandInterface cmd) {
         cmd.sendMessage(getContent(), cmd.getGuild().getName(), cmd.getUser().getUsername());
-        BoomBot.config.clearGuildCommands(cmd.getGuild());
+        BoomBot.config.clearGuildCommands(cmd.getGuildOptions());
     }
 
     @Override

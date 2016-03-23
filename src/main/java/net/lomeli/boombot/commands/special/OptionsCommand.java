@@ -24,8 +24,11 @@ public class OptionsCommand extends Command {
         VALID_OPTIONS.put("announceReady", ValueType.BOOOLEAN);
         VALID_OPTIONS.put("announceStopped", ValueType.BOOOLEAN);
         VALID_OPTIONS.put("disableClearChat", ValueType.BOOOLEAN);
+        VALID_OPTIONS.put("allowTTS", ValueType.BOOOLEAN);
+        VALID_OPTIONS.put("allowMentions", ValueType.BOOOLEAN);
         VALID_OPTIONS.put("secondsDelay", ValueType.INTEGER);
         VALID_OPTIONS.put("lang", ValueType.STRING);
+        VALID_OPTIONS.put("commandKey", ValueType.STRING);
     }
 
     @Override
@@ -59,22 +62,30 @@ public class OptionsCommand extends Command {
     }
 
     private void setValue(CommandInterface cmd, String name, String oldValue, Object value) {
-        switch (name) {
-            case "announceReady":
-                cmd.getGuildOptions().setAnnounceReady((boolean) value);
-                break;
-            case "announceStopped":
-                cmd.getGuildOptions().setAnnounceStopped((boolean) value);
-                break;
-            case "disableClearChat":
-                cmd.getGuildOptions().setDisableClearChat((boolean) value);
-                break;
-            case "secondsDelay":
-                cmd.getGuildOptions().setSecondsDelay((int) value);
-                break;
-            case "lang":
-                cmd.getGuildOptions().setLang(oldValue);
-                break;
+        if (name.equalsIgnoreCase("announceReady")) {
+            name = "announceReady";
+            cmd.getGuildOptions().setAnnounceReady((boolean) value);
+        } else if (name.equalsIgnoreCase("announceStopped")) {
+            name = "announceStopped";
+            cmd.getGuildOptions().setAnnounceStopped((boolean) value);
+        } else if (name.equalsIgnoreCase("disableClearChat")) {
+            name = "disableClearChat";
+            cmd.getGuildOptions().setDisableClearChat((boolean) value);
+        } else if (name.equalsIgnoreCase("allowTTS")) {
+            name = "allowTTS";
+            cmd.getGuildOptions().setAllowTTS((boolean) value);
+        } else if (name.equalsIgnoreCase("allowMentions")) {
+            name = "allowMentions";
+            cmd.getGuildOptions().setAllowMentions((boolean) value);
+        } else if (name.equalsIgnoreCase("secondsDelay")) {
+            name = "secondsDelay";
+            cmd.getGuildOptions().setSecondsDelay((int) value);
+        } else if (name.equalsIgnoreCase("lang")) {
+            name = "lang";
+            cmd.getGuildOptions().setLang(oldValue);
+        } else if (name.equalsIgnoreCase("commandKey")) {
+            name = "commandKey";
+            cmd.getGuildOptions().setCommandKey(oldValue);
         }
         cmd.sendMessage("boombot.command.options", name, value);
         BoomBot.configLoader.writeConfig();

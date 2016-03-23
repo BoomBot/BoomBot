@@ -11,7 +11,7 @@ import net.lomeli.boombot.lib.GuildOptions;
 
 public class CreateCommand extends Command {
     public CreateCommand() {
-        super("create-command", "boombot.command.createcommand");
+        super("mkcom", "boombot.command.createcommand");
     }
 
     @Override
@@ -29,7 +29,7 @@ public class CreateCommand extends Command {
                 cmd.sendMessage(getContent() + ".content.empty");
             String safeName = name.replaceAll("%s", "% s").replaceAll("%S", "% S").replaceAll("%u", "<User>").replaceAll("%U", "<USER>");
             String safeContent = content.replaceAll("%s", "(Blank)").replaceAll("%S", "(Blank)").replaceAll("%u", "<User>").replaceAll("%U", "<USER>");
-            if (BoomBot.config.addGuildCommand(cmd.getGuild(), new Command(name, content)))
+            if (BoomBot.config.addGuildCommand(cmd.getGuildOptions(), new Command(name, content.replace("\\n", "\n"))))
                 cmd.sendMessage(getContent(), safeName, safeContent);
             else
                 cmd.sendMessage(getContent() + ".name.exists", safeName);

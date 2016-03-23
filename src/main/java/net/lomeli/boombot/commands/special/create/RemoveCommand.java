@@ -10,7 +10,7 @@ import net.lomeli.boombot.lib.GuildOptions;
 
 public class RemoveCommand extends Command {
     public RemoveCommand() {
-        super("remove-command", "boombot.command.removecommand");
+        super("rmcom", "boombot.command.removecommand");
     }
 
     @Override
@@ -20,7 +20,7 @@ public class RemoveCommand extends Command {
                 String name = cmd.getArgs().get(i);
                 if (name.isEmpty())
                     cmd.sendMessage(getContent() + ".empty");
-                if (BoomBot.config.removeGuildCommand(cmd.getGuild(), name))
+                if (BoomBot.config.removeGuildCommand(cmd.getGuildOptions(), name))
                     cmd.sendMessage(getContent(), name, cmd.getUser().getUsername());
                 else
                     cmd.sendMessage(getContent() + ".notexists", name);

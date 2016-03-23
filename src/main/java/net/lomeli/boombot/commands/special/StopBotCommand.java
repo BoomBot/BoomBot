@@ -20,13 +20,14 @@ public class StopBotCommand extends Command {
 
     @Override
     public void executeCommand(CommandInterface cmd) {
-        List<Guild> guilds = BoomBot.jda.getGuilds();
-        for (Guild guild : guilds) {
-            if (guild != null) {
-                GuildOptions options = BoomBot.config.getGuildOptions(guild);
-                if (options != null && options.announceStopped())
-                    guild.getPublicChannel().sendMessage(getContent());
-            }
+        if (!BoomBot.debug) {
+            List<Guild> guilds = BoomBot.jda.getGuilds();
+            if (!guilds.isEmpty())
+                guilds.stream().filter(guild -> guild != null).forEach(guild -> {
+                    GuildOptions options = BoomBot.config.getGuildOptions(guild);
+                    if (options != null && options.announceStopped())
+                        guild.getPublicChannel().sendMessage(getContent());
+                });
         }
         Logger.info("BoomBot shutting down via command from %s...", cmd.getUser().getUsername());
         BoomBot.jda.shutdown();

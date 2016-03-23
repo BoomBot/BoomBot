@@ -5,6 +5,8 @@ boombot.command.permissions.user.missing=%s requires %s permissions to use %s
 boombot.ready=BoomBot is ready!
 
 ## Commands
+# About
+boombot.command.about=Hi, I'm BoomBot. I was made by <@98616246483812352> as a fun little project.%nYou can find out more about me at https://github.com/BoomBot/BoomBot
 # Reload Configs
 boombot.command.reloadconfig=Configs successfully reloaded!
 # Help
@@ -21,14 +23,19 @@ boombot.command.clearchat.disabled=This command is currently disabled.
 # Ban Use
 boombot.command.banuse=%s has been banned from using commands in %s! %s
 boombot.command.banuse.message=You have been banned from using commands in %s. %s
-boombot.command.banuse.cannotban=Cannot ban %s from using commands, as they DO NOT exist.
+boombot.command.banuse.message.banned=You cannot use commands in %s.
+boombot.command.banuse.multiple=Can only ban users one at a time.
+boombot.command.banuse.cannotban=Cannot ban user from using commands, as they DO NOT exist.
 boombot.command.banuse.who=Ban who from using commands?
 boombot.command.banuse.reason=Reason: %s
+boombot.command.banuse.self=I can't even use commands!
+boombot.command.banuse.owner=%s cannot be banned from using commands.
 # UnBan Use
 boombot.command.unbanuse=%s can use commands in %s again.
 boombot.command.unbanuse.message=You can now use commands again in %s.
 boombot.command.unbanuse.wasnt=% wasn't banned from using commands.
 boombot.command.unbanuse.who=Ban who from using commands?
+boombot.command.unbanuse.self=Doot!
 # Restrict
 boombot.command.restrict=%s is in restricted use mode. Only channel managers can use commands.
 boombot.command.restrict.restricted=%s is already in restricted use mode.
@@ -42,10 +49,13 @@ boombot.command.kick.who=Kick who?
 boombot.command.kick.self=Why would BoomBot kick itself?
 boombot.command.kick.message=You have been kicked from %s. %s
 boombot.command.kick.cannot=Cannot kick %s, as they DO NOT exist.
+boombot.command.kick.owner=%s is the owner, so they cannot be kicked.
 # Ban
 boombot.command.ban=%s has been banned! Their messages from the past %s day(s) have been deleted. %s
 boombot.command.ban.reason=Reason: %s
 boombot.command.ban.who=Ban who?
+boombot.command.ban.multiple=Can only ban users one at a time.
+boombot.command.ban.owner=%s is the owner, so they cannot be banned.
 boombot.command.ban.self=BoomBot probably shouldn't be banning itself...
 boombot.command.ban.message=You have been banned from %s. Your messages from the past %s day(s) have been deleted. %s
 boombot.command.ban.cannot=Cannot ban %s, as they DO NOT exist.

@@ -9,6 +9,7 @@ import java.io.FileWriter;
 import java.io.InputStreamReader;
 
 import net.lomeli.boombot.lib.BoomConfig;
+import net.lomeli.boombot.lib.Logger;
 
 public class ConfigLoader {
     private File mainFile;
@@ -30,7 +31,7 @@ public class ConfigLoader {
                 configReader.close();
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            Logger.error("Failed to read config file %s!", e, mainFile.toString());
         }
     }
 
@@ -42,7 +43,7 @@ public class ConfigLoader {
             writer.write(stuff);
             writer.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            Logger.error("Could not write to %s!", e, mainFile.toString());
         }
     }
 }

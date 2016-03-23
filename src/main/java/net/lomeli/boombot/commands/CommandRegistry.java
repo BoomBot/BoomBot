@@ -26,14 +26,13 @@ public enum CommandRegistry {
 
     CommandRegistry() {
         commands = Lists.newArrayList();
-        registerBasicCommands();
     }
 
-    private void registerBasicCommands() {
+    public void registerBasicCommands() {
         addNewCommand(new HelpCommand());
         addNewCommand(new RunningCommand());
         addNewCommand(new ReloadConfigCommand());
-        addNewCommand(new Command("about", "Hi, I'm BoomBot. I was made by @Lomeli12 as a fun little project.\nYou can find out more about me at https://github.com/BoomBot/BoomBot"));
+        addNewCommand(new Command("about", "boombot.command.about"));
         addNewCommand(new StopBotCommand());
         addNewCommand(new ClearChatCommand());
         addNewCommand(new OptionsCommand());
@@ -49,13 +48,16 @@ public enum CommandRegistry {
         addNewCommand(new KickCommand());
         addNewCommand(new BanCommand());
 
-        addNewCommand(new JoinVoiceCommand());
-        addNewCommand(new LeaveVoiceCommand());
-        addNewCommand(new AddAudioCommand());
+        if (BoomBot.debug) {
+            Logger.info("Registering debugging and in-development commands");
+            addNewCommand(new JoinVoiceCommand());
+            addNewCommand(new LeaveVoiceCommand());
+            addNewCommand(new AddAudioCommand());
 
-        //Debugging command
-        addNewCommand(new GuildIdCommand());
-        addNewCommand(new ChannelIdCommand());
+            //Debugging command
+            addNewCommand(new GuildIdCommand());
+            addNewCommand(new ChannelIdCommand());
+        }
     }
 
     public boolean addNewCommand(Command command) {
@@ -75,13 +77,13 @@ public enum CommandRegistry {
 
     public boolean executeCommand(CommandInterface cmd) {
         Command exCommand = null;
-        GuildOptions guildOptions = BoomBot.config.getGuildOptions(cmd.getGuild());
+        GuildOptions guildOptions = cmd.getGuildOptions();
         if (guildOptions.isUserBanned(cmd.getUser())) {
-            cmd.sendUserMessage("You cannot use commands in %s.", cmd.getGuild().getName());
+            cmd.sendUserMessage("boombot.command.banuse.message.banned", cmd.getGuild().getName());
             return false;
         }
         if (guildOptions.isChannelRestricted(cmd.getChannel()) && !PermissionsHelper.userHasPermissions(cmd.getUser(), cmd.getGuild(), Permission.MANAGE_CHANNEL)) {
-            cmd.sendUserMessage("%s is in restricted use mode.", cmd.getChannel().getName());
+            cmd.sendUserMessage("boombot.command.restrict", cmd.getChannel().getName());
             return false;
         }
         // Check Built-In commands
