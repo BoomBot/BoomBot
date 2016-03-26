@@ -25,13 +25,13 @@ public class HelpCommand extends Command {
         String commandList = "";
         for (Command c : CommandRegistry.INSTANCE.getCommands()) {
             if (c != null)
-                commandList += "!" + c.getName() + ", ";
+                commandList += options.getCommandKey() + c.getName() + ", ";
         }
         msg += options.translate(getContent() + ".default", commandList.substring(0, commandList.length() - 2));
         commandList = "";
         for (Command c : options.getCommandList()) {
             if (c != null)
-                commandList += "!" + c.getName() + ", ";
+                commandList += options.getCommandKey() + c.getName() + ", ";
         }
         msg += "\n" + options.translate(getContent(), cmd.getGuild().getName(), commandList.substring(0, commandList.length() - 2));
         cmd.sendMessage(msg);
