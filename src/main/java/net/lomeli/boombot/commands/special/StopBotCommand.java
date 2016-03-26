@@ -26,7 +26,7 @@ public class StopBotCommand extends Command {
                 guilds.stream().filter(guild -> guild != null).forEach(guild -> {
                     GuildOptions options = BoomBot.config.getGuildOptions(guild);
                     if (options != null && options.announceStopped())
-                        guild.getPublicChannel().sendMessage(getContent());
+                        guild.getPublicChannel().sendMessage(options.translate(getContent()));
                 });
         }
         Logger.info("BoomBot shutting down via command from %s...", cmd.getUser().getUsername());
