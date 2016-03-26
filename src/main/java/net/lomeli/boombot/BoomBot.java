@@ -10,8 +10,8 @@ import java.util.Date;
 import net.lomeli.boombot.commands.CommandRegistry;
 import net.lomeli.boombot.lang.LangRegistry;
 import net.lomeli.boombot.lib.BoomConfig;
-import net.lomeli.boombot.lib.Logger;
-import net.lomeli.boombot.lib.ShutdownHook;
+import net.lomeli.boombot.helper.Logger;
+import net.lomeli.boombot.update.ShutdownHook;
 
 public class BoomBot {
     public static BoomListen listener;
@@ -21,6 +21,7 @@ public class BoomBot {
     public static ConfigLoader configLoader;
     public static File logFolder, logFile;
     public static boolean debug;
+    public static final int MAJOR = 1, MINOR = 0, REV = 0;
 
     public static void main(String[] args) {
         try {

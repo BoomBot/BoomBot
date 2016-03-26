@@ -10,10 +10,12 @@ import net.lomeli.boombot.BoomBot;
 import net.lomeli.boombot.commands.Command;
 
 public class BoomConfig {
-    public List<GuildOptions> guildOptions;
+    private List<GuildOptions> guildOptions;
+    private boolean updatable;
 
     public BoomConfig() {
         guildOptions = Lists.newArrayList();
+        updatable = false;
     }
 
     public boolean addGuildCommand(GuildOptions guildOptions, Command command) {
@@ -67,5 +69,9 @@ public class BoomConfig {
                 return commandList;
         }
         return new GuildOptions(guild);
+    }
+
+    public boolean isUpdatable() {
+        return updatable;
     }
 }

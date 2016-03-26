@@ -15,7 +15,7 @@ import net.lomeli.boombot.commands.CommandRegistry;
 import net.lomeli.boombot.helper.UserHelper;
 import net.lomeli.boombot.lib.CommandInterface;
 import net.lomeli.boombot.lib.GuildOptions;
-import net.lomeli.boombot.lib.Logger;
+import net.lomeli.boombot.helper.Logger;
 
 public class BoomListen extends ListenerAdapter {
 

@@ -1,4 +1,4 @@
-package net.lomeli.boombot.commands.special;
+package net.lomeli.boombot.commands.special.moderate;
 
 import net.dv8tion.jda.Permission;
 import net.dv8tion.jda.entities.Message;

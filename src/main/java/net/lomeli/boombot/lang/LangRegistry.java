@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import net.lomeli.boombot.BoomBot;
-import net.lomeli.boombot.lib.Logger;
+import net.lomeli.boombot.helper.Logger;
 
 /**
  * Copied over from another project of mine, to be implemented at a future date.

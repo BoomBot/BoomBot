@@ -1,4 +1,4 @@
-package net.lomeli.boombot.lib;
+package net.lomeli.boombot.update;
 
 public class ShutdownHook extends Thread {
     @Override

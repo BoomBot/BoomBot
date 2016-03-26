@@ -17,7 +17,7 @@ import net.lomeli.boombot.commands.special.moderate.*;
 import net.lomeli.boombot.helper.PermissionsHelper;
 import net.lomeli.boombot.lib.CommandInterface;
 import net.lomeli.boombot.lib.GuildOptions;
-import net.lomeli.boombot.lib.Logger;
+import net.lomeli.boombot.helper.Logger;
 
 public enum CommandRegistry {
     INSTANCE();

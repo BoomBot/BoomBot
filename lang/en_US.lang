@@ -85,6 +85,11 @@ boombot.command.options.valuetype.mismatch=Value type mismatch: Expected %s, Got
 boombot.command.options.valuetype.boolean=Boolean
 boombot.command.options.valuetype.integer=Integer
 boombot.command.options.valuetype.string=String
+# Update command
+boombot.command.update=
+boombot.command.update.disabled=Using the update command is disabled on this server.
+boombot.command.update.downloading=
+boombot.command.update.complete=
 
 # Permission Types
 permissions.manage.messages=Message Management

@@ -9,7 +9,7 @@ import java.io.FileWriter;
 import java.io.InputStreamReader;
 
 import net.lomeli.boombot.lib.BoomConfig;
-import net.lomeli.boombot.lib.Logger;
+import net.lomeli.boombot.helper.Logger;
 
 public class ConfigLoader {
     private File mainFile;

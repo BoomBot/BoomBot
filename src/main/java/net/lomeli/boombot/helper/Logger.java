@@ -1,4 +1,4 @@
-package net.lomeli.boombot.lib;
+package net.lomeli.boombot.helper;
 
 import com.google.common.collect.Lists;
 

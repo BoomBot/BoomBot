@@ -1,8 +1,6 @@
 package net.lomeli.boombot.commands.special.moderate;
 
 import net.dv8tion.jda.Permission;
-import net.dv8tion.jda.entities.Guild;
-import net.dv8tion.jda.entities.Role;
 import net.dv8tion.jda.entities.User;
 
 import java.util.List;
@@ -13,7 +11,7 @@ import net.lomeli.boombot.helper.PermissionsHelper;
 import net.lomeli.boombot.helper.UserHelper;
 import net.lomeli.boombot.lib.CommandInterface;
 import net.lomeli.boombot.lib.GuildOptions;
-import net.lomeli.boombot.lib.Logger;
+import net.lomeli.boombot.helper.Logger;
 
 public class KickCommand extends Command {
     public KickCommand() {
