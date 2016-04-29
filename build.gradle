@@ -13,27 +13,27 @@ configFile.withReader {
     project.ext.config = new ConfigSlurper().parse prop
 }
 
-group = "${config.group}"
-archivesBaseName = "${config.archiveName}"
-version = "${config.releaseVersion}"
+group = config.group
+archivesBaseName = config.archiveName
+version = config.releaseVersion
 
 dependencies {
     compile "net.dv8tion:JDA:${config.jdaVersion}"
     compile "com.google.code.gson:gson:${config.gsonVersion}"
     compile "com.google.guava:guava:${config.guavaVersion}"
     compile "commons-io:commons-io:${config.commonsIOVersion}"
-    compile "com.github.axet:vget:${config.vgetVersion}"
+    //compile "com.github.axet:vget:${config.vgetVersion}"
 }
 
 jar {
     manifest  {
-        attributes 'Main-Class' : "${config.mainClass}"
+        attributes 'Main-Class' : config.mainClass
     }
 }
 
 task fatJar(type: Jar) {
     manifest {
-        attributes 'Main-Class': "${config.mainClass}"
+        attributes 'Main-Class': config.mainClass
     }
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
     with jar

@@ -1,16 +1,13 @@
 package net.lomeli.boombot.commands.special;
 
 import net.dv8tion.jda.Permission;
-import net.dv8tion.jda.entities.Guild;
-
-import java.util.List;
 
 import net.lomeli.boombot.BoomBot;
 import net.lomeli.boombot.commands.Command;
+import net.lomeli.boombot.helper.Logger;
 import net.lomeli.boombot.helper.PermissionsHelper;
 import net.lomeli.boombot.lib.CommandInterface;
 import net.lomeli.boombot.lib.GuildOptions;
-import net.lomeli.boombot.helper.Logger;
 
 public class StopBotCommand extends Command {
 
@@ -20,16 +17,9 @@ public class StopBotCommand extends Command {
 
     @Override
     public void executeCommand(CommandInterface cmd) {
-        if (!BoomBot.debug) {
-            List<Guild> guilds = BoomBot.jda.getGuilds();
-            if (!guilds.isEmpty())
-                guilds.stream().filter(guild -> guild != null).forEach(guild -> {
-                    GuildOptions options = BoomBot.config.getGuildOptions(guild);
-                    if (options != null && options.announceStopped())
-                        guild.getPublicChannel().sendMessage(options.translate(getContent()));
-                });
-        }
+        super.executeCommand(cmd);
         Logger.info("BoomBot shutting down via command from %s...", cmd.getUser().getUsername());
+        BoomBot.configLoader.writeConfig();
         BoomBot.jda.shutdown();
     }
 

@@ -9,28 +9,25 @@ import net.dv8tion.jda.events.guild.GuildJoinEvent;
 import net.dv8tion.jda.events.message.guild.GenericGuildMessageEvent;
 import net.dv8tion.jda.hooks.ListenerAdapter;
 
+import java.io.File;
 import java.util.List;
 
 import net.lomeli.boombot.commands.CommandRegistry;
+import net.lomeli.boombot.helper.Logger;
 import net.lomeli.boombot.helper.UserHelper;
 import net.lomeli.boombot.lib.CommandInterface;
 import net.lomeli.boombot.lib.GuildOptions;
-import net.lomeli.boombot.helper.Logger;
 
 public class BoomListen extends ListenerAdapter {
 
     @Override
     public void onReady(ReadyEvent event) {
-        if (!BoomBot.debug)
-            event.getJDA().getGuilds().stream().filter(guild -> guild != null).forEach(guild -> {
-                GuildOptions options = BoomBot.config.getGuildOptions(guild);
-                if (options != null && options.announceReady())
-                    guild.getPublicChannel().sendMessage(options.translate("boombot.ready"));
-            });
+
     }
 
     @Override
     public void onGuildJoin(GuildJoinEvent event) {
+        Logger.info("Joining %s...", event.getGuild().getName());
         if (BoomBot.config.getGuildOptions(event.getGuild()) == null) {
             BoomBot.config.updateGuildCommand(new GuildOptions(event.getGuild()));
         }
@@ -44,9 +41,6 @@ public class BoomListen extends ListenerAdapter {
         if (message.isEdited() || UserHelper.isUserBoomBot(event.getAuthor()))
             return;
         GuildOptions options = BoomBot.config.getGuildOptions(event.getGuild());
-        if (options == null)
-            options = new GuildOptions(event.getGuild().getId());
-
         if (!ready(options, event.getChannel())) return;
         String content = message.getRawContent();
         String key = options.getCommandKey();

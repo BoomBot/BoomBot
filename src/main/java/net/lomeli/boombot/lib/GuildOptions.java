@@ -12,6 +12,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import net.lomeli.boombot.BoomBot;
 import net.lomeli.boombot.commands.Command;
 import net.lomeli.boombot.commands.CommandRegistry;
 import net.lomeli.boombot.lang.LangRegistry;
@@ -21,31 +22,47 @@ public class GuildOptions {
     private List<String> banUsers, restrictedChannels;
     private String guildID, lang, commandKey;
     private boolean announceReady, announceStopped, allowMentions, allowTTS;
-    /** Requested by @Guard13007 since this could devastate channels*/
+    /**
+     * Requested by @Guard13007 since this could devastate channels
+     */
     private boolean disableClearChat;
     private int secondsDelay;
+    private transient Guild guild;
     private transient HashMap<String, Long> channelDelay;
 
     public GuildOptions() {
-        this("dummy");
+        this(null);
     }
 
-    public GuildOptions(String guildID) {
+    public GuildOptions(Guild guild) {
         this.channelDelay = Maps.newHashMap();
-        this.guildID = guildID;
+        this.guild = guild;
+        if (guild != null)
+            this.guildID = guild.getId();
         this.commandList = Lists.newArrayList();
         this.banUsers = Lists.newArrayList();
         this.restrictedChannels = Lists.newArrayList();
-        this.announceReady = true;
-        this.announceStopped = true;
+        this.announceReady = false;
+        this.announceStopped = false;
         this.disableClearChat = false;
         this.secondsDelay = 2;
         this.commandKey = "!";
         this.lang = "en_US";
     }
 
-    public GuildOptions(Guild guild) {
-        this(guild.getId());
+    public void initGuildOptions() {
+        if (guild == null)
+            guild = BoomBot.jda.getGuildById(guildID);
+        if (channelDelay == null)
+            channelDelay = Maps.newHashMap();
+        if (Strings.isNullOrEmpty(commandKey))
+            commandKey = "!?";
+        if (banUsers == null)
+            banUsers = Lists.newArrayList();
+        if (restrictedChannels == null)
+            restrictedChannels = Lists.newArrayList();
+        if (Strings.isNullOrEmpty(lang))
+            lang = "en_US";
     }
 
     public boolean addGuildCommand(Command command) {
@@ -204,6 +221,7 @@ public class GuildOptions {
     public void setAllowMentions(boolean value) {
         allowMentions = value;
     }
+
     public boolean allowTTS() {
         return allowTTS;
     }

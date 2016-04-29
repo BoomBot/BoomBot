@@ -8,9 +8,9 @@ import net.lomeli.boombot.helper.PermissionsHelper;
 import net.lomeli.boombot.lib.CommandInterface;
 import net.lomeli.boombot.lib.GuildOptions;
 
-public class DerestrictCommand extends Command {
-    public DerestrictCommand() {
-        super("derestrict", "boombot.command.derestrict");
+public class UnrestrictCommand extends Command {
+    public UnrestrictCommand() {
+        super("unrestrict", "boombot.command.unrestrict");
     }
 
     @Override

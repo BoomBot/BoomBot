@@ -6,7 +6,7 @@ boombot.ready=BoomBot is ready!
 
 ## Commands
 # About
-boombot.command.about=Hi, I'm BoomBot. I was made by <@98616246483812352> as a fun little project.%nYou can find out more about me at https://github.com/BoomBot/BoomBot
+boombot.command.about=Hi, I'm BoomBot. I was made by <@98616246483812352> as a fun little project.%nYou can find out more about me at https://github.com/BoomBot/BoomBot%nBoomBot was made in Java using JDA, which can be found at https://github.com/DV8FromTheWorld/JDA
 # Reload Configs
 boombot.command.reloadconfig=Configs successfully reloaded!
 # Help
@@ -39,9 +39,9 @@ boombot.command.unbanuse.self=Doot!
 # Restrict
 boombot.command.restrict=%s is in restricted use mode. Only channel managers can use commands.
 boombot.command.restrict.restricted=%s is already in restricted use mode.
-# Derestrict
-boombot.command.derestrict=Command restrictions have been lifted from %s.
-boombot.command.derestrict.notrestricted=%s isn't in restricted use mode.
+# Unrestrict
+boombot.command.unrestrict=Command restrictions have been lifted from %s.
+boombot.command.unrestrict.notrestricted=%s isn't in restricted use mode.
 # Kick
 boombot.command.kick=%s has been kicked! %s
 boombot.command.kick.reason=Reason: %s
@@ -63,12 +63,12 @@ boombot.command.ban.days.missing=Please specify how many days back we go back to
 boombot.command.ban.days.zero=Days worth of messages delete must be at least 0.
 # Clear Commands
 boombot.command.clearcommand=All commands for server %s has been cleared by %s.
-# Create Commands
+# Make Commands
 boombot.command.createcommand=Creating command %s. Content: %s
 boombot.command.createcommand.name.empty=Command name cannot be empty!
 boombot.command.createcommand.name.exists=Command with the name %s already exists!
 boombot.command.createcommand.content.empty=Command cannot be empty!
-boombot.command.createcommand.missing=Cannot create command! Missing arguments"
+boombot.command.createcommand.missing=Cannot create command! Missing arguments
 # Remove Commands
 boombot.command.removecommand=%s has been removed by %s.
 boombot.command.removecommand.empty=Command name cannot be empty!
@@ -90,6 +90,20 @@ boombot.command.update=
 boombot.command.update.disabled=Using the update command is disabled on this server.
 boombot.command.update.downloading=
 boombot.command.update.complete=
+# Guild Stats command
+boombot.command.stats=%s stats:
+boombot.command.stats.owner=%s was created by %s.
+boombot.command.stats.users=There are %s user(s), with %s user(s) online, %s user(s) away, and %s user(s) offline.
+boombot.command.stats.text=There are %s text channels. %s is the main public channel.
+boombot.command.stats.voice=There are %s voice channels.
+# Make Commands
+boombot.command.imgcommand=Added Image command %s.
+boombot.command.imgcommand.name.empty=Command name cannot be empty!
+boombot.command.imgcommand.name.exists=Command with the name %s already exists!
+boombot.command.imgcommand.message.none=No previous message!
+boombot.command.imgcommand.message.notimage=Previous message must contain an attachment.
+boombot.command.imgcommand.missing=Cannot create command! Missing arguments
+boombot.command.imgcommand.args.toomany=Too Many Arguments. Only two needed: <command name>
 
 # Permission Types
 permissions.manage.messages=Message Management

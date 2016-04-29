@@ -21,7 +21,7 @@ public class HelpCommand extends Command {
             cmd.sendUserMessage(getContent() + ".restricted", cmd.getChannel().getName());
             return;
         }
-        String msg = "";
+        String msg = "```";
         String commandList = "";
         for (Command c : CommandRegistry.INSTANCE.getCommands()) {
             if (c != null)
@@ -33,7 +33,7 @@ public class HelpCommand extends Command {
             if (c != null)
                 commandList += options.getCommandKey() + c.getName() + ", ";
         }
-        msg += "\n" + options.translate(getContent(), cmd.getGuild().getName(), commandList.substring(0, commandList.length() - 2));
+        msg += "\n\n" + options.translate(getContent(), cmd.getGuild().getName(), commandList.substring(0, commandList.length() - 2)) + "```";
         cmd.sendMessage(msg);
     }
 }

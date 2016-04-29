@@ -25,4 +25,13 @@ public class UserHelper {
     public static boolean isOwner(User user, Guild guild) {
         return (guild == null && user == null) ? false : user.getId().equals(guild.getOwnerId());
     }
+
+    public static User getUser(Guild guild, String id) {
+        if (guild == null || Strings.isNullOrEmpty(id)) return null;
+        for (User user : guild.getUsers()) {
+            if (user != null && user.getId().equals(id))
+                return user;
+        }
+        return null;
+    }
 }

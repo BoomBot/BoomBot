@@ -1,16 +1,14 @@
-package net.lomeli.boombot.lib;
+package net.lomeli.boombot.lang;
 
 import net.dv8tion.jda.JDA;
 import net.dv8tion.jda.Permission;
-import net.dv8tion.jda.entities.Message;
-import net.dv8tion.jda.entities.MessageEmbed;
-import net.dv8tion.jda.entities.TextChannel;
-import net.dv8tion.jda.entities.User;
+import net.dv8tion.jda.entities.*;
 import net.dv8tion.jda.entities.impl.JDAImpl;
 import net.dv8tion.jda.exceptions.PermissionException;
 
 import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class DeleteMessage implements Message {
     private JDAImpl api;
@@ -125,5 +123,14 @@ public class DeleteMessage implements Message {
     @Override
     public JDA getJDA() {
         return null;
+    }
+
+    @Override
+    public MessageChannel getChannel() {
+        return null;
+    }
+
+    @Override
+    public void updateMessageAsync(String newContent, Consumer<Message> callback) {
     }
 }

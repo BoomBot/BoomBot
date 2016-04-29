@@ -9,11 +9,11 @@ import java.util.Map;
 
 import net.lomeli.boombot.BoomBot;
 import net.lomeli.boombot.commands.Command;
+import net.lomeli.boombot.helper.Logger;
 import net.lomeli.boombot.helper.PermissionsHelper;
 import net.lomeli.boombot.lang.LangRegistry;
 import net.lomeli.boombot.lib.CommandInterface;
 import net.lomeli.boombot.lib.GuildOptions;
-import net.lomeli.boombot.helper.Logger;
 
 public class OptionsCommand extends Command {
     private HashMap<String, ValueType> VALID_OPTIONS;
@@ -61,7 +61,28 @@ public class OptionsCommand extends Command {
             cmd.sendMessage(getContent() + ".missing.all");
     }
 
-    private void setValue(CommandInterface cmd, String name, String oldValue, Object value) {
+    private String getOldValue(GuildOptions options, String name) {
+        if (name.equalsIgnoreCase("announceReady")) {
+            return "" + options.announceReady();
+        } else if (name.equalsIgnoreCase("announceStopped")) {
+            return "" + options.announceStopped();
+        } else if (name.equalsIgnoreCase("disableClearChat")) {
+            return "" + options.isClearChatDisabled();
+        } else if (name.equalsIgnoreCase("allowTTS")) {
+            return "" + options.allowTTS();
+        } else if (name.equalsIgnoreCase("allowMentions")) {
+            return "" + options.allowMentions();
+        } else if (name.equalsIgnoreCase("secondsDelay")) {
+            return "" + options.getSecondsDelay();
+        } else if (name.equalsIgnoreCase("lang")) {
+            return "" + options.getLang();
+        } else if (name.equalsIgnoreCase("commandKey")) {
+            return "" + options.getCommandKey();
+        }
+        return "";
+    }
+
+    private void setValue(CommandInterface cmd, String name, String valueName, Object value) {
         if (name.equalsIgnoreCase("announceReady")) {
             name = "announceReady";
             cmd.getGuildOptions().setAnnounceReady((boolean) value);
@@ -82,12 +103,12 @@ public class OptionsCommand extends Command {
             cmd.getGuildOptions().setSecondsDelay((int) value);
         } else if (name.equalsIgnoreCase("lang")) {
             name = "lang";
-            cmd.getGuildOptions().setLang(oldValue);
+            cmd.getGuildOptions().setLang(LangRegistry.getLangName((String) value));
         } else if (name.equalsIgnoreCase("commandKey")) {
             name = "commandKey";
-            cmd.getGuildOptions().setCommandKey(oldValue);
+            cmd.getGuildOptions().setCommandKey((String) value);
         }
-        cmd.sendMessage("boombot.command.options", name, value);
+        cmd.sendMessage("boombot.command.options", name, valueName);
         BoomBot.configLoader.writeConfig();
     }
 
@@ -98,7 +119,7 @@ public class OptionsCommand extends Command {
             case INTEGER:
                 return parseInt(str);
             case STRING:
-                return LangRegistry.getLangName(str);
+                return str;
         }
         return null;
     }

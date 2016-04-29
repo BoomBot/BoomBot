@@ -68,7 +68,9 @@ public class BoomConfig {
             if (commandList != null && commandList.getGuildID().equalsIgnoreCase(guild.getId()))
                 return commandList;
         }
-        return new GuildOptions(guild);
+        GuildOptions options = new GuildOptions(guild);
+        this.guildOptions.add(options);
+        return options;
     }
 
     public boolean isUpdatable() {

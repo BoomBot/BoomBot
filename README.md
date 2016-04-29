@@ -11,7 +11,7 @@ Commands            | Argument                                             | Res
 !?rmcom             | `<command 1 name> <command 2 name> ...`              | Removes one or more custom commands from the Guild. **User Must Have Channel Management Permissions**
 !?clearcoms         |                                                      | Removes all custom commands for the Guild. **User Must Have Server Management Permissions**
 !?restrict          |                                                      | Limits use of commands to Channel Managers. **User Must Have Channel Management Permissions**
-!?derestrict        |                                                      | Removes restriction of commands. **User Must Have Channel Management Permissions**
+!?unrestrict        |                                                      | Removes restriction of commands. **User Must Have Channel Management Permissions**
 !?running           |                                                      | Shows how long BoomBot has been running for.
 !?reload-config     |                                                      | Reloads config file. **User Must Have Server Management Permissions**
 !?kick              | `@<username> <reason (optional)>`                    | Kicks user. Will message them and give them the reason, if provided. **BoomBot And User Must Have Kick Permissions**

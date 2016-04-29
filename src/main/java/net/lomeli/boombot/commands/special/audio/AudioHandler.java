@@ -1,6 +1,5 @@
 package net.lomeli.boombot.commands.special.audio;
 
-import com.github.axet.vget.VGet;
 import com.google.common.collect.Lists;
 import net.dv8tion.jda.audio.player.FilePlayer;
 import org.apache.commons.io.FileUtils;
@@ -32,8 +31,8 @@ public enum AudioHandler {
                     audioFile.delete();
                 URL website = new URL(url);
                 if (YouTubeDownloadHelper.isYouTubeVideo(url)){
-                    VGet v = new VGet(website, audioFile);
-                    v.download();
+                    //VGet v = new VGet(website, audioFile);
+                    //v.download();
                 } else {
                     FileUtils.copyURLToFile(website, audioFile);
                 }
@@ -67,7 +66,7 @@ public enum AudioHandler {
                 } else {
                     if (audioFile.exists()) {
                         player = new FilePlayer(audioFile);
-                        BoomBot.jda.getAudioManager().setSendingHandler(player);
+                        //BoomBot.jda.getAudioManager().setSendingHandler(player);
                         player.play();
                         return true;
                     } else {
@@ -75,7 +74,7 @@ public enum AudioHandler {
                             downloadNextFile();
                         }
                         player = new FilePlayer(audioFile);
-                        BoomBot.jda.getAudioManager().setSendingHandler(player);
+                        //BoomBot.jda.getAudioManager().setSendingHandler(player);
                         player.play();
                         return true;
                     }
@@ -84,7 +83,7 @@ public enum AudioHandler {
                 e.printStackTrace();
                 player.stop();
                 player = null;
-                BoomBot.jda.getAudioManager().setAudioConnection(null);
+                //BoomBot.jda.getAudioManager().setAudioConnection(null);
             }
         }
         return false;

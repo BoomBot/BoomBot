@@ -1,12 +1,20 @@
 package net.lomeli.boombot.commands;
 
+import com.google.common.collect.Lists;
+import net.dv8tion.jda.MessageBuilder;
 import net.dv8tion.jda.entities.Guild;
+import net.dv8tion.jda.entities.Message;
+import net.dv8tion.jda.entities.MessageEmbed;
 import net.dv8tion.jda.entities.User;
+import net.dv8tion.jda.entities.impl.MessageEmbedImpl;
+import net.dv8tion.jda.entities.impl.MessageImpl;
 
+import java.io.File;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import net.lomeli.boombot.helper.ChannelHelper;
 import net.lomeli.boombot.lib.CommandInterface;
 import net.lomeli.boombot.lib.GuildOptions;
 
@@ -25,10 +33,11 @@ public class Command {
         String fullContent = getContent().replaceAll("%n", "\n");
         if (!options.allowMentions()) fullContent = stripMentions(fullContent, cmd.getGuild());
         String user = options.allowMentions() ? ("<@" + cmd.getUser().getId() + ">") : cmd.getUser().getUsername();
-        cmd.sendMessage(fullContent.replaceAll("%u", user).replaceAll("%U", user), cmd.getArgs());
+        String data = options.translate(fullContent.replaceAll("%u", user).replaceAll("%U", user), cmd.getArgs());
+        cmd.sendMessage(data);
     }
 
-    private String stripMentions(String raw, Guild guild) {
+    protected String stripMentions(String raw, Guild guild) {
         String out = raw;
         Matcher matcher = MENTION_PATTER.matcher(raw);
         List<User> userList = guild.getUsers();
@@ -68,6 +77,7 @@ public class Command {
     public String cannotExecuteMessage(UserType userType, CommandInterface cmd) {
         return "";
     }
+
 
     public enum UserType {
         USER(false), BOOMBOT(true);

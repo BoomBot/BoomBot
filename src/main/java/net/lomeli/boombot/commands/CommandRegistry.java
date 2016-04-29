@@ -36,13 +36,14 @@ public enum CommandRegistry {
         addNewCommand(new StopBotCommand());
         addNewCommand(new ClearChatCommand());
         addNewCommand(new OptionsCommand());
+        addNewCommand(new GuildStatCommand());
 
         addNewCommand(new CreateCommand());
         addNewCommand(new RemoveCommand());
         addNewCommand(new ClearCommand());
         addNewCommand(new BanUseCommand());
         addNewCommand(new UnBanUseCommand());
-        addNewCommand(new DerestrictCommand());
+        addNewCommand(new UnrestrictCommand());
         addNewCommand(new RestrictCommand());
 
         addNewCommand(new KickCommand());

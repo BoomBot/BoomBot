@@ -1,14 +1,9 @@
 package net.lomeli.boombot.commands.special.audio;
 
-import com.github.axet.vget.VGet;
 import net.dv8tion.jda.entities.VoiceChannel;
-import org.json.JSONObject;
-
-import java.net.URL;
 
 import net.lomeli.boombot.BoomBot;
 import net.lomeli.boombot.commands.Command;
-import net.lomeli.boombot.helper.YouTubeDownloadHelper;
 import net.lomeli.boombot.lib.CommandInterface;
 
 public class AddAudioCommand extends Command {
@@ -18,7 +13,7 @@ public class AddAudioCommand extends Command {
 
     @Override
     public void executeCommand(CommandInterface cmd) {
-        VoiceChannel channel = BoomBot.jda.getAudioManager().getConnectedChannel();
+        VoiceChannel channel = BoomBot.jda.getAudioManager(cmd.getGuild()).getConnectedChannel();
         if (channel == null) {
             cmd.sendMessage("BoomBot isn't connected to any channel.");
             return;
@@ -43,7 +38,7 @@ public class AddAudioCommand extends Command {
     }
 
     private void handleYouTube(CommandInterface cmd) {
-        String url = cmd.getArgs().get(1);
+        /*String url = cmd.getArgs().get(1);
         if (YouTubeDownloadHelper.isYouTubeVideo(url)) {
             String videoID = YouTubeDownloadHelper.extractYTId(url);
             String downloadURL = "http://www.youtube.com/watch?v=" + videoID;
@@ -57,7 +52,7 @@ public class AddAudioCommand extends Command {
             }
         } else {
             // Youtube search
-        }
+        }*/
     }
 
     private void handleSoundCloud(CommandInterface cmd) {

@@ -18,7 +18,7 @@ public class JoinVoiceCommand extends Command {
     @Override
     public void executeCommand(CommandInterface cmd) {
         VoiceChannel channel = getUserVoiceChannel(cmd.getUser(), cmd.getGuild());
-        VoiceChannel currentChannel = BoomBot.jda.getAudioManager().getConnectedChannel();
+        VoiceChannel currentChannel = BoomBot.jda.getAudioManager(cmd.getGuild()).getConnectedChannel();
         if (channel == null) {
             cmd.sendMessage("Join a Voice Channel first before summoning me.");
             return;
@@ -31,8 +31,8 @@ public class JoinVoiceCommand extends Command {
             cmd.sendMessage("BoomBot already in %s.", channel.getName());
             return;
         }
-        BoomBot.jda.getAudioManager().setSendingHandler(null);
-        BoomBot.jda.getAudioManager().openAudioConnection(channel);
+        BoomBot.jda.getAudioManager(cmd.getGuild()).setSendingHandler(null);
+        BoomBot.jda.getAudioManager(cmd.getGuild()).openAudioConnection(channel);
         cmd.sendMessage(getContent(), channel.getName());
     }
 

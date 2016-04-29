@@ -33,9 +33,9 @@ public class BoomBot {
             config = new BoomConfig();
             configLoader = new ConfigLoader(new File("config.cfg"));
             configLoader.parseConfig();
-            if (args.length >= 2) {
-                if (args.length > 2) {
-                    for (int i = 2; i < args.length; i++) {
+            if (args.length >= 1) {
+                if (args.length > 1) {
+                    for (int i = 1; i < args.length; i++) {
                         String arg = args[i];
                         switch (arg) {
                             case "-d":
@@ -48,11 +48,14 @@ public class BoomBot {
                     }
                 }
                 listener = new BoomListen();
-                jda = new JDABuilder(args[0], args[1]).addListener(listener).buildBlocking();
+                jda = new JDABuilder().setBotToken(args[0]).addListener(listener).buildBlocking();
                 startTime = new Date();
+                jda.getAccountManager().setGame("BoomBot using JDA");
                 Logger.info("Bot is ready");
-                if (debug)
+                if (debug) {
+                    jda.getAccountManager().setGame("BoomBot using JDA - Debug Mode");
                     Logger.info("BoomBot is in debug mode!");
+                }
                 CommandRegistry.INSTANCE.registerBasicCommands();
             } else {
                 Logger.info("BoomBot requires a email and password to login as!");

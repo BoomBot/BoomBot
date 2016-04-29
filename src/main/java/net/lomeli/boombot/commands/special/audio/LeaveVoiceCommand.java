@@ -13,7 +13,7 @@ public class LeaveVoiceCommand extends Command {
 
     @Override
     public void executeCommand(CommandInterface cmd) {
-        VoiceChannel channel = BoomBot.jda.getAudioManager().getConnectedChannel();
+        VoiceChannel channel = BoomBot.jda.getAudioManager(cmd.getGuild()).getConnectedChannel();
         if (channel == null) {
             cmd.sendMessage("BoomBot isn't connected to any channel.");
             return;
@@ -22,8 +22,8 @@ public class LeaveVoiceCommand extends Command {
         try {
             if (AudioHandler.INSTANCE.getPlayer() != null)
                 AudioHandler.INSTANCE.getPlayer().stop();
-            BoomBot.jda.getAudioManager().setSendingHandler(null);
-            BoomBot.jda.getAudioManager().closeAudioConnection();
+            BoomBot.jda.getAudioManager(cmd.getGuild()).setSendingHandler(null);
+            BoomBot.jda.getAudioManager(cmd.getGuild()).closeAudioConnection();
         } catch (Exception e){
             e.printStackTrace();
         }

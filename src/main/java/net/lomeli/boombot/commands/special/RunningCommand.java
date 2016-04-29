@@ -16,7 +16,10 @@ public class RunningCommand extends Command {
         long diffMinutes = diff / (60 * 1000) % 60;
         long diffHours = diff / (60 * 60 * 1000) % 24;
         long diffDays = diff / (24 * 60 * 60 * 1000);
-        String msg = cmd.getGuildOptions().translate(getContent(), BoomBot.startTime) + "\n" + cmd.getGuildOptions().translate(getContent() + ".timesince", diffDays, diffHours, diffMinutes, diffSeconds);
+        String msg = "```" + cmd.getGuildOptions().translate(getContent(), BoomBot.startTime) + "\n" + cmd.getGuildOptions().translate(getContent() + ".timesince", diffDays, diffHours, diffMinutes, diffSeconds);
+        if (BoomBot.debug)
+            msg += "\nI'm in debug mode, so I've probably not been up for very long.";
+        msg += "```";
         cmd.sendMessage(msg);
     }
 }
