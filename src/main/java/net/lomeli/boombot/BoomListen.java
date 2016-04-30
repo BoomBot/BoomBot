@@ -38,7 +38,7 @@ public class BoomListen extends ListenerAdapter {
         if (BoomBot.jda == null || BoomBot.jda.getSelfInfo() == null || event == null || event.getMessage() == null || event.getAuthor() == null)
             return;
         Message message = event.getMessage();
-        if (message.isEdited() || UserHelper.isUserBoomBot(event.getAuthor()))
+        if (message.isEdited() || UserHelper.isUserBoomBot(event.getAuthor()) || event.getAuthor().isBot())
             return;
         GuildOptions options = BoomBot.config.getGuildOptions(event.getGuild());
         if (!ready(options, event.getChannel())) return;

@@ -1,20 +1,12 @@
 package net.lomeli.boombot.commands;
 
-import com.google.common.collect.Lists;
-import net.dv8tion.jda.MessageBuilder;
 import net.dv8tion.jda.entities.Guild;
-import net.dv8tion.jda.entities.Message;
-import net.dv8tion.jda.entities.MessageEmbed;
 import net.dv8tion.jda.entities.User;
-import net.dv8tion.jda.entities.impl.MessageEmbedImpl;
-import net.dv8tion.jda.entities.impl.MessageImpl;
 
-import java.io.File;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import net.lomeli.boombot.helper.ChannelHelper;
 import net.lomeli.boombot.lib.CommandInterface;
 import net.lomeli.boombot.lib.GuildOptions;
 
@@ -77,7 +69,6 @@ public class Command {
     public String cannotExecuteMessage(UserType userType, CommandInterface cmd) {
         return "";
     }
-
 
     public enum UserType {
         USER(false), BOOMBOT(true);
