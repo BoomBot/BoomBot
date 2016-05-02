@@ -71,7 +71,14 @@ public class LangRegistry {
             s = english.getLocalization(key);
         if (s == null)
             s = key;
-        return String.format(s, objs);
+        if (objs != null && objs.length > 0) {
+            for (int i = 0; i < objs.length; i++) {
+                String str = objs[i].toString();
+                if (str.startsWith("[") && str.endsWith("]"))
+                    objs[i] = str.substring(1, str.length() - 1);
+            }
+        }
+        return (objs != null && objs.length > 0) ? String.format(s, objs) : s;
     }
 
     public static List<String> getKeys() {
