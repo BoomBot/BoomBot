@@ -22,18 +22,14 @@ public enum EventRegistry {
     }
 
     public boolean post(Event event) {
-        boolean flag = false;
         for (Object obj : eventHandlers) {
             Method[] methods = obj.getClass().getMethods();
             for (Method method : methods) {
                 if (method.getParameterCount() == 1 && method.getParameterTypes()[0] == event.getClass()) {
                     try {
                         method.invoke(obj, event);
-                        if (event.cancelable()) {
-                            flag = event.isCanceled();
-                            if (flag)
-                                return flag;
-                        }
+                        if (event.cancelable() && event.isCanceled())
+                            return true;
                     } catch (IllegalAccessException ex) {
                         Logger.error("Could not access event handler %s in %s", ex, method.getName(), obj.getClass().getName());
                     } catch (InvocationTargetException ex) {
@@ -42,6 +38,6 @@ public enum EventRegistry {
                 }
             }
         }
-        return flag;
+        return false;
     }
 }
