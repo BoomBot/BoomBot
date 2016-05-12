@@ -17,4 +17,9 @@ public class MessageSentEvent extends Event {
         this.channel = channel;
         this.message = message;
     }
+
+    @Override
+    public boolean cancelable() {
+        return true;
+    }
 }

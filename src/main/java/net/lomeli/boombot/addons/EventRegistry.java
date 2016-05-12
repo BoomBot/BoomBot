@@ -29,9 +29,11 @@ public enum EventRegistry {
                 if (method.getParameterCount() == 1 && method.getParameterTypes()[0] == event.getClass()) {
                     try {
                         method.invoke(obj, event);
-                        flag = event.isCanceled();
-                        if (flag)
-                            return flag;
+                        if (event.cancelable()) {
+                            flag = event.isCanceled();
+                            if (flag)
+                                return flag;
+                        }
                     } catch (IllegalAccessException ex) {
                         Logger.error("Could not access event handler %s in %s", ex, method.getName(), obj.getClass().getName());
                     } catch (InvocationTargetException ex) {
