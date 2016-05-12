@@ -12,6 +12,8 @@ import net.dv8tion.jda.hooks.ListenerAdapter;
 import java.io.File;
 import java.util.List;
 
+import net.lomeli.boombot.addons.EventRegistry;
+import net.lomeli.boombot.api.event.MessageSentEvent;
 import net.lomeli.boombot.commands.CommandRegistry;
 import net.lomeli.boombot.helper.Logger;
 import net.lomeli.boombot.helper.UserHelper;
@@ -40,6 +42,10 @@ public class BoomListen extends ListenerAdapter {
         Message message = event.getMessage();
         if (message.isEdited() || UserHelper.isUserBoomBot(event.getAuthor()) || event.getAuthor().isBot())
             return;
+        if (EventRegistry.INSTANCE.post(new MessageSentEvent(event.getAuthor(), event.getGuild(), event.getChannel(), event.getMessage()))) {
+            message.deleteMessage();
+            return;
+        }
         GuildOptions options = BoomBot.config.getGuildOptions(event.getGuild());
         if (!ready(options, event.getChannel())) return;
         String content = message.getRawContent();

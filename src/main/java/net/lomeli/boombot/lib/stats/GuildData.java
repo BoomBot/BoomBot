@@ -1,4 +1,4 @@
-package net.lomeli.boombot.lib;
+package net.lomeli.boombot.lib.stats;
 
 import net.dv8tion.jda.entities.Guild;
 import net.dv8tion.jda.entities.User;

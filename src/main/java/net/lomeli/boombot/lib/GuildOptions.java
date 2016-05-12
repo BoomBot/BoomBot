@@ -16,10 +16,12 @@ import net.lomeli.boombot.BoomBot;
 import net.lomeli.boombot.commands.Command;
 import net.lomeli.boombot.commands.CommandRegistry;
 import net.lomeli.boombot.lang.LangRegistry;
+import net.lomeli.boombot.lib.stats.UserCommandUsage;
 
 public class GuildOptions {
     private List<Command> commandList;
     private List<String> banUsers, restrictedChannels;
+    private List<UserCommandUsage> commandUsage;
     private String guildID, lang, commandKey;
     private boolean announceReady, announceStopped, allowMentions, allowTTS;
     /**
@@ -29,6 +31,7 @@ public class GuildOptions {
     private int secondsDelay;
     private transient Guild guild;
     private transient HashMap<String, Long> channelDelay;
+    private HashMap<String, Integer> comData;
 
     public GuildOptions() {
         this(null);
@@ -42,6 +45,8 @@ public class GuildOptions {
         this.commandList = Lists.newArrayList();
         this.banUsers = Lists.newArrayList();
         this.restrictedChannels = Lists.newArrayList();
+        this.commandUsage = Lists.newArrayList();
+        this.comData = Maps.newHashMap();
         this.announceReady = false;
         this.announceStopped = false;
         this.disableClearChat = false;
@@ -75,6 +80,7 @@ public class GuildOptions {
             if (c != null && c.getName().equalsIgnoreCase(command.getName()))
                 return false;
         }
+        comData.put(command.getName().toLowerCase(), 0);
         return commandList.add(command);
     }
 
@@ -84,6 +90,8 @@ public class GuildOptions {
             Command c = it.next();
             if (c != null && c.getName().equalsIgnoreCase(name)) {
                 it.remove();
+                commandUsage.stream().filter(d -> d != null).forEach(d -> d.removeCommand(name));
+                comData.remove(name.toLowerCase());
                 return true;
             }
         }
@@ -146,6 +154,29 @@ public class GuildOptions {
             channelDelay.put(id, System.currentTimeMillis());
     }
 
+    public UserCommandUsage getUserUsage(User user) {
+        UserCommandUsage data = new UserCommandUsage(user.getId());
+        if (!commandUsage.isEmpty()) {
+            for (UserCommandUsage d : commandUsage) {
+                if (d.getUserID().equals(user.getId())) {
+                    data = d;
+                    break;
+                }
+            }
+        }
+        return data;
+    }
+
+    public void updateUserUsage(User user, String commandKey) {
+        UserCommandUsage data = getUserUsage(user);
+        data.incrementUsage(commandKey);
+    }
+
+    public Object[] getMostUsedCommand() {
+        Object[] data = new Object[2];
+        return data;
+    }
+
     public void updateLastCommand(TextChannel channel) {
         if (channel != null) updateLastCommand(channel.getId());
     }
@@ -156,6 +187,25 @@ public class GuildOptions {
 
     public List<Command> getCommandList() {
         return commandList;
+    }
+
+    public Command getCommand(CommandInterface cmd) {
+        Command c = null;
+        for (Command command : commandList) {
+            if (command.getName().equalsIgnoreCase(cmd.getCommand())) {
+                if (command.canUserExecute(cmd)) {
+                    if (command.canBoomBotExecute(cmd))
+                        c = command;
+                    else
+                        cmd.sendMessage(command.cannotExecuteMessage(Command.UserType.BOOMBOT, cmd));
+                    break;
+                } else {
+                    cmd.sendMessage(command.cannotExecuteMessage(Command.UserType.USER, cmd));
+                    break;
+                }
+            }
+        }
+        return c;
     }
 
     public String getGuildID() {

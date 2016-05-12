@@ -4,6 +4,7 @@ repositories {
 }
 
 apply plugin: 'java'
+apply plugin: 'maven'
 
 ext.configFile = file "build.properties"
 
@@ -31,6 +32,11 @@ jar {
     }
 }
 
+task sourceJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
 task fatJar(type: Jar) {
     manifest {
         attributes 'Main-Class': config.mainClass
@@ -44,4 +50,31 @@ task copyLang(type: Copy) {
     into 'build/libs/lang'
 }
 
-build.dependsOn fatJar, copyLang
+task deobfJar(type: Jar) {
+    from sourceSets.main.output
+    classifier = "dev"
+}
+
+tasks.withType(Zip) { task ->
+    task.doLast {
+        ant.checksum algorithm: 'MD5', file: it.archivePath
+        ant.checksum algorithm: 'SHA1', file: it.archivePath
+    }
+}
+
+task writeNewPom << {
+    pom {
+        project {
+            inceptionYear '2016'
+            licenses {
+                license {
+                    name 'GNU GENERAL PUBLIC LICENSE, Version 3'
+                    url 'http://www.gnu.org/licenses/gpl.txt'
+                    distribution 'repo'
+                }
+            }
+        }
+    }.writeTo("$buildDir/libs/${config.archiveName}-${config.releaseVersion}.pom")
+}
+
+build.dependsOn fatJar, copyLang, sourceJar, deobfJar, writeNewPom

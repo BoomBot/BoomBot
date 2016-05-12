@@ -106,22 +106,9 @@ public enum CommandRegistry {
         }
         // Check Guild Commands
         if (exCommand == null) {
-            for (Command c : guildOptions.getCommandList()) {
-                if (c.getName().equalsIgnoreCase(cmd.getCommand())) {
-                    if (c.canUserExecute(cmd)) {
-                        if (c.canBoomBotExecute(cmd))
-                            exCommand = c;
-                        else {
-                            cmd.sendMessage(c.cannotExecuteMessage(Command.UserType.BOOMBOT, cmd));
-                            return false;
-                        }
-                        break;
-                    } else {
-                        cmd.sendMessage(c.cannotExecuteMessage(Command.UserType.USER, cmd));
-                        return false;
-                    }
-                }
-            }
+            Command com = guildOptions.getCommand(cmd);
+            if (com != null)
+                exCommand = com;
         }
         if (exCommand != null) {
             Logger.info("%s used %s command.", cmd.getUser().getUsername(), cmd.getCommand());

@@ -7,6 +7,7 @@ import javax.security.auth.login.LoginException;
 import java.io.File;
 import java.util.Date;
 
+import net.lomeli.boombot.addons.AddonLoader;
 import net.lomeli.boombot.commands.CommandRegistry;
 import net.lomeli.boombot.lang.LangRegistry;
 import net.lomeli.boombot.lib.BoomConfig;
@@ -57,6 +58,7 @@ public class BoomBot {
                     Logger.info("BoomBot is in debug mode!");
                 }
                 CommandRegistry.INSTANCE.registerBasicCommands();
+                AddonLoader.loadAddons();
             } else {
                 Logger.info("BoomBot requires a email and password to login as!");
             }
