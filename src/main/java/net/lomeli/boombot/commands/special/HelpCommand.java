@@ -2,7 +2,6 @@ package net.lomeli.boombot.commands.special;
 
 import net.dv8tion.jda.Permission;
 
-import net.lomeli.boombot.BoomBot;
 import net.lomeli.boombot.commands.Command;
 import net.lomeli.boombot.commands.CommandRegistry;
 import net.lomeli.boombot.helper.PermissionsHelper;
@@ -28,6 +27,12 @@ public class HelpCommand extends Command {
                 commandList += options.getCommandKey() + c.getName() + ", ";
         }
         msg += options.translate(getContent() + ".default", commandList.substring(0, commandList.length() - 2));
+        commandList = "";
+        for (Command c : CommandRegistry.INSTANCE.getAddonCommands()) {
+            if (c != null)
+                commandList += options.getCommandKey() + c.getName() + ", ";
+        }
+        msg += options.translate(getContent() + "addon", commandList.substring(0, commandList.length() - 2));
         commandList = "";
         for (Command c : options.getCommandList()) {
             if (c != null)

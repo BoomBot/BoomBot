@@ -12,6 +12,7 @@ boombot.command.reloadconfig=Configs successfully reloaded!
 # Help
 boombot.command.help=Commands for %s: %s
 boombot.command.help.default=Default Commands: %s
+boombot.command.help.addon=Addon Commands: %s
 boombot.command.help.restricted=Custom commands are restricted in the %s channel
 # Running
 boombot.command.running=BoomBot has been running since %s

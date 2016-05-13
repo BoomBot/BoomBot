@@ -23,57 +23,77 @@ public enum CommandRegistry {
     INSTANCE();
 
     private List<Command> commands;
+    private List<Command> addonCommands;
 
     CommandRegistry() {
         commands = Lists.newArrayList();
+        addonCommands = Lists.newArrayList();
     }
 
     public void registerBasicCommands() {
-        addNewCommand(new HelpCommand());
-        addNewCommand(new RunningCommand());
-        addNewCommand(new ReloadConfigCommand());
-        addNewCommand(new Command("about", "boombot.command.about"));
-        addNewCommand(new StopBotCommand());
-        addNewCommand(new ClearChatCommand());
-        addNewCommand(new OptionsCommand());
-        addNewCommand(new GuildStatCommand());
+        addNewCommand(new HelpCommand(), false);
+        addNewCommand(new RunningCommand(), false);
+        addNewCommand(new ReloadConfigCommand(), false);
+        addNewCommand(new Command("about", "boombot.command.about"), false);
+        addNewCommand(new StopBotCommand(), false);
+        addNewCommand(new ClearChatCommand(), false);
+        addNewCommand(new OptionsCommand(), false);
+        addNewCommand(new GuildStatCommand(), false);
 
-        addNewCommand(new CreateCommand());
-        addNewCommand(new RemoveCommand());
-        addNewCommand(new ClearCommand());
-        addNewCommand(new BanUseCommand());
-        addNewCommand(new UnBanUseCommand());
-        addNewCommand(new UnrestrictCommand());
-        addNewCommand(new RestrictCommand());
+        addNewCommand(new CreateCommand(), false);
+        addNewCommand(new RemoveCommand(), false);
+        addNewCommand(new ClearCommand(), false);
+        addNewCommand(new BanUseCommand(), false);
+        addNewCommand(new UnBanUseCommand(), false);
+        addNewCommand(new UnrestrictCommand(), false);
+        addNewCommand(new RestrictCommand(), false);
 
-        addNewCommand(new KickCommand());
-        addNewCommand(new BanCommand());
+        addNewCommand(new KickCommand(), false);
+        addNewCommand(new BanCommand(), false);
 
         if (BoomBot.debug) {
             Logger.info("Registering debugging and in-development commands");
-            addNewCommand(new JoinVoiceCommand());
-            addNewCommand(new LeaveVoiceCommand());
-            addNewCommand(new AddAudioCommand());
+            addNewCommand(new JoinVoiceCommand(), false);
+            addNewCommand(new LeaveVoiceCommand(), false);
+            addNewCommand(new AddAudioCommand(), false);
 
             //Debugging command
-            addNewCommand(new GuildIdCommand());
-            addNewCommand(new ChannelIdCommand());
+            addNewCommand(new GuildIdCommand(), false);
+            addNewCommand(new ChannelIdCommand(), false);
         }
     }
 
-    public boolean addNewCommand(Command command) {
-        for (Command c : commands) {
-            if (c.getName().equalsIgnoreCase(command.getName())) {
-                Logger.info("Command with name \"%s\" already exists, ignoring...", command.getName());
-                return false;
+    private boolean addNewCommand(Command command, boolean addon) {
+        if (addon) {
+            for (Command c : addonCommands) {
+                if (c.getName().equalsIgnoreCase(command.getName())) {
+                    Logger.info("Command with name \"%s\" already exists, ignoring...", command.getName());
+                    return false;
+                }
             }
+            addonCommands.add(command);
+        } else {
+            for (Command c : commands) {
+                if (c.getName().equalsIgnoreCase(command.getName())) {
+                    Logger.info("Command with name \"%s\" already exists, ignoring...", command.getName());
+                    return false;
+                }
+            }
+            commands.add(command);
         }
-        commands.add(command);
         return true;
     }
 
+    public boolean addNewCommand(Command command) {
+        return addNewCommand(command, true);
+    }
+
     public List<Command> getCommands() {
-        return commands;
+        return Lists.newArrayList(commands);
+    }
+
+    public List<Command> getAddonCommands() {
+        return Lists.newArrayList(addonCommands);
     }
 
     public boolean executeCommand(CommandInterface cmd) {
