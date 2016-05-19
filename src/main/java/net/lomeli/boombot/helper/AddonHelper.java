@@ -16,6 +16,8 @@ import net.lomeli.boombot.addons.AddonClassLoader;
 import net.lomeli.boombot.api.BoomAddon;
 
 public class AddonHelper {
+    private static List<String> ignoreList;
+
     static {
         ignoreList = Lists.newArrayList();
         ignoreList.add("build\\classes\\main");
@@ -68,8 +70,6 @@ public class AddonHelper {
         ignoreList.add("org.apache.httpcomponents");
         ignoreList.add("junit");
     }
-
-    private static List<String> ignoreList;
 
     public static List<String> getClassesInFile(File file) {
         List<String> classNames = Lists.newArrayList();

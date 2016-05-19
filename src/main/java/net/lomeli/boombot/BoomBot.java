@@ -29,6 +29,9 @@ public class BoomBot {
         //TODO: Stop any calls to System.exit()
         addonLoader = new Loader();
         LangRegistry.initRegistry();
+        if (debug)
+            Logger.info("Adding Shutdown Hook");
+        Runtime.getRuntime().addShutdownHook(new ShutdownHook());
         try {
             logFolder = new File("logs");
             if (!logFolder.exists())
@@ -72,9 +75,6 @@ public class BoomBot {
         } catch (InterruptedException e) {
             Logger.error("An Exception occurred", e);
         }
-        if (debug)
-            Logger.info("Adding Shutdown Hook");
-        Runtime.getRuntime().addShutdownHook(new ShutdownHook());
     }
 
     public static void shutdownBoomBot() {
