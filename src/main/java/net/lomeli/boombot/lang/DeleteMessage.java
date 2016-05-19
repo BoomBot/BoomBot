@@ -110,8 +110,7 @@ public class DeleteMessage implements Message {
 
     @Override
     public void deleteMessage() {
-        if(!api.getSelfInfo().getId().equals(getAuthor().getId()))
-        {
+        if (!api.getSelfInfo().getId().equals(getAuthor().getId())) {
             if (isPrivate())
                 throw new PermissionException("Cannot delete another User's messages in a PrivateChannel.");
             else if (!api.getTextChannelById(getChannelId()).checkPermission(api.getSelfInfo(), Permission.MESSAGE_MANAGE))

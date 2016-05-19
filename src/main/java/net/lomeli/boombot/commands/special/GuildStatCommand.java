@@ -4,8 +4,8 @@ import com.google.common.base.Strings;
 
 import net.lomeli.boombot.commands.Command;
 import net.lomeli.boombot.lib.CommandInterface;
-import net.lomeli.boombot.lib.stats.GuildData;
 import net.lomeli.boombot.lib.GuildOptions;
+import net.lomeli.boombot.lib.stats.GuildData;
 
 public class GuildStatCommand extends Command {
     public GuildStatCommand() {

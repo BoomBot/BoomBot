@@ -10,15 +10,15 @@ import net.lomeli.boombot.BoomBot;
 import net.lomeli.boombot.helper.Logger;
 
 public class UpdateUtil {
-    private static UpdateJson remoteData;
     private static final String JSON_REMOTE = "";
+    private static UpdateJson remoteData;
 
     public static void getRemoteData() {
         try {
             Gson gson = new GsonBuilder().create();
             URL url = new URL(JSON_REMOTE);
             remoteData = gson.fromJson(new InputStreamReader(url.openStream()), UpdateJson.class);
-        } catch(Exception e) {
+        } catch (Exception e) {
             Logger.error("Failed to get remote data", e);
         }
     }

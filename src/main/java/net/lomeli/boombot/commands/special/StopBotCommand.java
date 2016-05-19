@@ -19,8 +19,7 @@ public class StopBotCommand extends Command {
     public void executeCommand(CommandInterface cmd) {
         super.executeCommand(cmd);
         Logger.info("BoomBot shutting down via command from %s...", cmd.getUser().getUsername());
-        BoomBot.configLoader.writeConfig();
-        BoomBot.jda.shutdown();
+        BoomBot.shutdownBoomBot();
     }
 
     @Override

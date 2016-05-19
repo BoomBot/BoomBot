@@ -18,7 +18,6 @@ public class DownloadUpdateThread implements Runnable {
                 if (updateFile.exists())
                     updateFile.delete();
                 FileUtils.copyURLToFile(new URL(UpdateUtil.downloadURL()), updateFile);
-
             }
         } catch (Exception e) {
             Logger.error("Failed to download update.", e);

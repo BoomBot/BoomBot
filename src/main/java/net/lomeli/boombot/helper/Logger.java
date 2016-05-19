@@ -27,7 +27,7 @@ public class Logger {
         log(LogInfo.DEBUG, message, args);
     }
 
-    public static void warn(Object message, Object...args) {
+    public static void warn(Object message, Object... args) {
         log(LogInfo.WARN, message, args);
     }
 
@@ -36,7 +36,7 @@ public class Logger {
         e.printStackTrace();
     }
 
-    public static void error(Object message, Object...args) {
+    public static void error(Object message, Object... args) {
         log(LogInfo.ERROR, message, args);
     }
 

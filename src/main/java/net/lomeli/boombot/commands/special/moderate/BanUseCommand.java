@@ -1,7 +1,6 @@
 package net.lomeli.boombot.commands.special.moderate;
 
 import net.dv8tion.jda.Permission;
-import net.dv8tion.jda.entities.Guild;
 import net.dv8tion.jda.entities.User;
 
 import java.util.List;

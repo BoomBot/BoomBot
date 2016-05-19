@@ -12,6 +12,7 @@ import java.util.Random;
 import net.lomeli.boombot.BoomBot;
 
 public class CommandInterface {
+    public Random rand = new Random(System.currentTimeMillis());
     private GuildOptions guildOptions;
     private Guild guild;
     private User user;
@@ -19,7 +20,6 @@ public class CommandInterface {
     private Message message;
     private String command;
     private List<String> args;
-    public Random rand = new Random(System.currentTimeMillis());
 
     public CommandInterface(Message message, GuildOptions guildOptions, User user, TextChannel channel, String command, List<String> args) {
         this.message = message;

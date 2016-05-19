@@ -9,7 +9,6 @@ import net.dv8tion.jda.events.guild.GuildJoinEvent;
 import net.dv8tion.jda.events.message.guild.GenericGuildMessageEvent;
 import net.dv8tion.jda.hooks.ListenerAdapter;
 
-import java.io.File;
 import java.util.List;
 
 import net.lomeli.boombot.addons.EventRegistry;

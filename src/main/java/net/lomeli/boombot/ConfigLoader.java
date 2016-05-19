@@ -8,8 +8,8 @@ import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.InputStreamReader;
 
-import net.lomeli.boombot.lib.BoomConfig;
 import net.lomeli.boombot.helper.Logger;
+import net.lomeli.boombot.lib.BoomConfig;
 
 public class ConfigLoader {
     private File mainFile;

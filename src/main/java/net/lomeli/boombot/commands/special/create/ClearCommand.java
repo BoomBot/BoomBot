@@ -1,9 +1,6 @@
 package net.lomeli.boombot.commands.special.create;
 
 import net.dv8tion.jda.Permission;
-import net.dv8tion.jda.entities.Role;
-
-import java.util.List;
 
 import net.lomeli.boombot.BoomBot;
 import net.lomeli.boombot.commands.Command;

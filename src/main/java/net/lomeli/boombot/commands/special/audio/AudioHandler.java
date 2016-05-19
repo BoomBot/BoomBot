@@ -8,7 +8,6 @@ import java.io.File;
 import java.net.URL;
 import java.util.List;
 
-import net.lomeli.boombot.BoomBot;
 import net.lomeli.boombot.helper.YouTubeDownloadHelper;
 
 public enum AudioHandler {
@@ -30,7 +29,7 @@ public enum AudioHandler {
                 if (audioFile.exists())
                     audioFile.delete();
                 URL website = new URL(url);
-                if (YouTubeDownloadHelper.isYouTubeVideo(url)){
+                if (YouTubeDownloadHelper.isYouTubeVideo(url)) {
                     //VGet v = new VGet(website, audioFile);
                     //v.download();
                 } else {

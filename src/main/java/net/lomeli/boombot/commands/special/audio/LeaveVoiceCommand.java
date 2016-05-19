@@ -7,7 +7,7 @@ import net.lomeli.boombot.commands.Command;
 import net.lomeli.boombot.lib.CommandInterface;
 
 public class LeaveVoiceCommand extends Command {
-    public LeaveVoiceCommand(){
+    public LeaveVoiceCommand() {
         super("voice-leave", "BoomBot left %s.");
     }
 
@@ -24,7 +24,7 @@ public class LeaveVoiceCommand extends Command {
                 AudioHandler.INSTANCE.getPlayer().stop();
             BoomBot.jda.getAudioManager(cmd.getGuild()).setSendingHandler(null);
             BoomBot.jda.getAudioManager(cmd.getGuild()).closeAudioConnection();
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

@@ -8,7 +8,7 @@ import net.lomeli.boombot.helper.PermissionsHelper;
 import net.lomeli.boombot.lib.CommandInterface;
 import net.lomeli.boombot.lib.GuildOptions;
 
-public class UpdateCommand extends Command{
+public class UpdateCommand extends Command {
     public UpdateCommand() {
         super("update", "boombot.command.update");
     }
@@ -19,7 +19,6 @@ public class UpdateCommand extends Command{
             cmd.sendMessage(getContent() + ".disabled");
             return;
         }
-
     }
 
     @Override

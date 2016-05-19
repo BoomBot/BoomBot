@@ -7,14 +7,15 @@ import javax.security.auth.login.LoginException;
 import java.io.File;
 import java.util.Date;
 
-import net.lomeli.boombot.addons.AddonLoader;
+import net.lomeli.boombot.addons.Loader;
 import net.lomeli.boombot.commands.CommandRegistry;
+import net.lomeli.boombot.helper.Logger;
 import net.lomeli.boombot.lang.LangRegistry;
 import net.lomeli.boombot.lib.BoomConfig;
-import net.lomeli.boombot.helper.Logger;
 import net.lomeli.boombot.update.ShutdownHook;
 
 public class BoomBot {
+    public static final int MAJOR = 1, MINOR = 0, REV = 0;
     public static BoomListen listener;
     public static JDA jda;
     public static Date startTime;
@@ -22,11 +23,13 @@ public class BoomBot {
     public static ConfigLoader configLoader;
     public static File logFolder, logFile;
     public static boolean debug;
-    public static final int MAJOR = 1, MINOR = 0, REV = 0;
+    public static Loader addonLoader;
 
     public static void main(String[] args) {
+        //TODO: Stop any calls to System.exit()
+        addonLoader = new Loader();
+        LangRegistry.initRegistry();
         try {
-            LangRegistry.initRegistry();
             logFolder = new File("logs");
             if (!logFolder.exists())
                 logFolder.mkdir();
@@ -58,7 +61,7 @@ public class BoomBot {
                     Logger.info("BoomBot is in debug mode!");
                 }
                 CommandRegistry.INSTANCE.registerBasicCommands();
-                AddonLoader.loadAddons();
+                addonLoader.loadAddons();
             } else {
                 Logger.info("BoomBot requires a email and password to login as!");
             }
@@ -72,5 +75,10 @@ public class BoomBot {
         if (debug)
             Logger.info("Adding Shutdown Hook");
         Runtime.getRuntime().addShutdownHook(new ShutdownHook());
+    }
+
+    public static void shutdownBoomBot() {
+        configLoader.writeConfig();
+        jda.shutdown();
     }
 }

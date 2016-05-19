@@ -236,12 +236,12 @@ public class GuildOptions {
         this.secondsDelay = secondsDelay;
     }
 
-    public void setLang(String lang) {
-        this.lang = lang;
-    }
-
     public String getLang() {
         return lang;
+    }
+
+    public void setLang(String lang) {
+        this.lang = lang;
     }
 
     public Map<String, Long> getChannelDelay() {

@@ -4,11 +4,11 @@ import net.dv8tion.jda.Permission;
 
 import net.lomeli.boombot.BoomBot;
 import net.lomeli.boombot.commands.Command;
+import net.lomeli.boombot.helper.Logger;
 import net.lomeli.boombot.helper.PermissionsHelper;
 import net.lomeli.boombot.lang.LangRegistry;
 import net.lomeli.boombot.lib.CommandInterface;
 import net.lomeli.boombot.lib.GuildOptions;
-import net.lomeli.boombot.helper.Logger;
 
 public class ReloadConfigCommand extends Command {
 

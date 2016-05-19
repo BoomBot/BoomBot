@@ -13,7 +13,8 @@ public enum EventRegistry {
     INSTANCE();
 
     private final List<Object> eventHandlers;
-    EventRegistry(){
+
+    EventRegistry() {
         this.eventHandlers = Lists.newArrayList();
     }
 

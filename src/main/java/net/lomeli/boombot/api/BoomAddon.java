@@ -9,14 +9,18 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 public @interface BoomAddon {
     String addonID();
+
     String name() default "";
+
     String version() default "";
 
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.FIELD)
-    @interface Instance{}
+    @interface Instance {
+    }
 
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.METHOD)
-    @interface Init{}
+    @interface Init {
+    }
 }

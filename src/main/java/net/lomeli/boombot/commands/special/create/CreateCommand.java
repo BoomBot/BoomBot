@@ -1,12 +1,8 @@
 package net.lomeli.boombot.commands.special.create;
 
 import com.google.common.base.Strings;
-import com.google.common.collect.Lists;
 import net.dv8tion.jda.Permission;
-import net.dv8tion.jda.entities.Message;
-import net.dv8tion.jda.entities.MessageEmbed;
 
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -18,6 +14,7 @@ import net.lomeli.boombot.lib.GuildOptions;
 
 public class CreateCommand extends Command {
     public static Pattern imagePattern = Pattern.compile("https?:\\/\\/(?:[a-z\\-]+\\.)+[a-z]{2,6}(?:\\/[^\\/#?]+)+\\.(?:jpe?g|gif|png)");
+
     public CreateCommand() {
         super("mkcom", "boombot.command.createcommand");
     }

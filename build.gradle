@@ -4,7 +4,6 @@ repositories {
 }
 
 apply plugin: 'java'
-apply plugin: 'maven'
 
 ext.configFile = file "build.properties"
 
@@ -62,19 +61,4 @@ tasks.withType(Zip) { task ->
     }
 }
 
-task writeNewPom << {
-    pom {
-        project {
-            inceptionYear '2016'
-            licenses {
-                license {
-                    name 'GNU GENERAL PUBLIC LICENSE, Version 3'
-                    url 'http://www.gnu.org/licenses/gpl.txt'
-                    distribution 'repo'
-                }
-            }
-        }
-    }.writeTo("$buildDir/libs/${config.archiveName}-${config.releaseVersion}.pom")
-}
-
-build.dependsOn fatJar, copyLang, sourceJar, deobfJar, writeNewPom
+build.dependsOn fatJar, copyLang, sourceJar, deobfJar
