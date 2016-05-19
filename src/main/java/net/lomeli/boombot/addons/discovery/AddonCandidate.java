@@ -28,17 +28,11 @@ public class AddonCandidate {
             loader.addFile(addonFile);
             List<String> classNames = Lists.newArrayList();
             List<Class> classes = Lists.newArrayList();
-            switch (type) {
-                case DIR:
-                    classNames.addAll(AddonHelper.getClassesInPath(addonFile, addonPath));
-                    classes.addAll(AddonHelper.findAddonClass(classNames, loader));
-
-                    break;
-                case JAR:
-                    classNames.addAll(AddonHelper.getClassesInFile(addonFile));
-                    classes.addAll(AddonHelper.findAddonClass(classNames, loader));
-                    break;
-            }
+            if (type == AddonType.DIR)
+                classNames.addAll(AddonHelper.getClassesInPath(addonFile, addonPath));
+            else
+                classNames.addAll(AddonHelper.getClassesInFile(addonFile));
+            classes.addAll(AddonHelper.findAddonClass(classNames, loader));
             for (Class cl : classes)
                 addonLoader.addContainer(new AddonContainer(cl));
         } catch (ClassNotFoundException ex) {
