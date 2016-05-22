@@ -29,7 +29,7 @@ public class Loader {
     public void loadAddons() {
         Logger.info("Discovering addons");
         discoverAddons();
-        addonLoader.findAddons(addonClassLoader);
+        addonLoader.findAddons();
         try {
             addonLoader.searchForDuplicates();
         } catch (DuplicateAddonException ex) {

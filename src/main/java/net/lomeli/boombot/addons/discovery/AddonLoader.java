@@ -22,9 +22,9 @@ public class AddonLoader {
         candidateList.add(addonCandidate);
     }
 
-    public void findAddons(AddonClassLoader loader) {
+    public void findAddons() {
         candidateList.stream().forEach(candidate -> {
-            candidate.findAddons(this, loader);
+            candidate.findAddons(this);
         });
         String addonList = "";
         for (int i = 0; i < containers.size(); i++) {

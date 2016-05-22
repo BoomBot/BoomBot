@@ -38,7 +38,7 @@ public class AddonContainer {
                     method.invoke(addonInstance);
             }
         } catch (Exception e) {
-
+            e.printStackTrace();
         }
     }
 

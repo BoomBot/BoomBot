@@ -84,6 +84,7 @@ public enum CommandRegistry {
             }
             commands.add(command);
         }
+        Logger.debug("Added command %s", command.getName());
         return true;
     }
 
@@ -127,7 +128,6 @@ public enum CommandRegistry {
                 }
             }
         }
-
         // Check Addon Commands
         for (Command c : addonCommands) {
             if (c.getName().equalsIgnoreCase(cmd.getCommand())) {
@@ -152,7 +152,7 @@ public enum CommandRegistry {
                 exCommand = com;
         }
         if (exCommand != null && !EventRegistry.INSTANCE.post(new CommandEvent.Pre(exCommand, cmd.getUser(), cmd.getGuild(), cmd.getChannel()))) {
-            Logger.info("%s used %s command.", cmd.getUser().getUsername(), cmd.getCommand());
+            Logger.info("%s used %s command in %s guild.", cmd.getUser().getUsername(), cmd.getCommand(), cmd.getGuild().getName());
             exCommand.executeCommand(cmd);
             EventRegistry.INSTANCE.post(new CommandEvent.Post(exCommand, cmd.getUser(), cmd.getGuild(), cmd.getChannel()));
             return true;

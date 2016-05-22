@@ -1,5 +1,6 @@
 package net.lomeli.boombot.commands.special;
 
+import com.google.common.base.Strings;
 import net.dv8tion.jda.Permission;
 
 import net.lomeli.boombot.commands.Command;
@@ -26,19 +27,22 @@ public class HelpCommand extends Command {
             if (c != null)
                 commandList += options.getCommandKey() + c.getName() + ", ";
         }
-        msg += options.translate(getContent() + ".default", commandList.substring(0, commandList.length() - 2));
+        if (!Strings.isNullOrEmpty(commandList))
+            msg += options.translate(getContent() + ".default", commandList.substring(0, commandList.length() - 2));
         commandList = "";
         for (Command c : CommandRegistry.INSTANCE.getAddonCommands()) {
             if (c != null)
                 commandList += options.getCommandKey() + c.getName() + ", ";
         }
-        msg += options.translate(getContent() + "addon", commandList.substring(0, commandList.length() - 2));
+        if (!Strings.isNullOrEmpty(commandList))
+            msg += "\n\n" + options.translate(getContent() + ".addon", commandList.substring(0, commandList.length() - 2));
         commandList = "";
         for (Command c : options.getCommandList()) {
             if (c != null)
                 commandList += options.getCommandKey() + c.getName() + ", ";
         }
-        msg += "\n\n" + options.translate(getContent(), cmd.getGuild().getName(), commandList.substring(0, commandList.length() - 2)) + "```";
+        if (!Strings.isNullOrEmpty(commandList))
+            msg += "\n\n" + options.translate(getContent(), cmd.getGuild().getName(), commandList.substring(0, commandList.length() - 2)) + "```";
         cmd.sendMessage(msg);
     }
 }

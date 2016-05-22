@@ -76,7 +76,7 @@ public class BoomBot {
             Logger.error("An Exception occurred", e);
         }
     }
-
+    
     public static void shutdownBoomBot() {
         configLoader.writeConfig();
         jda.shutdown();

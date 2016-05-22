@@ -11,15 +11,11 @@ public class AddonClassLoader extends URLClassLoader {
     private List<File> sources;
 
     public AddonClassLoader(ClassLoader parent) {
-        super(new URL[0], null);
+        super(parent instanceof URLClassLoader ? ((URLClassLoader) parent).getURLs() : new URL[]{}, null);
         this.mainClassLoader = new URLLoaderWrapper((URLClassLoader) parent);
         this.sources = Lists.newArrayList();
     }
 
-    public void addFile(File addon) throws MalformedURLException {
-        mainClassLoader.addURL(addon.toURI().toURL());
-        this.sources.add(addon);
-    }
 
     @Override
     public Class<?> loadClass(String name) throws ClassNotFoundException {

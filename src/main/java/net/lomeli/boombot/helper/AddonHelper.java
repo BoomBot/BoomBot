@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-import net.lomeli.boombot.addons.AddonClassLoader;
 import net.lomeli.boombot.api.BoomAddon;
 
 public class AddonHelper {
@@ -112,7 +111,7 @@ public class AddonHelper {
         return classNames;
     }
 
-    public static List<Class> findAddonClass(List<String> clazzes, AddonClassLoader classLoader) throws ClassNotFoundException {
+    public static List<Class> findAddonClass(List<String> clazzes, ClassLoader classLoader) throws ClassNotFoundException {
         List<Class> classList = Lists.newArrayList();
         for (String st : clazzes) {
             Class clazz = classLoader.loadClass(st);

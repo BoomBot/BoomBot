@@ -5,9 +5,10 @@ import com.google.common.collect.Lists;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.List;
 
-import net.lomeli.boombot.addons.AddonClassLoader;
 import net.lomeli.boombot.addons.AddonContainer;
 import net.lomeli.boombot.helper.AddonHelper;
 import net.lomeli.boombot.helper.Logger;
@@ -23,9 +24,10 @@ public class AddonCandidate {
         this.type = type;
     }
 
-    public void findAddons(AddonLoader addonLoader, AddonClassLoader loader) {
+    public void findAddons(AddonLoader addonLoader) {
         try {
-            loader.addFile(addonFile);
+            URL url = addonFile.toURI().toURL();
+            ClassLoader loader = new URLClassLoader(new URL[]{url});
             List<String> classNames = Lists.newArrayList();
             List<Class> classes = Lists.newArrayList();
             if (type == AddonType.DIR)
