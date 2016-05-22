@@ -6,6 +6,8 @@ import net.dv8tion.jda.Permission;
 import java.util.List;
 
 import net.lomeli.boombot.BoomBot;
+import net.lomeli.boombot.api.event.EventRegistry;
+import net.lomeli.boombot.api.event.text.CommandEvent;
 import net.lomeli.boombot.commands.special.*;
 import net.lomeli.boombot.commands.special.audio.AddAudioCommand;
 import net.lomeli.boombot.commands.special.audio.JoinVoiceCommand;
@@ -39,6 +41,7 @@ public enum CommandRegistry {
         addNewCommand(new ClearChatCommand(), false);
         addNewCommand(new OptionsCommand(), false);
         addNewCommand(new GuildStatCommand(), false);
+        addNewCommand(new AvatarCommand(), false);
 
         addNewCommand(new CreateCommand(), false);
         addNewCommand(new RemoveCommand(), false);
@@ -124,15 +127,34 @@ public enum CommandRegistry {
                 }
             }
         }
+
+        // Check Addon Commands
+        for (Command c : addonCommands) {
+            if (c.getName().equalsIgnoreCase(cmd.getCommand())) {
+                if (c.canUserExecute(cmd)) {
+                    if (c.canBoomBotExecute(cmd))
+                        exCommand = c;
+                    else {
+                        cmd.sendMessage(c.cannotExecuteMessage(Command.UserType.BOOMBOT, cmd));
+                        return false;
+                    }
+                    break;
+                } else {
+                    cmd.sendMessage(c.cannotExecuteMessage(Command.UserType.USER, cmd));
+                    return false;
+                }
+            }
+        }
         // Check Guild Commands
         if (exCommand == null) {
             Command com = guildOptions.getCommand(cmd);
             if (com != null)
                 exCommand = com;
         }
-        if (exCommand != null) {
+        if (exCommand != null && !EventRegistry.INSTANCE.post(new CommandEvent.Pre(exCommand, cmd.getUser(), cmd.getGuild(), cmd.getChannel()))) {
             Logger.info("%s used %s command.", cmd.getUser().getUsername(), cmd.getCommand());
             exCommand.executeCommand(cmd);
+            EventRegistry.INSTANCE.post(new CommandEvent.Post(exCommand, cmd.getUser(), cmd.getGuild(), cmd.getChannel()));
             return true;
         }
         return false;

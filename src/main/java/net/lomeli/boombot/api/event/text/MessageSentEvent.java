@@ -1,9 +1,11 @@
-package net.lomeli.boombot.api.event;
+package net.lomeli.boombot.api.event.text;
 
 import net.dv8tion.jda.entities.Guild;
 import net.dv8tion.jda.entities.Message;
 import net.dv8tion.jda.entities.TextChannel;
 import net.dv8tion.jda.entities.User;
+
+import net.lomeli.boombot.api.event.Event;
 
 public class MessageSentEvent extends Event {
     public final User user;

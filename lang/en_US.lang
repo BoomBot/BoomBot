@@ -105,6 +105,10 @@ boombot.command.imgcommand.message.none=No previous message!
 boombot.command.imgcommand.message.notimage=Previous message must contain an attachment.
 boombot.command.imgcommand.missing=Cannot create command! Missing arguments
 boombot.command.imgcommand.args.toomany=Too Many Arguments. Only two needed: <command name>
+# Avatar Command
+boombot.command.avatar.extraargs=Must either mention a user or no arguments at all.
+boombot.command.avatar.missing=User %s does not have an avatar.
+boombot.command.avatar.one=Only displaying the first mentioned user.
 
 # Permission Types
 permissions.manage.messages=Message Management

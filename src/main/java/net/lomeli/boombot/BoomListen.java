@@ -11,8 +11,8 @@ import net.dv8tion.jda.hooks.ListenerAdapter;
 
 import java.util.List;
 
-import net.lomeli.boombot.addons.EventRegistry;
-import net.lomeli.boombot.api.event.MessageSentEvent;
+import net.lomeli.boombot.api.event.EventRegistry;
+import net.lomeli.boombot.api.event.text.MessageSentEvent;
 import net.lomeli.boombot.commands.CommandRegistry;
 import net.lomeli.boombot.helper.Logger;
 import net.lomeli.boombot.helper.UserHelper;

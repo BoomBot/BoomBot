@@ -10,7 +10,6 @@ import net.lomeli.boombot.addons.exceptions.DuplicateAddonException;
 import net.lomeli.boombot.helper.Logger;
 
 public class AddonLoader {
-
     private List<AddonCandidate> candidateList;
     private List<AddonContainer> containers;
 
@@ -39,7 +38,7 @@ public class AddonLoader {
     public void searchForDuplicates() throws DuplicateAddonException {
         List<String> registeredIDs = Lists.newArrayList();
         for (AddonContainer container : containers) {
-            if (registeredIDs.contains(container.getId()))
+            if (registeredIDs.contains(container.getId()) || container.getId().equalsIgnoreCase("boombot"))
                 throw new DuplicateAddonException(container.getId());
             registeredIDs.add(container.getId());
         }
