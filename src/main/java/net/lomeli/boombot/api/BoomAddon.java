@@ -14,6 +14,8 @@ public @interface BoomAddon {
 
     String version() default "";
 
+    String acceptedBoomBotVersion() default "*";
+
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.FIELD)
     @interface Instance {
@@ -22,5 +24,10 @@ public @interface BoomAddon {
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.METHOD)
     @interface Init {
+    }
+
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target(ElementType.METHOD)
+    @interface PostInit {
     }
 }

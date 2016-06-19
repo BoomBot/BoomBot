@@ -31,7 +31,9 @@ public class JoinVoiceCommand extends Command {
             cmd.sendMessage("BoomBot already in %s.", channel.getName());
             return;
         }
-        BoomBot.jda.getAudioManager(cmd.getGuild()).setSendingHandler(null);
+        cmd.getGuildOptions().audioThread = new Thread(cmd.getGuildOptions().getAudioHandler());
+        cmd.getGuildOptions().audioThread.start();
+        BoomBot.jda.getAudioManager(cmd.getGuild()).setSendingHandler(cmd.getGuildOptions().getAudioHandler().getPlayer());
         BoomBot.jda.getAudioManager(cmd.getGuild()).openAudioConnection(channel);
         cmd.sendMessage(getContent(), channel.getName());
     }

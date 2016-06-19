@@ -9,6 +9,7 @@ import net.lomeli.boombot.addons.discovery.AddonCandidate;
 import net.lomeli.boombot.addons.discovery.AddonLoader;
 import net.lomeli.boombot.addons.exceptions.DuplicateAddonException;
 import net.lomeli.boombot.api.BoomAddon;
+import net.lomeli.boombot.api.BoomBotAPI;
 import net.lomeli.boombot.helper.AddonHelper;
 import net.lomeli.boombot.helper.Logger;
 
@@ -16,7 +17,6 @@ import net.lomeli.boombot.helper.Logger;
  * Slightly based of FML
  */
 public class Loader {
-    private final File addonFolder = new File("addons");
     private AddonClassLoader addonClassLoader;
     private AddonLoader addonLoader;
 
@@ -36,7 +36,12 @@ public class Loader {
             Logger.error("", ex);
             BoomBot.shutdownBoomBot();
         }
+        Logger.info("Initializing addons");
         addonLoader.initAddons();
+        Logger.info("Finished Initializing addons");
+        Logger.info("Post-initializing addons");
+        addonLoader.postAddons();
+        Logger.info("Finished Post-Initializing of addons");
     }
 
     private void discoverAddons() {
@@ -63,15 +68,16 @@ public class Loader {
 
     private void discoverAddonsFromFolder() {
         Logger.info("Looking for addons in addons folder");
-        if (!addonFolder.exists()) {
-            addonFolder.mkdir();
-            return;
-        } else if (!addonFolder.isDirectory()) {
-            addonFolder.mkdir();
+        if (!BoomBotAPI.ADDON_FOLDER.exists() || !BoomBotAPI.ADDON_FOLDER.isDirectory()) {
+            BoomBotAPI.ADDON_FOLDER.mkdir();
+            BoomBotAPI.ADDON_CONFIG_FOLDER.mkdir();
             return;
         }
 
-        File[] files = addonFolder.listFiles(new FilenameFilter() {
+        if (!BoomBotAPI.ADDON_CONFIG_FOLDER.exists() || !BoomBotAPI.ADDON_CONFIG_FOLDER.isDirectory())
+            BoomBotAPI.ADDON_CONFIG_FOLDER.mkdir();
+
+        File[] files = BoomBotAPI.ADDON_FOLDER.listFiles(new FilenameFilter() {
             @Override
             public boolean accept(File dir, String name) {
                 return name.endsWith(".jar") || name.endsWith(".zip");

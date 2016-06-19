@@ -42,6 +42,19 @@ public class AddonContainer {
         }
     }
 
+    public void postInitAddon() {
+        try {
+            Method[] methods = addonInstance.getClass().getMethods();
+            for (Method method : methods) {
+                BoomAddon.PostInit post = AnnotationHelper.getAnnotationFromMethod(method, null, BoomAddon.PostInit.class);
+                if (post != null)
+                    method.invoke(addonInstance);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public String getId() {
         return id;
     }

@@ -15,7 +15,8 @@ import net.lomeli.boombot.lib.BoomConfig;
 import net.lomeli.boombot.update.ShutdownHook;
 
 public class BoomBot {
-    public static final int MAJOR = 1, MINOR = 0, REV = 0;
+    public static final int MAJOR = 2, MINOR = 0, REV = 0;
+    public static final String BOOM_BOT_VERSION = String.format("%s.%s.%s", MAJOR, MINOR, REV);
     public static BoomListen listener;
     public static JDA jda;
     public static Date startTime;
@@ -76,7 +77,7 @@ public class BoomBot {
             Logger.error("An Exception occurred", e);
         }
     }
-    
+
     public static void shutdownBoomBot() {
         configLoader.writeConfig();
         jda.shutdown();

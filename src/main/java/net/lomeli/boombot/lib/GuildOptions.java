@@ -15,6 +15,7 @@ import java.util.Map;
 import net.lomeli.boombot.BoomBot;
 import net.lomeli.boombot.commands.Command;
 import net.lomeli.boombot.commands.CommandRegistry;
+import net.lomeli.boombot.commands.special.audio.lib.AudioHandler;
 import net.lomeli.boombot.lang.LangRegistry;
 import net.lomeli.boombot.lib.stats.UserCommandUsage;
 
@@ -31,7 +32,9 @@ public class GuildOptions {
     private int secondsDelay;
     private transient Guild guild;
     private transient HashMap<String, Long> channelDelay;
+    private transient AudioHandler audioHandler;
     private HashMap<String, Integer> comData;
+    public transient Thread audioThread;
 
     public GuildOptions() {
         this(null);
@@ -47,6 +50,7 @@ public class GuildOptions {
         this.restrictedChannels = Lists.newArrayList();
         this.commandUsage = Lists.newArrayList();
         this.comData = Maps.newHashMap();
+        this.audioHandler = new AudioHandler();
         this.announceReady = false;
         this.announceStopped = false;
         this.disableClearChat = false;
@@ -284,5 +288,9 @@ public class GuildOptions {
         if (Strings.isNullOrEmpty(lang)) lang = "en_US";
         LangRegistry.setCurrentLang(lang);
         return LangRegistry.translate(key, args);
+    }
+
+    public AudioHandler getAudioHandler() {
+        return audioHandler;
     }
 }

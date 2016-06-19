@@ -38,6 +38,8 @@ public class BoomListen extends ListenerAdapter {
     public void onGenericGuildMessage(GenericGuildMessageEvent event) {
         if (BoomBot.jda == null || BoomBot.jda.getSelfInfo() == null || event == null || event.getMessage() == null || event.getAuthor() == null)
             return;
+        if (BoomBot.debug && !event.getGuild().getId().equals("159936190089265152"))
+            return;
         Message message = event.getMessage();
         if (message.isEdited() || UserHelper.isUserBoomBot(event.getAuthor()) || event.getAuthor().isBot())
             return;

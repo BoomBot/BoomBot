@@ -20,8 +20,9 @@ public class LeaveVoiceCommand extends Command {
         }
         cmd.sendMessage(getContent(), channel.getName());
         try {
-            if (AudioHandler.INSTANCE.getPlayer() != null)
-                AudioHandler.INSTANCE.getPlayer().stop();
+            cmd.getGuildOptions().getAudioHandler().stop();
+            cmd.getGuildOptions().audioThread.interrupt();
+            cmd.getGuildOptions().audioThread = null;
             BoomBot.jda.getAudioManager(cmd.getGuild()).setSendingHandler(null);
             BoomBot.jda.getAudioManager(cmd.getGuild()).closeAudioConnection();
         } catch (Exception e) {

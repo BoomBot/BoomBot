@@ -9,7 +9,9 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.List;
 
+import net.lomeli.boombot.BoomBot;
 import net.lomeli.boombot.addons.AddonContainer;
+import net.lomeli.boombot.addons.exceptions.WrongBoomBotVersion;
 import net.lomeli.boombot.helper.AddonHelper;
 import net.lomeli.boombot.helper.Logger;
 
@@ -47,6 +49,9 @@ public class AddonCandidate {
             Logger.error("Failed to load file %s", ex, addonFile.getName());
         } catch (InvocationTargetException ex) {
             Logger.error("Could not access addon info in %s", ex, addonFile.getName());
+        } catch (WrongBoomBotVersion ex) {
+            Logger.error("Failed to load addon %s", ex, addonFile.getName());
+            BoomBot.shutdownBoomBot();
         }
     }
 

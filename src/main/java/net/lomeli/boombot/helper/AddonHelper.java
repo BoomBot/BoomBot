@@ -6,12 +6,15 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.lang.annotation.Annotation;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import net.lomeli.boombot.BoomBot;
+import net.lomeli.boombot.addons.discovery.AnnotationHelper;
+import net.lomeli.boombot.addons.exceptions.WrongBoomBotVersion;
 import net.lomeli.boombot.api.BoomAddon;
 
 public class AddonHelper {
@@ -111,19 +114,22 @@ public class AddonHelper {
         return classNames;
     }
 
-    public static List<Class> findAddonClass(List<String> clazzes, ClassLoader classLoader) throws ClassNotFoundException {
+    public static List<Class> findAddonClass(List<String> clazzes, ClassLoader classLoader) throws ClassNotFoundException, WrongBoomBotVersion {
         List<Class> classList = Lists.newArrayList();
         for (String st : clazzes) {
-            Class clazz = classLoader.loadClass(st);
-            Annotation[] annotations = clazz.getAnnotations();
-            if (annotations != null && annotations.length > 0) {
-                annotationsLoop:
-                for (Annotation a : annotations) {
-                    if (a.annotationType().toString().equals(BoomAddon.class.toString())) {
+            try {
+                Class clazz = classLoader.loadClass(st);
+                BoomAddon annotation = AnnotationHelper.getAnnotationFromClass(clazz, null, BoomAddon.class);
+                if (annotation != null) {
+                    if (annotation.acceptedBoomBotVersion().equals(BoomBot.BOOM_BOT_VERSION) || annotation.acceptedBoomBotVersion().equals("*"))
                         classList.add(clazz);
-                        break annotationsLoop;
-                    }
+                    else
+                        throw new WrongBoomBotVersion(annotation.name(), annotation.acceptedBoomBotVersion(), BoomBot.BOOM_BOT_VERSION);
                 }
+            } catch (IllegalAccessException ex) {
+                Logger.error("Could not access annotations for %s", st);
+            } catch (InvocationTargetException ex) {
+                Logger.error("Error while accessing %s", st);
             }
         }
         return classList;

@@ -132,4 +132,14 @@ public class DeleteMessage implements Message {
     @Override
     public void updateMessageAsync(String newContent, Consumer<Message> callback) {
     }
+
+    @Override
+    public boolean isMentioned(User user) {
+        return false;
+    }
+
+    @Override
+    public List<Role> getMentionedRoles() {
+        return null;
+    }
 }

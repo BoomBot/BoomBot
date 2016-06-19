@@ -3,10 +3,7 @@ package net.lomeli.boombot.helper;
 import com.google.common.collect.Lists;
 import net.dv8tion.jda.JDA;
 import net.dv8tion.jda.Permission;
-import net.dv8tion.jda.entities.Message;
-import net.dv8tion.jda.entities.SelfInfo;
-import net.dv8tion.jda.entities.TextChannel;
-import net.dv8tion.jda.entities.User;
+import net.dv8tion.jda.entities.*;
 import net.dv8tion.jda.entities.impl.JDAImpl;
 import net.dv8tion.jda.entities.impl.UserImpl;
 import net.dv8tion.jda.exceptions.PermissionException;
@@ -46,15 +43,15 @@ public class ChannelHelper {
         return messages;
     }
 
-    public static Message sendAttachmentMessage(Message msg, TextChannel channel) {
+    public static Message sendAttachmentMessage(Message msg, TextChannel channel, Guild guild) {
         SelfInfo self = channel.getJDA().getSelfInfo();
         if (!channel.checkPermission(self, Permission.MESSAGE_WRITE))
             throw new PermissionException(Permission.MESSAGE_WRITE);
         //TODO: PermissionException for Permission.MESSAGE_ATTACH_FILES maybe
 
         JDAImpl api = (JDAImpl) channel.getJDA();
-        if (api.getMessageLimit() != null)
-            throw new RateLimitedException(api.getMessageLimit() - System.currentTimeMillis());
+        if (api.getMessageLimit(guild.getId()) != null)
+            throw new RateLimitedException(api.getMessageLimit(guild.getId()) - System.currentTimeMillis());
         try {
             JSONArray attachments = attachmentsToJson(msg.getAttachments());
             JSONObject jsonmsg = new JSONObject().put("content", msg.getRawContent()).put("tts", msg.isTTS()).put("attachments", attachments);
@@ -63,7 +60,7 @@ public class ChannelHelper {
                     jsonmsg);
             if (response.isRateLimit()) {
                 long retry_after = response.getObject().getLong("retry_after");
-                api.setMessageTimeout(retry_after);
+                api.setMessageTimeout(guild.getId(), retry_after);
                 throw new RateLimitedException(retry_after);
             }
             if (!response.isOk())

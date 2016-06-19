@@ -48,6 +48,10 @@ public class AddonLoader {
         containers.stream().filter(a -> a != null).forEach(a -> a.initAddon());
     }
 
+    public void postAddons() {
+        containers.stream().filter(a -> a != null).forEach(a -> a.postInitAddon());
+    }
+
     public void addContainer(AddonContainer container) {
         this.containers.add(container);
     }

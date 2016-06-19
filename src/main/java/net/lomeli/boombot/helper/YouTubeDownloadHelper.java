@@ -48,7 +48,7 @@ public class YouTubeDownloadHelper {
     public static JSONObject getVideoInfo(String videoID) {
         String result;
         HttpClient httpClient = HttpClientBuilder.create().build();
-        HttpGet request = new HttpGet("http://www.youtubeinmp3.com/fetch/?format=JSON&video=http://www.youtube.com/watch?v=" + videoID);
+        HttpGet request = new HttpGet("http://www.youtubeinmp3.com/fetch/?format=JSON&video=http://www.youtube.com/watch?v=" + videoID + "&filesize=1");
         HttpResponse response;
         try {
             response = httpClient.execute(request);
@@ -56,11 +56,10 @@ public class YouTubeDownloadHelper {
             if (entity != null) {
                 InputStream instream = entity.getContent();
                 result = convertStreamToString(instream);
-                System.out.println(result);
                 return new JSONObject(result);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (IOException ex) {
+            Logger.error("An issue occurred trying to get a YT video with the id %s", ex, videoID);
         }
         return null;
     }

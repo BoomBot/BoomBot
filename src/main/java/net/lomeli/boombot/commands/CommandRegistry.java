@@ -9,9 +9,7 @@ import net.lomeli.boombot.BoomBot;
 import net.lomeli.boombot.api.event.EventRegistry;
 import net.lomeli.boombot.api.event.text.CommandEvent;
 import net.lomeli.boombot.commands.special.*;
-import net.lomeli.boombot.commands.special.audio.AddAudioCommand;
-import net.lomeli.boombot.commands.special.audio.JoinVoiceCommand;
-import net.lomeli.boombot.commands.special.audio.LeaveVoiceCommand;
+import net.lomeli.boombot.commands.special.audio.*;
 import net.lomeli.boombot.commands.special.create.ClearCommand;
 import net.lomeli.boombot.commands.special.create.CreateCommand;
 import net.lomeli.boombot.commands.special.create.RemoveCommand;
@@ -59,6 +57,9 @@ public enum CommandRegistry {
             addNewCommand(new JoinVoiceCommand(), false);
             addNewCommand(new LeaveVoiceCommand(), false);
             addNewCommand(new AddAudioCommand(), false);
+            addNewCommand(new NextCommand(), false);
+            addNewCommand(new PlayCommand(), false);
+            addNewCommand(new StopCommand(), false);
 
             //Debugging command
             addNewCommand(new GuildIdCommand(), false);
