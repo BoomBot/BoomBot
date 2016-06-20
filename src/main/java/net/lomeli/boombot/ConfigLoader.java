@@ -1,7 +1,9 @@
 package net.lomeli.boombot;
 
+import com.google.common.base.Strings;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -25,11 +27,9 @@ public class ConfigLoader {
             writeConfig();
         try {
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
-            InputStreamReader configReader = new InputStreamReader(new FileInputStream(mainFile));
-            if (configReader != null) {
-                BoomBot.config = gson.fromJson(configReader, BoomConfig.class);
-                configReader.close();
-            }
+            String data = FileUtils.readFileToString(mainFile, "UTF-8");
+            if (!Strings.isNullOrEmpty(data))
+                BoomBot.config = gson.fromJson(data, BoomConfig.class);
         } catch (Exception e) {
             Logger.error("Failed to read config file %s!", e, mainFile.toString());
         }
@@ -39,9 +39,7 @@ public class ConfigLoader {
         try {
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
             String stuff = gson.toJson(BoomBot.config, BoomConfig.class);
-            FileWriter writer = new FileWriter(mainFile);
-            writer.write(stuff);
-            writer.close();
+            FileUtils.write(mainFile, stuff, "UTF-8");
         } catch (Exception e) {
             Logger.error("Could not write to %s!", e, mainFile.toString());
         }
