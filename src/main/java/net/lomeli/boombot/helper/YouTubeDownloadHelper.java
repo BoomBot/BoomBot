@@ -1,5 +1,6 @@
 package net.lomeli.boombot.helper;
 
+import net.lomeli.boombot.logging.BoomLogger;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -59,7 +60,7 @@ public class YouTubeDownloadHelper {
                 return new JSONObject(result);
             }
         } catch (IOException ex) {
-            Logger.error("An issue occurred trying to get a YT video with the id %s", ex, videoID);
+            BoomLogger.error("An issue occurred trying to get a YT video with the id %s", ex, videoID);
         }
         return null;
     }

@@ -14,7 +14,7 @@ import java.util.List;
 import net.lomeli.boombot.api.event.EventRegistry;
 import net.lomeli.boombot.api.event.text.MessageSentEvent;
 import net.lomeli.boombot.commands.CommandRegistry;
-import net.lomeli.boombot.helper.Logger;
+import net.lomeli.boombot.logging.BoomLogger;
 import net.lomeli.boombot.helper.UserHelper;
 import net.lomeli.boombot.lib.CommandInterface;
 import net.lomeli.boombot.lib.GuildOptions;
@@ -28,7 +28,7 @@ public class BoomListen extends ListenerAdapter {
 
     @Override
     public void onGuildJoin(GuildJoinEvent event) {
-        Logger.info("Joining %s...", event.getGuild().getName());
+        BoomLogger.info("Joining %s...", event.getGuild().getName());
         if (BoomBot.config.getGuildOptions(event.getGuild()) == null) {
             BoomBot.config.updateGuildCommand(new GuildOptions(event.getGuild()));
         }
@@ -68,8 +68,7 @@ public class BoomListen extends ListenerAdapter {
 
     @Override
     public void onShutdown(ShutdownEvent event) {
-        BoomBot.configLoader.writeConfig();
-        Logger.writeLogFile(BoomBot.logFolder, BoomBot.logFile);
+        BoomBot.wrapUp();
     }
 
     private boolean ready(GuildOptions options, TextChannel channel) {

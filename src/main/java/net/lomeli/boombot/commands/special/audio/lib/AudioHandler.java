@@ -10,7 +10,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 
-import net.lomeli.boombot.helper.Logger;
+import net.lomeli.boombot.logging.BoomLogger;
 import net.lomeli.boombot.helper.ObfUtil;
 
 public class AudioHandler implements Runnable {
@@ -69,7 +69,7 @@ public class AudioHandler implements Runnable {
             if (this.songFile.exists())
                 FileUtils.forceDelete(this.songFile);
         } catch (IOException ex) {
-            Logger.error("Couldn't delete song.mp3", ex);
+            BoomLogger.error("Couldn't delete song.mp3", ex);
         }
     }
 
@@ -94,9 +94,9 @@ public class AudioHandler implements Runnable {
             this.downloaderThread = new Thread(new FileDownloader(songFile, url, file.getSize()));
             this.downloaderThread.start();
         } catch (MalformedURLException ex) {
-            Logger.error("Malformed URL in song queue", ex);
+            BoomLogger.error("Malformed URL in song queue", ex);
         } catch (IOException ex) {
-            Logger.error("Could not open file %s", ex, file);
+            BoomLogger.error("Could not open file %s", ex, file);
         }
     }
 
@@ -106,14 +106,14 @@ public class AudioHandler implements Runnable {
             if (this.downloaderThread != null) {
                 Runnable run = getThreadRunnable(this.downloaderThread);
                 if (run instanceof FileDownloader && ((FileDownloader) run).isFinished()) {
-                    Logger.debug("Attempting to play song file!");
+                    BoomLogger.debug("Attempting to play song file!");
                     try {
                         this.player.setAudioFile(songFile);
                         this.player.play();
                     } catch (IOException ex) {
-                        Logger.error("Could not open song file", ex);
+                        BoomLogger.error("Could not open song file", ex);
                     } catch (UnsupportedAudioFileException ex) {
-                        Logger.error("Could not play song file", ex);
+                        BoomLogger.error("Could not play song file", ex);
                     }
                     this.downloaderThread = null;
                 }

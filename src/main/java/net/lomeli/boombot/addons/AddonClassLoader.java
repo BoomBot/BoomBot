@@ -16,7 +16,6 @@ public class AddonClassLoader extends URLClassLoader {
         this.sources = Lists.newArrayList();
     }
 
-
     @Override
     public Class<?> loadClass(String name) throws ClassNotFoundException {
         try {

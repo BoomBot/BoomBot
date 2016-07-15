@@ -1,11 +1,8 @@
 package net.lomeli.boombot.commands.special;
 
-import net.dv8tion.jda.Permission;
-
 import net.lomeli.boombot.BoomBot;
 import net.lomeli.boombot.commands.Command;
-import net.lomeli.boombot.helper.Logger;
-import net.lomeli.boombot.helper.PermissionsHelper;
+import net.lomeli.boombot.logging.BoomLogger;
 import net.lomeli.boombot.lang.LangRegistry;
 import net.lomeli.boombot.lib.CommandInterface;
 import net.lomeli.boombot.lib.GuildOptions;
@@ -22,12 +19,12 @@ public class ReloadConfigCommand extends Command {
         BoomBot.configLoader.parseConfig();
         LangRegistry.initRegistry();
         if (BoomBot.debug)
-            Logger.info("Config and lang files should've been reloaded!");
+            BoomLogger.info("Config and lang files should've been reloaded!");
     }
 
     @Override
     public boolean canUserExecute(CommandInterface cmd) {
-        return PermissionsHelper.userHasPermissions(cmd.getUser(), cmd.getGuild(), Permission.MANAGE_SERVER);
+        return BoomBot.config.isUserAdmin(cmd.getUser());
     }
 
     @Override

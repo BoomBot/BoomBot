@@ -4,10 +4,9 @@ import com.google.common.collect.Lists;
 
 import java.util.List;
 
-import net.lomeli.boombot.addons.AddonClassLoader;
 import net.lomeli.boombot.addons.AddonContainer;
 import net.lomeli.boombot.addons.exceptions.DuplicateAddonException;
-import net.lomeli.boombot.helper.Logger;
+import net.lomeli.boombot.logging.BoomLogger;
 
 public class AddonLoader {
     private List<AddonCandidate> candidateList;
@@ -32,7 +31,7 @@ public class AddonLoader {
             addonList += String.format("%s {%s | %s}", container.getName(), container.getId(), container.getVersion());
             if (i != containers.size() - 1) addonList += ", ";
         }
-        Logger.info("Found the following addons: %s", addonList);
+        BoomLogger.info("Found the following addons: %s", addonList);
     }
 
     public void searchForDuplicates() throws DuplicateAddonException {

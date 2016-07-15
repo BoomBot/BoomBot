@@ -7,7 +7,7 @@ import java.io.InputStreamReader;
 import java.net.URL;
 
 import net.lomeli.boombot.BoomBot;
-import net.lomeli.boombot.helper.Logger;
+import net.lomeli.boombot.logging.BoomLogger;
 
 public class UpdateUtil {
     private static final String JSON_REMOTE = "";
@@ -19,7 +19,7 @@ public class UpdateUtil {
             URL url = new URL(JSON_REMOTE);
             remoteData = gson.fromJson(new InputStreamReader(url.openStream()), UpdateJson.class);
         } catch (Exception e) {
-            Logger.error("Failed to get remote data", e);
+            BoomLogger.error("Failed to get remote data", e);
         }
     }
 

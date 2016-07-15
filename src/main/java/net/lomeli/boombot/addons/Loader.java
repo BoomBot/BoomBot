@@ -11,7 +11,7 @@ import net.lomeli.boombot.addons.exceptions.DuplicateAddonException;
 import net.lomeli.boombot.api.BoomAddon;
 import net.lomeli.boombot.api.BoomBotAPI;
 import net.lomeli.boombot.helper.AddonHelper;
-import net.lomeli.boombot.helper.Logger;
+import net.lomeli.boombot.logging.BoomLogger;
 
 /**
  * Slightly based of FML
@@ -21,27 +21,27 @@ public class Loader {
     private AddonLoader addonLoader;
 
     public Loader() {
-        Logger.info("Creating addon class loader");
+        BoomLogger.info("Creating addon class loader");
         addonClassLoader = new AddonClassLoader(BoomAddon.class.getClassLoader());
         addonLoader = new AddonLoader();
     }
 
     public void loadAddons() {
-        Logger.info("Discovering addons");
+        BoomLogger.info("Discovering addons");
         discoverAddons();
         addonLoader.findAddons();
         try {
             addonLoader.searchForDuplicates();
         } catch (DuplicateAddonException ex) {
-            Logger.error("", ex);
+            BoomLogger.error("", ex);
             BoomBot.shutdownBoomBot();
         }
-        Logger.info("Initializing addons");
+        BoomLogger.info("Initializing addons");
         addonLoader.initAddons();
-        Logger.info("Finished Initializing addons");
-        Logger.info("Post-initializing addons");
+        BoomLogger.info("Finished Initializing addons");
+        BoomLogger.info("Post-initializing addons");
         addonLoader.postAddons();
-        Logger.info("Finished Post-Initializing of addons");
+        BoomLogger.info("Finished Post-Initializing of addons");
     }
 
     private void discoverAddons() {
@@ -51,7 +51,7 @@ public class Loader {
     }
 
     private void discoverClassPathAddons() {
-        Logger.debug("Loading debug addons");
+        BoomLogger.debug("Loading debug addons");
         File[] sources = addonClassLoader.getParentSources();
         if (sources != null && sources.length > 0) {
             Arrays.sort(sources);
@@ -67,7 +67,7 @@ public class Loader {
     }
 
     private void discoverAddonsFromFolder() {
-        Logger.info("Looking for addons in addons folder");
+        BoomLogger.info("Looking for addons in addons folder");
         if (!BoomBotAPI.ADDON_FOLDER.exists() || !BoomBotAPI.ADDON_FOLDER.isDirectory()) {
             BoomBotAPI.ADDON_FOLDER.mkdir();
             BoomBotAPI.ADDON_CONFIG_FOLDER.mkdir();

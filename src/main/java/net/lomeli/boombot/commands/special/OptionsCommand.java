@@ -9,7 +9,7 @@ import java.util.Map;
 
 import net.lomeli.boombot.BoomBot;
 import net.lomeli.boombot.commands.Command;
-import net.lomeli.boombot.helper.Logger;
+import net.lomeli.boombot.logging.BoomLogger;
 import net.lomeli.boombot.helper.PermissionsHelper;
 import net.lomeli.boombot.lang.LangRegistry;
 import net.lomeli.boombot.lib.CommandInterface;
@@ -128,7 +128,7 @@ public class OptionsCommand extends Command {
         try {
             return Integer.parseInt(str);
         } catch (NumberFormatException e) {
-            Logger.error("Number format exception in Options Command", e);
+            BoomLogger.error("Number format exception in Options Command", e);
         }
         return null;
     }
@@ -137,7 +137,7 @@ public class OptionsCommand extends Command {
         try {
             return Boolean.parseBoolean(str);
         } catch (Exception e) {
-            Logger.error("Boolean format exception in Options Command", e);
+            BoomLogger.error("Boolean format exception in Options Command", e);
         }
         return null;
     }

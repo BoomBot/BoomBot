@@ -1,11 +1,8 @@
 package net.lomeli.boombot.commands.special;
 
-import net.dv8tion.jda.Permission;
-
 import net.lomeli.boombot.BoomBot;
 import net.lomeli.boombot.commands.Command;
-import net.lomeli.boombot.helper.Logger;
-import net.lomeli.boombot.helper.PermissionsHelper;
+import net.lomeli.boombot.logging.BoomLogger;
 import net.lomeli.boombot.lib.CommandInterface;
 import net.lomeli.boombot.lib.GuildOptions;
 
@@ -18,13 +15,13 @@ public class StopBotCommand extends Command {
     @Override
     public void executeCommand(CommandInterface cmd) {
         super.executeCommand(cmd);
-        Logger.info("BoomBot shutting down via command from %s...", cmd.getUser().getUsername());
+        BoomLogger.info("BoomBot shutting down via command from %s...", cmd.getUser().getUsername());
         BoomBot.shutdownBoomBot();
     }
 
     @Override
     public boolean canUserExecute(CommandInterface cmd) {
-        return PermissionsHelper.userHasPermissions(cmd.getUser(), cmd.getGuild(), Permission.MANAGE_SERVER);
+        return BoomBot.config.isUserAdmin(cmd.getUser());
     }
 
     @Override

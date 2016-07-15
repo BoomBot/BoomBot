@@ -1,21 +1,21 @@
 package net.lomeli.boombot.helper;
 
+import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import net.lomeli.boombot.BoomBot;
-import net.lomeli.boombot.addons.discovery.AnnotationHelper;
 import net.lomeli.boombot.addons.exceptions.WrongBoomBotVersion;
 import net.lomeli.boombot.api.BoomAddon;
+import net.lomeli.boombot.logging.BoomLogger;
 
 public class AddonHelper {
     private static List<String> ignoreList;
@@ -71,6 +71,7 @@ public class AddonHelper {
         ignoreList.add("commons-codec");
         ignoreList.add("org.apache.httpcomponents");
         ignoreList.add("junit");
+        ignoreList.add("BoomBot.jar");
     }
 
     public static List<String> getClassesInFile(File file) {
@@ -85,9 +86,9 @@ public class AddonHelper {
                 }
             }
         } catch (FileNotFoundException ex) {
-            Logger.error("Could not find file %s", ex, file.getName());
+            BoomLogger.error("Could not find file %s", ex, file.getName());
         } catch (IOException ex) {
-            Logger.error("Could not open file %s", ex, file.getName());
+            BoomLogger.error("Could not open file %s", ex, file.getName());
         }
         return classNames;
     }
@@ -117,22 +118,25 @@ public class AddonHelper {
     public static List<Class> findAddonClass(List<String> clazzes, ClassLoader classLoader) throws ClassNotFoundException, WrongBoomBotVersion {
         List<Class> classList = Lists.newArrayList();
         for (String st : clazzes) {
-            try {
-                Class clazz = classLoader.loadClass(st);
-                BoomAddon annotation = AnnotationHelper.getAnnotationFromClass(clazz, null, BoomAddon.class);
-                if (annotation != null) {
-                    if (annotation.acceptedBoomBotVersion().equals(BoomBot.BOOM_BOT_VERSION) || annotation.acceptedBoomBotVersion().equals("*"))
-                        classList.add(clazz);
-                    else
-                        throw new WrongBoomBotVersion(annotation.name(), annotation.acceptedBoomBotVersion(), BoomBot.BOOM_BOT_VERSION);
-                }
-            } catch (IllegalAccessException ex) {
-                Logger.error("Could not access annotations for %s", st);
-            } catch (InvocationTargetException ex) {
-                Logger.error("Error while accessing %s", st);
+            Class clazz = classLoader.loadClass(st);
+            BoomAddon annotation = (BoomAddon) clazz.getAnnotation(BoomAddon.class);
+            if (annotation != null) {
+                if (annotation.acceptedBoomBotVersion().equals(BoomBot.BOOM_BOT_VERSION) || annotation.acceptedBoomBotVersion().equals("*"))
+                    classList.add(clazz);
+                else
+                    throw new WrongBoomBotVersion(annotation.name(), annotation.acceptedBoomBotVersion(), BoomBot.BOOM_BOT_VERSION);
             }
         }
         return classList;
+    }
+
+    public static boolean isAddonClass(Class clazz) throws WrongBoomBotVersion {
+        if (clazz == null) return false;
+        BoomAddon addon = (BoomAddon) clazz.getAnnotation(BoomAddon.class);
+        if (addon == null) return false;
+        if (!Strings.isNullOrEmpty(addon.acceptedBoomBotVersion()) && (addon.acceptedBoomBotVersion().equals(BoomBot.BOOM_BOT_VERSION) || addon.acceptedBoomBotVersion().equals("*")))
+            return true;
+        throw new WrongBoomBotVersion(addon.name(), addon.acceptedBoomBotVersion(), BoomBot.BOOM_BOT_VERSION);
     }
 
     public static boolean ignoreFile(String name) {

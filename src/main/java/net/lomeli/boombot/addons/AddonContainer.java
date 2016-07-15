@@ -4,7 +4,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import net.lomeli.boombot.addons.discovery.AnnotationHelper;
 import net.lomeli.boombot.api.BoomAddon;
 
 public class AddonContainer {
@@ -13,7 +12,7 @@ public class AddonContainer {
 
     public AddonContainer(Class clazz) throws IllegalAccessException, InstantiationException, InvocationTargetException {
         this.addonInstance = clazz.newInstance();
-        BoomAddon addonInfo = AnnotationHelper.getAnnotationFromClass(clazz, null, BoomAddon.class);
+        BoomAddon addonInfo = (BoomAddon) clazz.getAnnotation(BoomAddon.class);
         if (addonInfo != null) {
             this.id = addonInfo.addonID();
             this.name = addonInfo.name();
@@ -25,7 +24,7 @@ public class AddonContainer {
         try {
             Field[] fields = addonInstance.getClass().getDeclaredFields();
             for (Field field : fields) {
-                BoomAddon.Instance instance = AnnotationHelper.getAnnotationFromField(field, null, BoomAddon.Instance.class);
+                BoomAddon.Instance instance = field.getAnnotation(BoomAddon.Instance.class);
                 if (instance != null) {
                     field.set(addonInstance, addonInstance);
                     break;
@@ -33,7 +32,7 @@ public class AddonContainer {
             }
             Method[] methods = addonInstance.getClass().getMethods();
             for (Method method : methods) {
-                BoomAddon.Init init = AnnotationHelper.getAnnotationFromMethod(method, null, BoomAddon.Init.class);
+                BoomAddon.Init init = method.getAnnotation(BoomAddon.Init.class);
                 if (init != null)
                     method.invoke(addonInstance);
             }
@@ -46,7 +45,7 @@ public class AddonContainer {
         try {
             Method[] methods = addonInstance.getClass().getMethods();
             for (Method method : methods) {
-                BoomAddon.PostInit post = AnnotationHelper.getAnnotationFromMethod(method, null, BoomAddon.PostInit.class);
+                BoomAddon.PostInit post = method.getAnnotation(BoomAddon.PostInit.class);
                 if (post != null)
                     method.invoke(addonInstance);
             }

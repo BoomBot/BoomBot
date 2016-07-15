@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import net.lomeli.boombot.BoomBot;
-import net.lomeli.boombot.helper.Logger;
+import net.lomeli.boombot.logging.BoomLogger;
 
 /**
  * Copied over from another project of mine, to be implemented at a future date.
@@ -35,10 +35,10 @@ public class LangRegistry {
                             if (FilenameUtils.getBaseName(langFile.getAbsolutePath()).equals("en_US"))
                                 english = local;
                             if (BoomBot.debug)
-                                Logger.info("Loaded " + local.getLocalizationName() + " localization");
+                                BoomLogger.info("Loaded " + local.getLocalizationName() + " localization");
                         }
                     } catch (Exception e) {
-                        Logger.error("Failed to load localization file %s", e, langFile.toString());
+                        BoomLogger.error("Failed to load localization file %s", e, langFile.toString());
                     }
                 }
             }

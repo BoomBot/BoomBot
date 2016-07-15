@@ -1,46 +1,53 @@
-package net.lomeli.boombot.helper;
+package net.lomeli.boombot.logging;
 
 import com.google.common.collect.Lists;
+import org.apache.commons.io.FileUtils;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.PrintStream;
 import java.util.Date;
 import java.util.List;
 
-public class Logger {
-    public static PrintStream out = System.out;
-    private static List<String> logMsg = Lists.newArrayList();
+import net.lomeli.boombot.BoomBot;
 
-    public static void log(LogInfo info, Object message, Object... args) {
-        String msg = String.format("[%s][%s]: %s", new Date(), info.getName(), String.format(message.toString(), args));
+public class Logger {
+    private static List<String> logMsg = Lists.newArrayList();
+    private PrintStream out = System.out;
+    private String owner;
+
+    public Logger(String owner) {
+        this.owner = owner;
+    }
+
+    public void log(LogInfo info, Object message, Object... args) {
+        String msg = String.format("[%s][%s][%s]: %s", new Date(), info.getName(), owner, String.format(message.toString(), args));
         out.println(msg);
         logMsg.add(msg);
     }
 
-    public static void info(Object message, Object... args) {
+    public void info(Object message, Object... args) {
         log(LogInfo.INFO, message, args);
     }
 
-    public static void debug(Object message, Object... args) {
-        log(LogInfo.DEBUG, message, args);
+    public void debug(Object message, Object... args) {
+        if (BoomBot.debug)
+            log(LogInfo.DEBUG, message, args);
     }
 
-    public static void warn(Object message, Object... args) {
+    public void warn(Object message, Object... args) {
         log(LogInfo.WARN, message, args);
     }
 
-    public static void warn(Object message, Exception e, Object... args) {
+    public void warn(Object message, Exception e, Object... args) {
         warn(message, args);
         e.printStackTrace();
     }
 
-    public static void error(Object message, Object... args) {
+    public void error(Object message, Object... args) {
         log(LogInfo.ERROR, message, args);
     }
 
-    public static void error(Object message, Exception e, Object... args) {
+    public void error(Object message, Exception e, Object... args) {
         error(message, args);
         e.printStackTrace();
         logMsg.add(e.getLocalizedMessage());
@@ -51,13 +58,8 @@ public class Logger {
             if (!folder.exists()) folder.mkdir();
             if (file == null || logMsg.isEmpty()) return;
             if (file.exists()) file.delete();
-            FileWriter stream = new FileWriter(file);
-            BufferedWriter bufferedWriter = new BufferedWriter(stream);
-            for (int i = 0; i < logMsg.size(); i++) {
-                bufferedWriter.write(logMsg.get(i));
-                bufferedWriter.newLine();
-            }
-            bufferedWriter.flush();
+            FileUtils.writeLines(file, logMsg, true);
+            logMsg.clear();
         } catch (Exception e) {
             e.printStackTrace();
         }

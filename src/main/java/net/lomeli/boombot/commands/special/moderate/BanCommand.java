@@ -7,7 +7,7 @@ import java.util.List;
 
 import net.lomeli.boombot.BoomBot;
 import net.lomeli.boombot.commands.Command;
-import net.lomeli.boombot.helper.Logger;
+import net.lomeli.boombot.logging.BoomLogger;
 import net.lomeli.boombot.helper.PermissionsHelper;
 import net.lomeli.boombot.helper.UserHelper;
 import net.lomeli.boombot.lib.CommandInterface;
@@ -63,7 +63,7 @@ public class BanCommand extends Command {
         try {
             return Integer.parseInt(str);
         } catch (NumberFormatException e) {
-            Logger.error("Number format exception in Ban Command", e);
+            BoomLogger.error("Number format exception in Ban Command", e);
         }
         return 0;
     }
@@ -85,7 +85,7 @@ public class BanCommand extends Command {
         String message = options.translate("boombot.command.permissions.user.missing", cmd.getUser().getUsername(), permissionLang, cmd.getCommand());
         if (userType.isBoomBot()) {
             String s = "%1$s does not have enough permissions to ban users. Please give %1$s a role that can ban users to use this command.";
-            Logger.info(s, BoomBot.jda.getSelfInfo().getUsername());
+            BoomLogger.info(s, BoomBot.jda.getSelfInfo().getUsername());
             message = options.translate("boombot.command.permissions.user.missing", BoomBot.jda.getSelfInfo().getUsername(), permissionLang, cmd.getCommand());
         }
         return message;

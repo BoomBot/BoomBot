@@ -14,7 +14,7 @@ import net.lomeli.boombot.commands.special.create.ClearCommand;
 import net.lomeli.boombot.commands.special.create.CreateCommand;
 import net.lomeli.boombot.commands.special.create.RemoveCommand;
 import net.lomeli.boombot.commands.special.moderate.*;
-import net.lomeli.boombot.helper.Logger;
+import net.lomeli.boombot.logging.BoomLogger;
 import net.lomeli.boombot.helper.PermissionsHelper;
 import net.lomeli.boombot.lib.CommandInterface;
 import net.lomeli.boombot.lib.GuildOptions;
@@ -53,7 +53,7 @@ public enum CommandRegistry {
         addNewCommand(new BanCommand(), false);
 
         if (BoomBot.debug) {
-            Logger.info("Registering debugging and in-development commands");
+            BoomLogger.info("Registering debugging and in-development commands");
             addNewCommand(new JoinVoiceCommand(), false);
             addNewCommand(new LeaveVoiceCommand(), false);
             addNewCommand(new AddAudioCommand(), false);
@@ -71,7 +71,7 @@ public enum CommandRegistry {
         if (addon) {
             for (Command c : addonCommands) {
                 if (c.getName().equalsIgnoreCase(command.getName())) {
-                    Logger.info("Command with name \"%s\" already exists, ignoring...", command.getName());
+                    BoomLogger.info("Command with name \"%s\" already exists, ignoring...", command.getName());
                     return false;
                 }
             }
@@ -79,13 +79,13 @@ public enum CommandRegistry {
         } else {
             for (Command c : commands) {
                 if (c.getName().equalsIgnoreCase(command.getName())) {
-                    Logger.info("Command with name \"%s\" already exists, ignoring...", command.getName());
+                    BoomLogger.info("Command with name \"%s\" already exists, ignoring...", command.getName());
                     return false;
                 }
             }
             commands.add(command);
         }
-        Logger.debug("Added command %s", command.getName());
+        BoomLogger.debug("Added command %s", command.getName());
         return true;
     }
 
@@ -153,7 +153,7 @@ public enum CommandRegistry {
                 exCommand = com;
         }
         if (exCommand != null && !EventRegistry.INSTANCE.post(new CommandEvent.Pre(exCommand, cmd.getUser(), cmd.getGuild(), cmd.getChannel()))) {
-            Logger.info("%s used %s command in %s guild.", cmd.getUser().getUsername(), cmd.getCommand(), cmd.getGuild().getName());
+            BoomLogger.info("%s used %s command in %s guild.", cmd.getUser().getUsername(), cmd.getCommand(), cmd.getGuild().getName());
             exCommand.executeCommand(cmd);
             EventRegistry.INSTANCE.post(new CommandEvent.Post(exCommand, cmd.getUser(), cmd.getGuild(), cmd.getChannel()));
             return true;

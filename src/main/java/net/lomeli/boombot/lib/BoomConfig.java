@@ -1,5 +1,6 @@
 package net.lomeli.boombot.lib;
 
+import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import net.dv8tion.jda.entities.Guild;
 import net.dv8tion.jda.entities.User;
@@ -12,9 +13,11 @@ import net.lomeli.boombot.commands.Command;
 public class BoomConfig {
     private List<GuildOptions> guildOptions;
     private boolean updatable;
+    private List<String> adminUsers;
 
     public BoomConfig() {
         guildOptions = Lists.newArrayList();
+        adminUsers = Lists.newArrayList();
         updatable = false;
     }
 
@@ -75,5 +78,10 @@ public class BoomConfig {
 
     public boolean isUpdatable() {
         return updatable;
+    }
+
+    public boolean isUserAdmin(User user) {
+        if (user != null && !Strings.isNullOrEmpty(user.getId())) return false;
+        return this.adminUsers.contains(user.getId());
     }
 }

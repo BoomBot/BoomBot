@@ -9,9 +9,11 @@ import java.util.Date;
 
 import net.lomeli.boombot.addons.Loader;
 import net.lomeli.boombot.commands.CommandRegistry;
-import net.lomeli.boombot.helper.Logger;
+import net.lomeli.boombot.logging.BoomLogger;
 import net.lomeli.boombot.lang.LangRegistry;
 import net.lomeli.boombot.lib.BoomConfig;
+import net.lomeli.boombot.logging.LogThread;
+import net.lomeli.boombot.logging.Logger;
 import net.lomeli.boombot.update.ShutdownHook;
 
 public class BoomBot {
@@ -28,10 +30,11 @@ public class BoomBot {
 
     public static void main(String[] args) {
         //TODO: Stop any calls to System.exit()
+        new Thread(new LogThread()).start();
         addonLoader = new Loader();
         LangRegistry.initRegistry();
         if (debug)
-            Logger.info("Adding Shutdown Hook");
+            BoomLogger.info("Adding Shutdown Hook");
         Runtime.getRuntime().addShutdownHook(new ShutdownHook());
         try {
             logFolder = new File("logs");
@@ -51,7 +54,7 @@ public class BoomBot {
                                 debug = true;
                                 break;
                             default:
-                                Logger.warn("Argument %s not recognized, ignoring.", arg);
+                                BoomLogger.warn("Argument %s not recognized, ignoring.", arg);
                         }
                     }
                 }
@@ -59,27 +62,32 @@ public class BoomBot {
                 jda = new JDABuilder().setBotToken(args[0]).addListener(listener).buildBlocking();
                 startTime = new Date();
                 jda.getAccountManager().setGame("BoomBot using JDA");
-                Logger.info("Bot is ready");
+                BoomLogger.info("Bot is ready");
                 if (debug) {
                     jda.getAccountManager().setGame("BoomBot using JDA - Debug Mode");
-                    Logger.info("BoomBot is in debug mode!");
+                    BoomLogger.info("BoomBot is in debug mode!");
                 }
                 CommandRegistry.INSTANCE.registerBasicCommands();
                 addonLoader.loadAddons();
             } else {
-                Logger.info("BoomBot requires a email and password to login as!");
+                BoomLogger.info("BoomBot requires a email and password to login as!");
             }
         } catch (IllegalArgumentException e) {
-            Logger.error("The config was not populated. Please enter an email and password.", e);
+            BoomLogger.error("The config was not populated. Please enter an email and password.", e);
         } catch (LoginException e) {
-            Logger.error("The provided email / password combination was incorrect. Please provide valid details.", e);
+            BoomLogger.error("The provided email / password combination was incorrect. Please provide valid details.", e);
         } catch (InterruptedException e) {
-            Logger.error("An Exception occurred", e);
+            BoomLogger.error("An Exception occurred", e);
         }
     }
 
-    public static void shutdownBoomBot() {
+    public static void wrapUp() {
         configLoader.writeConfig();
+        Logger.writeLogFile(BoomBot.logFolder, BoomBot.logFile);
+    }
+
+    public static void shutdownBoomBot() {
+        wrapUp();
         jda.shutdown();
     }
 }

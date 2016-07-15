@@ -6,7 +6,7 @@ import org.apache.commons.io.IOUtils;
 import java.io.*;
 import java.net.URL;
 
-import net.lomeli.boombot.helper.Logger;
+import net.lomeli.boombot.logging.BoomLogger;
 
 public class FileDownloader implements Runnable {
     private File file;
@@ -23,11 +23,11 @@ public class FileDownloader implements Runnable {
     public void run() {
         try {
             if (downloadResource(fileURL, file, size)) {
-                Logger.debug("Finished Download file");
+                BoomLogger.debug("Finished Download file");
                 finished = true;
             }
         } catch (Exception ex) {
-            Logger.error("Failed to download file from %s", ex, fileURL.toString());
+            BoomLogger.error("Failed to download file from %s", ex, fileURL.toString());
         }
     }
 
