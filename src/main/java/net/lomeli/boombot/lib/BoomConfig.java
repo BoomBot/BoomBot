@@ -81,7 +81,7 @@ public class BoomConfig {
     }
 
     public boolean isUserAdmin(User user) {
-        if (user != null && !Strings.isNullOrEmpty(user.getId())) return false;
+        if (user != null && Strings.isNullOrEmpty(user.getId())) return false;
         return this.adminUsers.contains(user.getId());
     }
 }
