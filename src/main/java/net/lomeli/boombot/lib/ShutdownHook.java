@@ -1,4 +1,4 @@
-package net.lomeli.boombot.update;
+package net.lomeli.boombot.lib;
 
 import net.lomeli.boombot.BoomBot;
 

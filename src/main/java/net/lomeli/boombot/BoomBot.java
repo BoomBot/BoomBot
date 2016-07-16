@@ -9,12 +9,13 @@ import java.util.Date;
 
 import net.lomeli.boombot.addons.Loader;
 import net.lomeli.boombot.commands.CommandRegistry;
+import net.lomeli.boombot.lib.BoomSecurityManager;
 import net.lomeli.boombot.logging.BoomLogger;
 import net.lomeli.boombot.lang.LangRegistry;
 import net.lomeli.boombot.lib.BoomConfig;
 import net.lomeli.boombot.logging.LogThread;
 import net.lomeli.boombot.logging.Logger;
-import net.lomeli.boombot.update.ShutdownHook;
+import net.lomeli.boombot.lib.ShutdownHook;
 
 public class BoomBot {
     public static final int MAJOR = 2, MINOR = 0, REV = 0;
@@ -29,7 +30,7 @@ public class BoomBot {
     public static Loader addonLoader;
 
     public static void main(String[] args) {
-        //TODO: Stop any calls to System.exit()
+        System.setSecurityManager(new BoomSecurityManager());
         new Thread(new LogThread()).start();
         addonLoader = new Loader();
         LangRegistry.initRegistry();
@@ -89,5 +90,6 @@ public class BoomBot {
     public static void shutdownBoomBot() {
         wrapUp();
         jda.shutdown();
+        System.exit(0);
     }
 }
