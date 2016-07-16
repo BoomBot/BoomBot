@@ -18,7 +18,7 @@ import net.lomeli.boombot.logging.Logger;
 import net.lomeli.boombot.lib.ShutdownHook;
 
 public class BoomBot {
-    public static final int MAJOR = 2, MINOR = 0, REV = 0;
+    public static final int MAJOR = 2, MINOR = 1, REV = 0;
     public static final String BOOM_BOT_VERSION = String.format("%s.%s.%s", MAJOR, MINOR, REV);
     public static BoomListen listener;
     public static JDA jda;
