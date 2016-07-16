@@ -1,4 +1,4 @@
-package net.lomeli.boombot.commands.special;
+package net.lomeli.boombot.commands.special.other;
 
 import net.lomeli.boombot.BoomBot;
 import net.lomeli.boombot.commands.Command;

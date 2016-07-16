@@ -1,21 +1,25 @@
-package net.lomeli.boombot.commands.special;
+package net.lomeli.boombot.commands.special.admin;
 
 import net.lomeli.boombot.BoomBot;
 import net.lomeli.boombot.commands.Command;
+import net.lomeli.boombot.logging.BoomLogger;
+import net.lomeli.boombot.lang.LangRegistry;
 import net.lomeli.boombot.lib.CommandInterface;
 import net.lomeli.boombot.lib.GuildOptions;
 
-public class UpdateCommand extends Command {
-    public UpdateCommand() {
-        super("update", "boombot.command.update");
+public class ReloadConfigCommand extends Command {
+
+    public ReloadConfigCommand() {
+        super("reload-config", "boombot.command.reloadconfig");
     }
 
     @Override
     public void executeCommand(CommandInterface cmd) {
-        if (!BoomBot.config.isUpdatable()) {
-            cmd.sendMessage(getContent() + ".disabled");
-            return;
-        }
+        super.executeCommand(cmd);
+        BoomBot.configLoader.parseConfig();
+        LangRegistry.initRegistry();
+        if (BoomBot.debug)
+            BoomLogger.info("Config and lang files should've been reloaded!");
     }
 
     @Override

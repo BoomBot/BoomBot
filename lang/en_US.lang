@@ -1,7 +1,7 @@
 langfile.langauage=English (US)
 
 # Command Permissions
-boombot.command.permissions.user.missing=%s requires %s permissions to use %s
+boombot.command.permissions.user.missing=%1$s requires %2$s permissions to use %3$s
 boombot.ready=BoomBot is ready!
 
 ## Commands
@@ -10,20 +10,20 @@ boombot.command.about=Hi, I'm BoomBot. I was made by <@98616246483812352> as a f
 # Reload Configs
 boombot.command.reloadconfig=Configs successfully reloaded!
 # Help
-boombot.command.help=Commands for %s: %s
+boombot.command.help=Commands for %1$s: %2$s
 boombot.command.help.default=Default Commands: %s
 boombot.command.help.addon=Addon Commands: %s
 boombot.command.help.restricted=Custom commands are restricted in the %s channel
 # Running
 boombot.command.running=BoomBot has been running since %s
-boombot.command.running.timesince=It has been %s days, %s hours, %s minutes, and %s seconds since then!
+boombot.command.running.timesince=It has been %1$s days, %2$s hours, %3$s minutes, and %4$s seconds since then!
 # Shut Boom Bot
 boombot.command.stopboombot=BoomBot is now shutting down...
 # Clear Chat
 boombot.command.clearchat.disabled=This command is currently disabled.
 # Ban Use
-boombot.command.banuse=%s has been banned from using commands in %s! %s
-boombot.command.banuse.message=You have been banned from using commands in %s. %s
+boombot.command.banuse=%1$s has been banned from using commands in %2$s! %3$s
+boombot.command.banuse.message=You have been banned from using commands in %1$s. %2$s
 boombot.command.banuse.message.banned=You cannot use commands in %s.
 boombot.command.banuse.multiple=Can only ban users one at a time.
 boombot.command.banuse.cannotban=Cannot ban user from using commands, as they DO NOT exist.
@@ -32,7 +32,7 @@ boombot.command.banuse.reason=Reason: %s
 boombot.command.banuse.self=I can't even use commands!
 boombot.command.banuse.owner=%s cannot be banned from using commands.
 # UnBan Use
-boombot.command.unbanuse=%s can use commands in %s again.
+boombot.command.unbanuse=%1$s can use commands in %2$s again.
 boombot.command.unbanuse.message=You can now use commands again in %s.
 boombot.command.unbanuse.wasnt=% wasn't banned from using commands.
 boombot.command.unbanuse.who=Ban who from using commands?
@@ -44,45 +44,45 @@ boombot.command.restrict.restricted=%s is already in restricted use mode.
 boombot.command.unrestrict=Command restrictions have been lifted from %s.
 boombot.command.unrestrict.notrestricted=%s isn't in restricted use mode.
 # Kick
-boombot.command.kick=%s has been kicked! %s
+boombot.command.kick=%1$s has been kicked! %2$s
 boombot.command.kick.reason=Reason: %s
 boombot.command.kick.who=Kick who?
 boombot.command.kick.self=Why would BoomBot kick itself?
-boombot.command.kick.message=You have been kicked from %s. %s
+boombot.command.kick.message=You have been kicked from %1$s. %2$s
 boombot.command.kick.cannot=Cannot kick %s, as they DO NOT exist.
 boombot.command.kick.owner=%s is the owner, so they cannot be kicked.
 # Ban
-boombot.command.ban=%s has been banned! Their messages from the past %s day(s) have been deleted. %s
+boombot.command.ban=%1$s has been banned! Their messages from the past %2$s day(s) have been deleted. %3$s
 boombot.command.ban.reason=Reason: %s
 boombot.command.ban.who=Ban who?
 boombot.command.ban.multiple=Can only ban users one at a time.
 boombot.command.ban.owner=%s is the owner, so they cannot be banned.
 boombot.command.ban.self=BoomBot probably shouldn't be banning itself...
-boombot.command.ban.message=You have been banned from %s. Your messages from the past %s day(s) have been deleted. %s
+boombot.command.ban.message=You have been banned from %1$s. Your messages from the past %2$s day(s) have been deleted. %3$s
 boombot.command.ban.cannot=Cannot ban %s, as they DO NOT exist.
 boombot.command.ban.days.missing=Please specify how many days back we go back to delete their messages. Must be at least 0.
 boombot.command.ban.days.zero=Days worth of messages delete must be at least 0.
 # Clear Commands
-boombot.command.clearcommand=All commands for server %s has been cleared by %s.
+boombot.command.clearcommand=All commands for server %1$s has been cleared by %2$s.
 # Make Commands
-boombot.command.createcommand=Creating command %s. Content: %s
+boombot.command.createcommand=Creating command %1$s. Content: %2$s
 boombot.command.createcommand.name.empty=Command name cannot be empty!
 boombot.command.createcommand.name.exists=Command with the name %s already exists!
 boombot.command.createcommand.content.empty=Command cannot be empty!
 boombot.command.createcommand.missing=Cannot create command! Missing arguments
 # Remove Commands
-boombot.command.removecommand=%s has been removed by %s.
+boombot.command.removecommand=%1$s has been removed by %2$s.
 boombot.command.removecommand.empty=Command name cannot be empty!
 boombot.command.removecommand.notexists=Command %s does NOT exist!
 boombot.command.removecommand.missing=Missing Argument: Command(s) name
 # Options Command
-boombot.command.options=Option %s has been changed to %s.
+boombot.command.options=Option %1$s has been changed to %2$s.
 boombot.command.options.args.toomany=Too Many Arguments. Only two needed: <option name> <option value>
 boombot.command.options.missing.all=Missing Arguments. Two needed: <option name> <option value>
 boombot.command.options.missing.name=Missing Argument: Option name
 boombot.command.options.missing.name.exist=Option %s does not exist.
 boombot.command.options.missing.value=Missing Argument: Option value
-boombot.command.options.valuetype.mismatch=Value type mismatch: Expected %s, Got %s
+boombot.command.options.valuetype.mismatch=Value type mismatch: Expected %1$s, Got %2$s
 boombot.command.options.valuetype.boolean=Boolean
 boombot.command.options.valuetype.integer=Integer
 boombot.command.options.valuetype.string=String
@@ -93,9 +93,9 @@ boombot.command.update.downloading=
 boombot.command.update.complete=
 # Guild Stats command
 boombot.command.stats=%s stats:
-boombot.command.stats.owner=%s was created by %s.
-boombot.command.stats.users=There are %s user(s), with %s user(s) online, %s user(s) away, and %s user(s) offline.
-boombot.command.stats.text=There are %s text channels. %s is the main public channel.
+boombot.command.stats.owner=%1$s was created by %2$s.
+boombot.command.stats.users=There are %1$s user(s), with %2$s user(s) online, %3$s user(s) away, and %4$s user(s) offline.
+boombot.command.stats.text=There are %1$s text channels. %2$s is the main public channel.
 boombot.command.stats.voice=There are %s voice channels.
 # Make Commands
 boombot.command.imgcommand=Added Image command %s.
@@ -109,6 +109,10 @@ boombot.command.imgcommand.args.toomany=Too Many Arguments. Only two needed: <co
 boombot.command.avatar.extraargs=Must either mention a user or no arguments at all.
 boombot.command.avatar.missing=User %s does not have an avatar.
 boombot.command.avatar.one=Only displaying the first mentioned user.
+# Addon command
+boombot.command.addon=%1$s addon(s) are currently running on <@%2$s>.
+boombot.command.addon.none=There are no addons installed.
+boombot.command.addon.info=%1$s [id = %2$s, version = %3$s]
 
 # Permission Types
 permissions.manage.messages=Message Management

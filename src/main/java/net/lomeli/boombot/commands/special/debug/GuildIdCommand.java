@@ -1,4 +1,4 @@
-package net.lomeli.boombot.commands.special;
+package net.lomeli.boombot.commands.special.debug;
 
 import net.lomeli.boombot.commands.Command;
 import net.lomeli.boombot.lib.CommandInterface;

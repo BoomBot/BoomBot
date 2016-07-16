@@ -3,6 +3,7 @@ package net.lomeli.boombot.addons;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.util.Arrays;
+import java.util.List;
 
 import net.lomeli.boombot.BoomBot;
 import net.lomeli.boombot.addons.discovery.AddonCandidate;
@@ -89,6 +90,10 @@ public class Loader {
                     addonLoader.addCandidate(new AddonCandidate(null, file, AddonCandidate.AddonType.JAR));
             }
         }
+    }
+
+    public List<AddonContainer> getLoadedAddons() {
+        return addonLoader.addonList();
     }
 }
 

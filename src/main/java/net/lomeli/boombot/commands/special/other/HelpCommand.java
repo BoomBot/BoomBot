@@ -1,4 +1,4 @@
-package net.lomeli.boombot.commands.special;
+package net.lomeli.boombot.commands.special.other;
 
 import com.google.common.base.Strings;
 import net.dv8tion.jda.Permission;

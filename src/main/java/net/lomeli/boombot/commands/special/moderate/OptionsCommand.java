@@ -1,4 +1,4 @@
-package net.lomeli.boombot.commands.special;
+package net.lomeli.boombot.commands.special.moderate;
 
 import com.google.common.collect.Maps;
 import net.dv8tion.jda.Permission;

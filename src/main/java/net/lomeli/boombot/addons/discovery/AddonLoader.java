@@ -54,4 +54,8 @@ public class AddonLoader {
     public void addContainer(AddonContainer container) {
         this.containers.add(container);
     }
+
+    public List<AddonContainer> addonList() {
+        return Lists.newArrayList(containers);
+    }
 }

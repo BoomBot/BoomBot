@@ -1,22 +1,21 @@
-package net.lomeli.boombot.commands.special;
+package net.lomeli.boombot.commands.special.admin;
 
 import net.lomeli.boombot.BoomBot;
 import net.lomeli.boombot.commands.Command;
-import net.lomeli.boombot.logging.BoomLogger;
 import net.lomeli.boombot.lib.CommandInterface;
 import net.lomeli.boombot.lib.GuildOptions;
 
-public class StopBotCommand extends Command {
-
-    public StopBotCommand() {
-        super("stop-boom-bot", "boombot.command.stopboombot");
+public class UpdateCommand extends Command {
+    public UpdateCommand() {
+        super("update", "boombot.command.update");
     }
 
     @Override
     public void executeCommand(CommandInterface cmd) {
-        super.executeCommand(cmd);
-        BoomLogger.info("BoomBot shutting down via command from %s...", cmd.getUser().getUsername());
-        BoomBot.shutdownBoomBot();
+        if (!BoomBot.config.isUpdatable()) {
+            cmd.sendMessage(getContent() + ".disabled");
+            return;
+        }
     }
 
     @Override

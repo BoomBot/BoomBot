@@ -8,12 +8,16 @@ import java.util.List;
 import net.lomeli.boombot.BoomBot;
 import net.lomeli.boombot.api.event.EventRegistry;
 import net.lomeli.boombot.api.event.text.CommandEvent;
-import net.lomeli.boombot.commands.special.*;
+import net.lomeli.boombot.commands.special.admin.ReloadConfigCommand;
+import net.lomeli.boombot.commands.special.admin.StopBotCommand;
 import net.lomeli.boombot.commands.special.audio.*;
 import net.lomeli.boombot.commands.special.create.ClearCommand;
 import net.lomeli.boombot.commands.special.create.CreateCommand;
 import net.lomeli.boombot.commands.special.create.RemoveCommand;
+import net.lomeli.boombot.commands.special.debug.ChannelIdCommand;
+import net.lomeli.boombot.commands.special.debug.GuildIdCommand;
 import net.lomeli.boombot.commands.special.moderate.*;
+import net.lomeli.boombot.commands.special.other.*;
 import net.lomeli.boombot.logging.BoomLogger;
 import net.lomeli.boombot.helper.PermissionsHelper;
 import net.lomeli.boombot.lib.CommandInterface;
@@ -40,6 +44,7 @@ public enum CommandRegistry {
         addNewCommand(new OptionsCommand(), false);
         addNewCommand(new GuildStatCommand(), false);
         addNewCommand(new AvatarCommand(), false);
+        addNewCommand(new ViewAddonCommands(), false);
 
         addNewCommand(new CreateCommand(), false);
         addNewCommand(new RemoveCommand(), false);
