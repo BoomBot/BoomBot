@@ -1,7 +1,5 @@
 package net.lomeli.boombot.api.events.bot.data;
 
-import com.google.common.collect.Maps;
-
 import java.util.Map;
 
 import net.lomeli.boombot.api.data.GuildData;
@@ -28,6 +26,10 @@ public class DataEvent extends Event {
     public static class DataWriteEvent extends DataEvent {
         public DataWriteEvent(Map<String, GuildData> dataRegistry) {
             super(dataRegistry);
+        }
+
+        public Map<String, GuildData> getData() {
+            return dataRegistry;
         }
     }
 
