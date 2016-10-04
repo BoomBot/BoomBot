@@ -4,7 +4,6 @@ import com.google.common.collect.Maps;
 import org.apache.commons.io.FilenameUtils;
 
 import java.io.File;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.Map;
 
@@ -37,12 +36,7 @@ public class DataRegistry implements IDataRegistry {
     @Override
     public void readGuildData() {
         if (dataRegistry.size() > 0 && dataFolder != null && dataFolder.exists() && dataFolder.isDirectory()) {
-            File[] dataFiles = dataFolder.listFiles(new FilenameFilter() {
-                @Override
-                public boolean accept(File dir, String name) {
-                    return FilenameUtils.isExtension(name, "cfg");
-                }
-            });
+            File[] dataFiles = dataFolder.listFiles((dir, name) -> FilenameUtils.isExtension(name, "cfg"));
             if (dataFiles != null && dataFiles.length > 0) {
                 for (File file : dataFiles) {
                     try {
