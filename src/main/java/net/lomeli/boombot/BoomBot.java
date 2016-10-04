@@ -83,6 +83,11 @@ public class BoomBot {
         }
     }
 
+    private static void setupRegistry() {
+        BoomAPI.dataRegistry = new DataRegistry(new File("data"));
+        BoomAPI.dataRegistry.readGuildData();
+    }
+
     /**
      * Moves old logs to make room for latest log
      */
