@@ -29,6 +29,10 @@ public class EntityData {
         return old;
     }
 
+    public String[] getKeys() {
+        return entityData.keySet().toArray(new String[entityData.keySet().size()]);
+    }
+
     public byte setByte(String key, byte value) {
         return set(key, value);
     }
