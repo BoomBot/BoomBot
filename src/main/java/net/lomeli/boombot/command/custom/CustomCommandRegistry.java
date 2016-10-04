@@ -5,13 +5,22 @@ import com.google.common.collect.Maps;
 
 import java.util.Map;
 
+import net.lomeli.boombot.api.BoomAPI;
+import net.lomeli.boombot.api.data.EntityData;
+import net.lomeli.boombot.api.data.GuildData;
+import net.lomeli.boombot.api.events.Event;
+import net.lomeli.boombot.api.events.bot.data.DataEvent;
+
 public enum CustomCommandRegistry {
-    INSTANCE;
+    INSTANCE();
+
+    private static final String CUSTOM_DATA_KEY = "boombot_custom_command_data";
 
     Map<String, Map<String, CustomContent>> guildCommands;
 
-    CustomCommandRegistry(){
+    CustomCommandRegistry() {
         this.guildCommands = Maps.newHashMap();
+        BoomAPI.eventRegistry.registerEventHandler(this);
     }
 
     public CustomContent getGuildCommand(String guildID, String commandID) {
@@ -52,5 +61,26 @@ public enum CustomCommandRegistry {
             flag = true;
         }
         return flag;
+    }
+
+    @Event.EventHandler
+    public void readDataEvent(DataEvent.DataReadEvent event) {
+        if (event.getGuildIDs() == null || event.getGuildIDs().length <= 0) return;
+        for (String guildID : event.getGuildIDs()) {
+            GuildData guildData = event.getGuildData(guildID);
+            if (guildData != null && guildData.getGuildData() != null) {
+                EntityData rawData = guildData.getGuildData();
+                if (rawData != null && rawData.hasKey(CUSTOM_DATA_KEY)) {
+                    EntityData commandData = rawData.getData(CUSTOM_DATA_KEY);
+                    String[] commandNames = commandData.getKeys();
+                    if (commandNames == null || commandNames.length <= 0) continue;
+                    for (String name : commandNames) {
+                        String command = commandData.getString(name);
+                        if (!Strings.isNullOrEmpty(name) && !Strings.isNullOrEmpty(command))
+                            addGuildCommand(guildID, new CustomContent(name, command));
+                    }
+                }
+            }
+        }
     }
 }
