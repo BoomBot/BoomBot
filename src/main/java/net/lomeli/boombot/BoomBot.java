@@ -84,7 +84,7 @@ public class BoomBot {
     }
 
     /**
-     * Moves old logs to make room for lastest log
+     * Moves old logs to make room for latest log
      */
     public static void setupLogFolder() {
         File logFolder = new File("logs");
