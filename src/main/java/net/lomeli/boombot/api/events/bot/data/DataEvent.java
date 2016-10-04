@@ -18,29 +18,25 @@ public class DataEvent extends Event {
         return dataRegistry.get(id);
     }
 
-    public static class DataWriteEvent extends DataEvent {
+    public String[] getGuildIDs() {
+        return dataRegistry.keySet().toArray(new String[dataRegistry.keySet().size()]);
+    }
 
+    /**
+     * Fires right before BoomBot saves guild data.
+     */
+    public static class DataWriteEvent extends DataEvent {
         public DataWriteEvent(Map<String, GuildData> dataRegistry) {
             super(dataRegistry);
         }
-
-        public void setGuildData(String id, GuildData data) {
-            dataRegistry.put(id, data);
-        }
-
-        public Map<String, GuildData> getData() {
-            return Maps.newHashMap(dataRegistry);
-        }
     }
 
+    /**
+     * Fires right after BoomBot has read all guild data.
+     */
     public static class DataReadEvent extends DataEvent {
-
         public DataReadEvent(Map<String, GuildData> dataRegistry) {
             super(dataRegistry);
-        }
-
-        public String[] getGuildIDs() {
-            return dataRegistry.keySet().toArray(new String[dataRegistry.keySet().size()]);
         }
     }
 }
