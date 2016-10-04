@@ -22,12 +22,14 @@ import net.lomeli.boombot.api.BoomAPI;
 import net.lomeli.boombot.api.events.bot.InitEvent;
 import net.lomeli.boombot.api.events.bot.PostInitEvent;
 import net.lomeli.boombot.core.EventListner;
+import net.lomeli.boombot.lib.CommandRegistry;
 import net.lomeli.boombot.lib.DataRegistry;
 import net.lomeli.boombot.lib.EventRegistry;
 
 public class BoomBot {
 
     public static boolean debug;
+    public static String debugGuildID;
     public static final int MAJOR = 3, MINOR = 0, REV = 0;
     public static final String BOOM_BOT_VERSION = String.format("%s.%s.%s", MAJOR, MINOR, REV);
     public static Logger logger;
@@ -39,9 +41,8 @@ public class BoomBot {
         logger = LogManager.getLogger("BoomBot");
         logger.info("Starting BoomBot v{}", BOOM_BOT_VERSION);
 
-        logger.info("Setting up data registry");
-        BoomAPI.dataRegistry = new DataRegistry(new File("data"));
-        BoomAPI.dataRegistry.readGuildData();
+        logger.info("Setting up registries");
+        setupRegistry();
 
         if (args != null && args.length > 0) {
             String key = args[0];
@@ -76,16 +77,21 @@ public class BoomBot {
 
     private static void checkIfDebug(String[] args) {
         for (String arg : args) {
-            if (!Strings.isNullOrEmpty(arg) && (arg.equalsIgnoreCase("-d") || arg.equalsIgnoreCase("--debug"))) {
-                debug = true;
-                logger.debug("BoomBot is now in debug mode");
-                return;
+            if (!Strings.isNullOrEmpty(arg) && (arg.startsWith("-d=") || arg.startsWith("--debug="))) {
+                String[] splitArg = arg.split("=");
+                if (splitArg != null && splitArg.length == 2) {
+                    debug = true;
+                    debugGuildID = splitArg[1];
+                    logger.debug("BoomBot is now in debug mode using channel with id {}", debugGuildID);
+                    return;
+                }
             }
         }
     }
 
     private static void setupRegistry() {
         BoomAPI.eventRegistry = new EventRegistry();
+        BoomAPI.commandRegistry = new CommandRegistry();
         BoomAPI.dataRegistry = new DataRegistry(new File("data"));
         BoomAPI.dataRegistry.readGuildData();
     }
