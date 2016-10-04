@@ -23,6 +23,7 @@ import net.lomeli.boombot.api.events.bot.InitEvent;
 import net.lomeli.boombot.api.events.bot.PostInitEvent;
 import net.lomeli.boombot.core.EventListner;
 import net.lomeli.boombot.lib.DataRegistry;
+import net.lomeli.boombot.lib.EventRegistry;
 
 public class BoomBot {
 
@@ -84,6 +85,7 @@ public class BoomBot {
     }
 
     private static void setupRegistry() {
+        BoomAPI.eventRegistry = new EventRegistry();
         BoomAPI.dataRegistry = new DataRegistry(new File("data"));
         BoomAPI.dataRegistry.readGuildData();
     }
