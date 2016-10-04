@@ -1,8 +1,6 @@
 package net.lomeli.boombot.lib;
 
 import com.google.common.collect.Maps;
-import com.google.common.io.Files;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 
 import java.io.File;
@@ -11,8 +9,10 @@ import java.io.IOException;
 import java.util.Map;
 
 import net.lomeli.boombot.BoomBot;
+import net.lomeli.boombot.api.BoomAPI;
 import net.lomeli.boombot.api.data.GuildData;
 import net.lomeli.boombot.api.data.IDataRegistry;
+import net.lomeli.boombot.api.events.bot.data.DataEvent;
 import net.lomeli.boombot.api.util.BasicGuildUtil;
 
 public class DataRegistry implements IDataRegistry {
@@ -36,7 +36,7 @@ public class DataRegistry implements IDataRegistry {
 
     @Override
     public void readGuildData() {
-        if (dataRegistry.size() > 0 && dataFolder != null && dataFolder.exists() && dataFolder.isDirectory()){
+        if (dataRegistry.size() > 0 && dataFolder != null && dataFolder.exists() && dataFolder.isDirectory()) {
             File[] dataFiles = dataFolder.listFiles(new FilenameFilter() {
                 @Override
                 public boolean accept(File dir, String name) {
@@ -56,11 +56,15 @@ public class DataRegistry implements IDataRegistry {
                     }
                 }
             }
+            BoomAPI.eventRegistry.post(new DataEvent.DataReadEvent(dataRegistry));
         }
     }
 
     @Override
     public void writeGuildData() {
+        DataEvent.DataWriteEvent event = new DataEvent.DataWriteEvent(dataRegistry);
+        BoomAPI.eventRegistry.post(event);
+        dataRegistry.putAll(event.getData());
         if (dataRegistry.size() > 0) {
             for (Map.Entry<String, GuildData> entry : dataRegistry.entrySet())
                 entry.getValue().writeData(dataFolder);

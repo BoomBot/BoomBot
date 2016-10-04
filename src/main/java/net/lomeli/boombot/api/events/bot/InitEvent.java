@@ -1,6 +1,8 @@
 package net.lomeli.boombot.api.events.bot;
 
-public class InitEvent {
+import net.lomeli.boombot.api.events.Event;
+
+public class InitEvent extends Event {
     private String boomBotID;
     private String boomBotName;
     private String boomBotDiscriminator;

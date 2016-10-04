@@ -5,7 +5,9 @@ import com.google.common.collect.Lists;
 import java.util.Collections;
 import java.util.List;
 
-public class PostInitEvent {
+import net.lomeli.boombot.api.events.Event;
+
+public class PostInitEvent extends Event {
     private String currentGame;
     private List<String> guildIDs;
 
