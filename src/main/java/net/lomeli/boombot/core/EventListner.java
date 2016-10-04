@@ -1,7 +1,6 @@
 package net.lomeli.boombot.core;
 
 import net.dv8tion.jda.entities.Guild;
-import net.dv8tion.jda.events.DisconnectEvent;
 import net.dv8tion.jda.events.ReadyEvent;
 import net.dv8tion.jda.events.ShutdownEvent;
 import net.dv8tion.jda.events.guild.GuildJoinEvent;
