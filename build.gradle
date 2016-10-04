@@ -22,7 +22,8 @@ dependencies {
     compile "com.google.code.gson:gson:${config.gsonVersion}"
     compile "com.google.guava:guava:${config.guavaVersion}"
     compile "commons-io:commons-io:${config.commonsIOVersion}"
-    //compile "com.github.axet:vget:${config.vgetVersion}"
+    compile "org.apache.logging.log4j:log4j-api:${config.log4jVersion}"
+    compile "org.apache.logging.log4j:log4j-core:${config.log4jVersion}"
 }
 
 jar {
@@ -44,10 +45,15 @@ task fatJar(type: Jar) {
     with jar
 }
 
-task copyLang(type: Copy) {
-    from 'lang'
-    into 'build/libs/lang'
-}
+//task copyLang(type: Copy) {
+//    from 'lang'
+//    into 'build/libs/lang'
+//}
+
+//task copyNative(type: Copy) {
+//    from 'ffmpeg_native'
+//    into 'build/libs/ffmpeg_native'
+//}
 
 task deobfJar(type: Jar) {
     from sourceSets.main.output
@@ -61,4 +67,4 @@ tasks.withType(Zip) { task ->
     }
 }
 
-build.dependsOn fatJar, copyLang, sourceJar, deobfJar
+build.dependsOn fatJar, /*copyLang, copyNative, */sourceJar, deobfJar

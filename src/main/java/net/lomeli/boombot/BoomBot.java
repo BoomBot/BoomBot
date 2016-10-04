@@ -1,95 +1,106 @@
 package net.lomeli.boombot;
 
+import com.google.common.base.Strings;
+import com.google.common.collect.Lists;
 import net.dv8tion.jda.JDA;
 import net.dv8tion.jda.JDABuilder;
+import org.apache.commons.io.FileUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.security.auth.login.LoginException;
 import java.io.File;
-import java.util.Date;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.nio.file.attribute.FileTime;
+import java.util.List;
 
-import net.lomeli.boombot.addons.Loader;
-import net.lomeli.boombot.commands.CommandRegistry;
-import net.lomeli.boombot.lib.BoomSecurityManager;
-import net.lomeli.boombot.logging.BoomLogger;
-import net.lomeli.boombot.lang.LangRegistry;
-import net.lomeli.boombot.lib.BoomConfig;
-import net.lomeli.boombot.logging.LogThread;
-import net.lomeli.boombot.logging.Logger;
-import net.lomeli.boombot.lib.ShutdownHook;
+import net.lomeli.boombot.api.BoomAPI;
+import net.lomeli.boombot.api.events.bot.InitEvent;
+import net.lomeli.boombot.api.events.bot.PostInitEvent;
+import net.lomeli.boombot.core.EventListner;
+import net.lomeli.boombot.lib.DataRegistry;
 
 public class BoomBot {
-    public static final int MAJOR = 2, MINOR = 1, REV = 0;
-    public static final String BOOM_BOT_VERSION = String.format("%s.%s.%s", MAJOR, MINOR, REV);
-    public static BoomListen listener;
-    public static JDA jda;
-    public static Date startTime;
-    public static BoomConfig config;
-    public static ConfigLoader configLoader;
-    public static File logFolder, logFile;
+
     public static boolean debug;
-    public static Loader addonLoader;
+    public static final int MAJOR = 3, MINOR = 0, REV = 0;
+    public static final String BOOM_BOT_VERSION = String.format("%s.%s.%s", MAJOR, MINOR, REV);
+    public static Logger logger;
+    public static JDA jda;
+    public static EventListner mainListener;
 
     public static void main(String[] args) {
-        System.setSecurityManager(new BoomSecurityManager());
-        new Thread(new LogThread()).start();
-        addonLoader = new Loader();
-        LangRegistry.initRegistry();
-        if (debug)
-            BoomLogger.info("Adding Shutdown Hook");
-        Runtime.getRuntime().addShutdownHook(new ShutdownHook());
-        try {
-            logFolder = new File("logs");
-            if (!logFolder.exists())
-                logFolder.mkdir();
-            logFile = new File(logFolder, (new Date() + ".log").replaceAll(":", "-").replaceAll(" ", "_"));
-            config = new BoomConfig();
-            configLoader = new ConfigLoader(new File("config.cfg"));
-            configLoader.parseConfig();
-            if (args.length >= 1) {
-                if (args.length > 1) {
-                    for (int i = 1; i < args.length; i++) {
-                        String arg = args[i];
-                        switch (arg) {
-                            case "-d":
-                            case "--debug":
-                                debug = true;
-                                break;
-                            default:
-                                BoomLogger.warn("Argument %s not recognized, ignoring.", arg);
-                        }
-                    }
-                }
-                listener = new BoomListen();
-                jda = new JDABuilder().setBotToken(args[0]).addListener(listener).buildBlocking();
-                startTime = new Date();
-                jda.getAccountManager().setGame("BoomBot using JDA");
-                BoomLogger.info("Bot is ready");
-                if (debug) {
-                    jda.getAccountManager().setGame("BoomBot using JDA - Debug Mode");
-                    BoomLogger.info("BoomBot is in debug mode!");
-                }
-                CommandRegistry.INSTANCE.registerBasicCommands();
-                addonLoader.loadAddons();
-            } else {
-                BoomLogger.info("BoomBot requires a email and password to login as!");
+        setupLogFolder();
+        logger = LogManager.getLogger("BoomBot");
+        logger.info("Starting BoomBot v{}", BOOM_BOT_VERSION);
+
+        logger.info("Setting up data registry");
+        BoomAPI.dataRegistry = new DataRegistry(new File("data"));
+        BoomAPI.dataRegistry.readGuildData();
+
+        if (args != null && args.length > 0) {
+            String key = args[0];
+            //TODO Search for addons and fire preInit events
+            if (args.length > 1) checkIfDebug(args);
+            logger.info("Setting up main listener");
+            mainListener = new EventListner();
+
+            try {
+                jda = new JDABuilder().setBotToken(key).addListener(mainListener).setBulkDeleteSplittingEnabled(false).buildBlocking();
+                InitEvent initEvent = new InitEvent(jda.getSelfInfo().getId(), jda.getSelfInfo().getUsername(), jda.getSelfInfo().getDiscriminator());
+                //TODO Fire init event
+                //TODO Load builtin commands
+                // Gets the guilds boombot is currently a member of
+                List<String> guildIds = Lists.newArrayList();
+                if (!jda.getGuilds().isEmpty())
+                    jda.getGuilds().stream().filter(guild -> guild != null).forEach(guild -> guildIds.add(guild.getId()));
+                String[] ids = new String[guildIds.size()];
+                PostInitEvent postEvent = new PostInitEvent("JDA", guildIds.toArray(ids));
+                //TODO Fire post init event
+                jda.getAccountManager().setGame(postEvent.getCurrentGame());
+
+            } catch (LoginException ex) {
+                logger.error("Could not login with given key: %s", key);
+                ex.printStackTrace();
+            } catch (InterruptedException ex) {
+                logger.error("JDA thread unexpectedly interrupted!");
+                ex.printStackTrace();
             }
-        } catch (IllegalArgumentException e) {
-            BoomLogger.error("The config was not populated. Please enter an email and password.", e);
-        } catch (LoginException e) {
-            BoomLogger.error("The provided email / password combination was incorrect. Please provide valid details.", e);
-        } catch (InterruptedException e) {
-            BoomLogger.error("An Exception occurred", e);
         }
     }
 
-    public static void wrapUp() {
-        configLoader.writeConfig();
-        Logger.writeLogFile(BoomBot.logFolder, BoomBot.logFile);
+    private static void checkIfDebug(String[] args) {
+        for (String arg : args) {
+            if (!Strings.isNullOrEmpty(arg) && (arg.equalsIgnoreCase("-d") || arg.equalsIgnoreCase("--debug"))) {
+                debug = true;
+                logger.debug("BoomBot is now in debug mode");
+                return;
+            }
+        }
     }
 
-    public static void shutdownBoomBot() {
-        wrapUp();
-        jda.shutdown();
-        System.exit(0);
+    /**
+     * Moves old logs to make room for lastest log
+     */
+    public static void setupLogFolder() {
+        File logFolder = new File("logs");
+        if (!logFolder.exists()) logFolder.mkdir();
+        File lastLog = new File(logFolder, "latest.log");
+        if (lastLog.exists()) {
+            try {
+                Path logPath = Paths.get(lastLog.getCanonicalPath());
+                BasicFileAttributes attrib = Files.readAttributes(logPath, BasicFileAttributes.class);
+                FileTime time = attrib.creationTime();
+                String name = String.format("%s.log", time.toInstant().toString().replace(":", "-"));
+                FileUtils.copyFile(lastLog, new File(logFolder, name));
+                lastLog.delete();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
     }
 }
