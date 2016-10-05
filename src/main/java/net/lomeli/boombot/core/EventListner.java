@@ -18,6 +18,8 @@ import net.lomeli.boombot.api.BoomAPI;
 import net.lomeli.boombot.api.commands.Command;
 import net.lomeli.boombot.api.commands.CommandInterface;
 import net.lomeli.boombot.api.data.GuildData;
+import net.lomeli.boombot.command.custom.CustomRegistry;
+import net.lomeli.boombot.command.custom.CustomContent;
 
 public class EventListner extends ListenerAdapter {
 
@@ -61,7 +63,9 @@ public class EventListner extends ListenerAdapter {
                     String result = cmd.execute(cmdInterface);
                     if (!Strings.isNullOrEmpty(result)) event.getChannel().sendMessage(result);
                 } else {
-
+                    CustomContent custom = CustomRegistry.INSTANCE.getGuildCommand(event.getGuild().getId(), commandName);
+                    if (custom != null)
+                        event.getChannel().sendMessage(custom.getCommandContent());
                 }
             }
         }

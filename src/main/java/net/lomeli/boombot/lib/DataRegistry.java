@@ -35,7 +35,7 @@ public class DataRegistry implements IDataRegistry {
 
     @Override
     public void readGuildData() {
-        if (dataRegistry.size() > 0 && dataFolder != null && dataFolder.exists() && dataFolder.isDirectory()) {
+        if (dataFolder != null && dataFolder.exists() && dataFolder.isDirectory()) {
             File[] dataFiles = dataFolder.listFiles((dir, name) -> FilenameUtils.isExtension(name, "cfg"));
             if (dataFiles != null && dataFiles.length > 0) {
                 for (File file : dataFiles) {
@@ -62,6 +62,16 @@ public class DataRegistry implements IDataRegistry {
         if (dataRegistry.size() > 0) {
             for (Map.Entry<String, GuildData> entry : dataRegistry.entrySet())
                 entry.getValue().writeData(dataFolder);
+        }
+    }
+
+    public void writeGuildData(String guildID) {
+        if (guildHasData(guildID)) {
+            DataEvent.DataWriteEvent event = new DataEvent.DataWriteEvent(dataRegistry);
+            BoomAPI.eventRegistry.post(event);
+            dataRegistry.putAll(event.getData());
+            GuildData data = getDataForGuild(guildID);
+            if (data != null) data.writeData(dataFolder);
         }
     }
 

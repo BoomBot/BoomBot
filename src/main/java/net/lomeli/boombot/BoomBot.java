@@ -92,6 +92,7 @@ public class BoomBot {
     private static void setupRegistry() {
         BoomAPI.eventRegistry = new EventRegistry();
         BoomAPI.commandRegistry = new CommandRegistry();
+        BoomAPI.eventRegistry.registerEventHandler(CustomRegistry.INSTANCE);
         BoomAPI.dataRegistry = new DataRegistry(new File("data"));
         BoomAPI.dataRegistry.readGuildData();
     }
