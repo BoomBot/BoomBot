@@ -39,6 +39,7 @@ public class BoomBot {
     public static EventListner mainListener;
 
     public static void main(String[] args) {
+        Runtime.getRuntime().addShutdownHook(new Thread(new ShutdownHook()));
         setupLogFolder();
         logger = LogManager.getLogger("BoomBot");
         logger.info("Starting BoomBot v{}", BOOM_BOT_VERSION);
