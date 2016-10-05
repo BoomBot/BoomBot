@@ -40,7 +40,7 @@ public class EventListner extends ListenerAdapter {
     public void onGenericGuildMessage(GenericGuildMessageEvent event) {
         if (BoomBot.jda == null || BoomBot.jda.getSelfInfo() == null || event == null || event.getMessage() == null ||
                 event.getGuild() == null || event.getAuthor() == null || event.getAuthor().isBot() ||
-                (BoomBot.debug && !event.getGuild().getId().equals(BoomBot.debugGuildID))) return;
+                (BoomBot.debug && !event.getGuild().getId().equals(BoomBot.debugGuildID) && !event.getChannel().getName().equalsIgnoreCase("test-channel"))) return;
         Message msg = event.getMessage();
         if (msg.isEdited()) return;
         Guild guild = event.getGuild();
