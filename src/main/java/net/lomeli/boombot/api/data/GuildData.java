@@ -59,7 +59,7 @@ public class GuildData {
             dataFolder.mkdir();
             return;
         }
-        BoomAPI.logger.info("Reading data for guild id {}", guildID);
+        BoomAPI.logger.debug("Reading data for guild id {}", guildID);
         Gson gson = new Gson();
         // Read generic guild data
         File dataFile = new File(dataFolder, guildID + ".cfg");

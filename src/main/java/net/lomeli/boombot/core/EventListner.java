@@ -10,7 +10,6 @@ import net.dv8tion.jda.events.message.guild.GenericGuildMessageEvent;
 import net.dv8tion.jda.events.message.priv.GenericPrivateMessageEvent;
 import net.dv8tion.jda.hooks.ListenerAdapter;
 
-import java.util.Arrays;
 import java.util.List;
 
 import net.lomeli.boombot.BoomBot;
@@ -80,9 +79,16 @@ public class EventListner extends ListenerAdapter {
     public void onGuildJoin(GuildJoinEvent event) {
         if (event.getGuild() != null) {
             BoomBot.logger.debug("Adding guild {}", event.getGuild().getName());
-            BoomAPI.dataRegistry.addGuild(event.getGuild().getId());
-            BoomAPI.dataRegistry.getDataForGuild(event.getGuild().getId()).getGuildData().setString("name", event.getGuild().getName());
+            if (!BoomAPI.dataRegistry.guildHasData(event.getGuild().getId())) {
+                BoomAPI.dataRegistry.addGuild(event.getGuild().getId());
+                BoomAPI.dataRegistry.getDataForGuild(event.getGuild().getId()).getGuildData().setString("name", event.getGuild().getName());
+            }
         }
+    }
+
+    @Override
+    public void onDisconnect(DisconnectEvent event) {
+        BoomAPI.dataRegistry.writeGuildData();
     }
 
     @Override
