@@ -4,7 +4,6 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import net.dv8tion.jda.JDA;
 import net.dv8tion.jda.JDABuilder;
-import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -21,10 +20,13 @@ import java.util.List;
 import net.lomeli.boombot.api.BoomAPI;
 import net.lomeli.boombot.api.events.bot.InitEvent;
 import net.lomeli.boombot.api.events.bot.PostInitEvent;
+import net.lomeli.boombot.command.custom.CustomRegistry;
 import net.lomeli.boombot.core.EventListner;
 import net.lomeli.boombot.lib.CommandRegistry;
 import net.lomeli.boombot.lib.DataRegistry;
 import net.lomeli.boombot.lib.EventRegistry;
+import net.lomeli.boombot.lib.ShutdownHook;
+import net.lomeli.boombot.util.IOUtil;
 
 public class BoomBot {
 
@@ -64,7 +66,6 @@ public class BoomBot {
                 PostInitEvent postEvent = new PostInitEvent("JDA", guildIds.toArray(ids));
                 //TODO Fire post init event
                 jda.getAccountManager().setGame(postEvent.getCurrentGame());
-
             } catch (LoginException ex) {
                 logger.error("Could not login with given key: %s", key);
                 ex.printStackTrace();
@@ -109,8 +110,8 @@ public class BoomBot {
                 Path logPath = Paths.get(lastLog.getCanonicalPath());
                 BasicFileAttributes attrib = Files.readAttributes(logPath, BasicFileAttributes.class);
                 FileTime time = attrib.creationTime();
-                String name = String.format("%s.log", time.toInstant().toString().replace(":", "-"));
-                FileUtils.copyFile(lastLog, new File(logFolder, name));
+                String name = String.format("%s.gz", time.toInstant().toString().replace(":", "-"));
+                IOUtil.gzipFile(lastLog, new File(logFolder, name));
                 lastLog.delete();
             } catch (IOException ex) {
                 ex.printStackTrace();
