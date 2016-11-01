@@ -65,7 +65,7 @@ public enum CustomRegistry {
 
     @Event.EventHandler
     public void readDataEvent(DataEvent.DataReadEvent event) {
-        //if (BoomBot.debug)
+        if (BoomBot.debug)
             BoomBot.logger.debug("Reading custom commands");
         if (event.getGuildIDs() == null || event.getGuildIDs().length <= 0) return;
         BoomBot.logger.debug("Iterating through data");

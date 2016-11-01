@@ -1,6 +1,8 @@
 package net.lomeli.boombot.api.data;
 
+import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
+import com.google.gson.internal.LinkedTreeMap;
 
 import java.util.Map;
 
@@ -138,6 +140,26 @@ public class EntityData {
 
     public EntityData getData(String key) {
         Object value = get(key);
-        return (value != null && value instanceof EntityData) ? (EntityData) value : new EntityData();
+        if (value instanceof LinkedTreeMap) {
+            LinkedTreeMap<String, Object> parentTree = (LinkedTreeMap) value;
+            if (parentTree.containsKey("entityData")) {
+                LinkedTreeMap<String, Object> treeMap = (LinkedTreeMap<String, Object>) parentTree.get("entityData");
+                EntityData newValue = new EntityData();
+                treeMap.entrySet().stream().filter(entry -> entry != null && !Strings.isNullOrEmpty(entry.getKey()) && entry.getValue() != null)
+                        .forEach(entry -> newValue.set(entry.getKey(), entry.getValue()));
+                return newValue;
+            }
+        }
+        return (value instanceof EntityData) ? (EntityData) value : new EntityData();
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append('{');
+        entityData.entrySet().stream().filter(entry -> entry != null && !Strings.isNullOrEmpty(entry.getKey()) && entry.getValue() != null)
+                .forEach(entry -> builder.append(String.format("\"%s\":%s;", entry.getKey(), entry.getValue())));
+        builder.append('}');
+        return builder.toString();
     }
 }
