@@ -1,4 +1,4 @@
-package net.lomeli.boombot.lib;
+package net.lomeli.boombot.core.registry;
 
 import com.google.common.collect.Lists;
 
@@ -24,6 +24,7 @@ public class EventRegistry implements IEventRegistry {
 
     @Override
     public boolean post(Event event) {
+        BoomBot.logger.debug("Firing {}", event.getClass().getSimpleName());
         for (Object obj : eventHandlers) {
             Method[] methods = obj.getClass().getMethods();
             for (Method method : methods) {

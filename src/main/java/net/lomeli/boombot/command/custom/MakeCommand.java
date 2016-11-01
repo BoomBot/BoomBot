@@ -5,7 +5,7 @@ import com.google.common.base.Strings;
 import net.lomeli.boombot.api.BoomAPI;
 import net.lomeli.boombot.api.commands.Command;
 import net.lomeli.boombot.api.commands.CommandInterface;
-import net.lomeli.boombot.lib.DataRegistry;
+import net.lomeli.boombot.core.registry.DataRegistry;
 
 public class MakeCommand implements Command {
     @Override

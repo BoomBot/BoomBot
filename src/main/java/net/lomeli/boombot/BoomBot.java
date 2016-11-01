@@ -22,11 +22,11 @@ import net.lomeli.boombot.api.events.bot.InitEvent;
 import net.lomeli.boombot.api.events.bot.PostInitEvent;
 import net.lomeli.boombot.command.custom.CustomRegistry;
 import net.lomeli.boombot.core.EventListner;
-import net.lomeli.boombot.lib.CommandRegistry;
-import net.lomeli.boombot.lib.DataRegistry;
-import net.lomeli.boombot.lib.EventRegistry;
+import net.lomeli.boombot.core.registry.CommandRegistry;
+import net.lomeli.boombot.core.registry.DataRegistry;
+import net.lomeli.boombot.core.registry.EventRegistry;
 import net.lomeli.boombot.lib.ShutdownHook;
-import net.lomeli.boombot.util.IOUtil;
+import net.lomeli.boombot.lib.util.IOUtil;
 
 public class BoomBot {
 

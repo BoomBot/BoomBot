@@ -1,4 +1,4 @@
-package net.lomeli.boombot.lib;
+package net.lomeli.boombot.core.registry;
 
 import com.google.common.collect.Maps;
 import org.apache.commons.io.FilenameUtils;
