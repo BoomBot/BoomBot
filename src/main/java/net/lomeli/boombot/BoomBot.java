@@ -67,6 +67,7 @@ public class BoomBot {
                 PostInitEvent postEvent = new PostInitEvent("JDA", guildIds.toArray(ids));
                 //TODO Fire post init event
                 jda.getAccountManager().setGame(postEvent.getCurrentGame());
+                logger.info("BoomBot finished loading!");
             } catch (LoginException ex) {
                 logger.error("Could not login with given key: %s", key);
                 ex.printStackTrace();

@@ -8,6 +8,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface Addon {
+    /** ID for the addon. MUST be all lowercase and have no spaces! Will be ignored otherwise! */
     String addonID();
 
     String name() default "";
