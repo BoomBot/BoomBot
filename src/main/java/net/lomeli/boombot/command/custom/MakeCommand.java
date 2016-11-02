@@ -20,9 +20,10 @@ public class MakeCommand implements Command {
         if (subStart >= cmd.getMessage().length()) return "Cannot make empty command";
         String messageContent = cmd.getMessage().substring(subStart);
         if (Strings.isNullOrEmpty(messageContent)) return "Cannot make empty command";
+        String safeMessage = messageContent.replaceAll("%s", "(Blank)").replaceAll("%S", "(BLANK)");
         if (CustomRegistry.INSTANCE.addGuildCommand(cmd.getGuildID(), new CustomContent(name, messageContent)))
             ((DataRegistry) BoomAPI.dataRegistry).writeGuildData(cmd.getGuildID());
-        return "Created command " + name + ". Content: " + messageContent;
+        return "Created command " + name + ". Content: " + safeMessage;
     }
 
     @Override
