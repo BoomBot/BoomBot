@@ -45,22 +45,26 @@ public class DataRegistry implements IDataRegistry {
         return boomBotData;
     }
 
-    @Override
-    public void readGuildData() {
-        // read BoomBot data. Addons do NOT need to read this!
+    public void readBoomBoData() {
         File boomBotdata = new File(BOOM_BOT_DATA);
         if (boomBotdata.exists()) {
             try {
                 String data = FileUtils.readFileToString(boomBotdata, "UTF-8");
                 this.boomBotData = gson.fromJson(data, EntityData.class);
-                if (this.boomBotData == null) this.boomBotData = new EntityData();
             } catch (IOException ex) {
                 BoomBot.logger.error("Could not read boombot config!", ex);
             }
         } else {
-            this.boomBotData.setString("OwnerID", "null");
-            writeGuildData();
+            this.boomBotData = new EntityData();
+            this.boomBotData.setStringArray("adminIDs", new String[0]);
+            writeBoomBotData();
         }
+    }
+
+    @Override
+    public void readGuildData() {
+        // read BoomBot data. Addons do NOT need to read this!
+        readBoomBoData();
         // Read guild data
         if (dataFolder != null && dataFolder.exists() && dataFolder.isDirectory()) {
             File[] dataFiles = dataFolder.listFiles((dir, name) -> FilenameUtils.isExtension(name, "cfg"));
@@ -81,9 +85,7 @@ public class DataRegistry implements IDataRegistry {
         }
     }
 
-    @Override
-    public void writeGuildData() {
-        // Write BoomBot data. Addons should NOT be able to write to it.
+    public void writeBoomBotData() {
         try {
             File boomBotdata = new File(BOOM_BOT_DATA);
             String data = gson.toJson(this.boomBotData);
@@ -91,6 +93,12 @@ public class DataRegistry implements IDataRegistry {
         } catch (IOException ex) {
             BoomBot.logger.error("Failed to write BoomBot base data", ex);
         }
+    }
+
+    @Override
+    public void writeGuildData() {
+        // Write BoomBot data. Addons should NOT be able to write to it.
+        writeBoomBotData();
         // Write guild data
         DataEvent.DataWriteEvent event = new DataEvent.DataWriteEvent(dataRegistry);
         BoomAPI.eventRegistry.post(event);
