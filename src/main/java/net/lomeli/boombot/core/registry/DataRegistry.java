@@ -45,7 +45,7 @@ public class DataRegistry implements IDataRegistry {
         return boomBotData;
     }
 
-    public void readBoomBoData() {
+    public void readBoomBotData() {
         File boomBotdata = new File(BOOM_BOT_DATA);
         if (boomBotdata.exists()) {
             try {
@@ -64,7 +64,7 @@ public class DataRegistry implements IDataRegistry {
     @Override
     public void readGuildData() {
         // read BoomBot data. Addons do NOT need to read this!
-        readBoomBoData();
+        readBoomBotData();
         // Read guild data
         if (dataFolder != null && dataFolder.exists() && dataFolder.isDirectory()) {
             File[] dataFiles = dataFolder.listFiles((dir, name) -> FilenameUtils.isExtension(name, "cfg"));
