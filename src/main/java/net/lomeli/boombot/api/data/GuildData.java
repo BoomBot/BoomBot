@@ -59,7 +59,7 @@ public class GuildData {
             dataFolder.mkdir();
             return;
         }
-        BoomAPI.logger.debug("Reading data for guild id {}", guildID);
+        BoomAPI.logger.debug("Reading data for guild id %s", guildID);
         Gson gson = new Gson();
         // Read generic guild data
         File dataFile = new File(dataFolder, guildID + ".cfg");
@@ -67,7 +67,7 @@ public class GuildData {
             try {
                 guildData = gson.fromJson(new FileReader(dataFile), EntityData.class);
             } catch (FileNotFoundException ex) {
-                BoomAPI.logger.error("Somehow couldn't find the config file for {}", guildID);
+                BoomAPI.logger.error("Somehow couldn't find the config file for %s", guildID);
                 ex.printStackTrace();
             }
         }
@@ -88,7 +88,7 @@ public class GuildData {
         // Read Voice Channel data
         File voiceFolder = new File(guildFolder, "voiceData");
         readMapData(voiceFolder, voiceData, gson);
-        BoomAPI.logger.info("Finished reading data for guild id {}", guildID);
+        BoomAPI.logger.info("Finished reading data for guild %s", guildData.getString("name"));
     }
 
     private void readMapData(File parentFolder, Map<String, EntityData> data, Gson gson) {
@@ -103,7 +103,7 @@ public class GuildData {
                             if (entityData != null && !Strings.isNullOrEmpty(id) && !data.containsKey(id))
                                 data.put(id, entityData);
                         } catch (IOException ex) {
-                            BoomAPI.logger.error("Failed to read data from file {} in {}", f.getName(), parentFolder.getName());
+                            BoomAPI.logger.error("Failed to read data from file %s in %s", f.getName(), parentFolder.getName());
                             ex.printStackTrace();
                         }
                     }
@@ -114,7 +114,7 @@ public class GuildData {
 
     public void writeData(File dataFolder) {
         if (!dataFolder.exists()) dataFolder.mkdir();
-        BoomAPI.logger.info("Writing data for guild id {}", guildID);
+        BoomAPI.logger.info("Writing data for guild id %s", guildID);
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         File dataFile = new File(dataFolder, guildID + ".cfg");
         try {
@@ -135,7 +135,7 @@ public class GuildData {
         File voiceFolder = new File(guildFolder, "voiceData");
         writeMapData(voiceFolder, voiceData, gson);
 
-        BoomAPI.logger.info("Finished writing data for guild id {}", guildID);
+        BoomAPI.logger.info("Finished writing data for guild %s", guildData.getString("name"));
     }
 
     private void writeMapData(File parentFolder, Map<String, EntityData> data, Gson gson) {
@@ -148,7 +148,7 @@ public class GuildData {
                     try {
                         FileUtils.write(new File(parentFolder, id + ".cfg"), gson.toJson(entityData), "UTF-8");
                     } catch (IOException ex) {
-                        BoomAPI.logger.error("Failed to write data for {} in {}", id, parentFolder.getName());
+                        BoomAPI.logger.error("Failed to write data for %s in %s", id, parentFolder.getName());
                         ex.printStackTrace();
                     }
                 }

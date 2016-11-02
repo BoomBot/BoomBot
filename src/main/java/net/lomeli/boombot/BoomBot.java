@@ -4,33 +4,24 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import net.dv8tion.jda.JDA;
 import net.dv8tion.jda.JDABuilder;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import javax.security.auth.login.LoginException;
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.attribute.BasicFileAttributes;
-import java.nio.file.attribute.FileTime;
 import java.util.List;
 
 import net.lomeli.boombot.api.BoomAPI;
 import net.lomeli.boombot.api.events.bot.InitEvent;
 import net.lomeli.boombot.api.events.bot.PostInitEvent;
+import net.lomeli.boombot.api.util.Logger;
 import net.lomeli.boombot.command.custom.CustomRegistry;
 import net.lomeli.boombot.core.EventListner;
 import net.lomeli.boombot.core.registry.CommandRegistry;
 import net.lomeli.boombot.core.registry.DataRegistry;
 import net.lomeli.boombot.core.registry.EventRegistry;
 import net.lomeli.boombot.lib.ShutdownHook;
-import net.lomeli.boombot.lib.util.IOUtil;
 
 public class BoomBot {
 
-    public static boolean debug;
     public static String debugGuildID;
     public static final int MAJOR = 3, MINOR = 0, REV = 0;
     public static final String BOOM_BOT_VERSION = String.format("%s.%s.%s", MAJOR, MINOR, REV);
@@ -40,17 +31,18 @@ public class BoomBot {
 
     public static void main(String[] args) {
         Runtime.getRuntime().addShutdownHook(new Thread(new ShutdownHook()));
-        setupLogFolder();
-        logger = LogManager.getLogger("BoomBot");
-        logger.info("Starting BoomBot v{}", BOOM_BOT_VERSION);
-
-        logger.info("Setting up registries");
-        setupRegistry();
+        Logger.setupLogFolder();
+        logger = new Logger("BoomBot");
+        logger.info("Starting BoomBot v%s", BOOM_BOT_VERSION);
 
         if (args != null && args.length > 0) {
             String key = args[0];
             //TODO Search for addons and fire preInit events
             if (args.length > 1) checkIfDebug(args);
+
+            logger.info("Setting up registries");
+            setupRegistry();
+
             logger.info("Setting up main listener");
             mainListener = new EventListner();
 
@@ -83,9 +75,9 @@ public class BoomBot {
             if (!Strings.isNullOrEmpty(arg) && (arg.startsWith("-d=") || arg.startsWith("--debug="))) {
                 String[] splitArg = arg.split("=");
                 if (splitArg != null && splitArg.length == 2) {
-                    debug = true;
+                    BoomAPI.debugMode = true;
                     debugGuildID = splitArg[1];
-                    logger.debug("BoomBot is now in debug mode using channel with id {}", debugGuildID);
+                    logger.debug("BoomBot is now in debug mode using channel with id %s", debugGuildID);
                     return;
                 }
             }
@@ -98,26 +90,5 @@ public class BoomBot {
         BoomAPI.eventRegistry.registerEventHandler(CustomRegistry.INSTANCE);
         BoomAPI.dataRegistry = new DataRegistry(new File("data"));
         BoomAPI.dataRegistry.readGuildData();
-    }
-
-    /**
-     * Moves old logs to make room for latest log
-     */
-    public static void setupLogFolder() {
-        File logFolder = new File("logs");
-        if (!logFolder.exists()) logFolder.mkdir();
-        File lastLog = new File(logFolder, "latest.log");
-        if (lastLog.exists()) {
-            try {
-                Path logPath = Paths.get(lastLog.getCanonicalPath());
-                BasicFileAttributes attrib = Files.readAttributes(logPath, BasicFileAttributes.class);
-                FileTime time = attrib.creationTime();
-                String name = String.format("%s.gz", time.toInstant().toString().replace(":", "-"));
-                IOUtil.gzipFile(lastLog, new File(logFolder, name));
-                lastLog.delete();
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-        }
     }
 }

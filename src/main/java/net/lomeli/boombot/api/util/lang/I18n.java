@@ -39,7 +39,7 @@ public class I18n {
             br.close();
             if (translations.containsKey("langfile.langauage")) name = translations.get("langfile.langauage");
         } catch (IOException ex) {
-            BoomAPI.logger.error("Could not load localization file {}", localizationFile.getName());
+            BoomAPI.logger.error("Could not load localization file %s", localizationFile.getName());
             ex.printStackTrace();
         }
     }

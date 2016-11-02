@@ -76,7 +76,7 @@ public class DataRegistry implements IDataRegistry {
                         data.readData(dataFolder);
                         dataRegistry.put(id, data);
                     } catch (IOException ex) {
-                        BoomBot.logger.error("Could not read file {}", file.getName());
+                        BoomBot.logger.error("Could not read file %s", file.getName());
                         ex.printStackTrace();
                     }
                 }

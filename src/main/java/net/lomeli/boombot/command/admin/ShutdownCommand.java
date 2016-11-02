@@ -4,15 +4,15 @@ import com.google.common.base.Strings;
 
 import net.lomeli.boombot.BoomBot;
 import net.lomeli.boombot.api.BoomAPI;
-import net.lomeli.boombot.api.commands.ICommand;
 import net.lomeli.boombot.api.commands.CommandInterface;
+import net.lomeli.boombot.api.commands.ICommand;
 import net.lomeli.boombot.api.data.EntityData;
 import net.lomeli.boombot.core.registry.DataRegistry;
 
 public class ShutdownCommand implements ICommand {
     @Override
     public String execute(CommandInterface cmd) {
-        EntityData boomBotData = ((DataRegistry)BoomAPI.dataRegistry).getBoomBotData();
+        EntityData boomBotData = ((DataRegistry) BoomAPI.dataRegistry).getBoomBotData();
         if (boomBotData == null) return "";
         String[] adminIDs = boomBotData.getStringArray("adminIDs");
         if (adminIDs == null || adminIDs.length <= 0) return "";

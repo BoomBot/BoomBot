@@ -3,8 +3,8 @@ package net.lomeli.boombot.command.custom;
 import com.google.common.base.Strings;
 
 import net.lomeli.boombot.api.BoomAPI;
-import net.lomeli.boombot.api.commands.ICommand;
 import net.lomeli.boombot.api.commands.CommandInterface;
+import net.lomeli.boombot.api.commands.ICommand;
 import net.lomeli.boombot.core.registry.DataRegistry;
 
 public class MakeCommand implements ICommand {

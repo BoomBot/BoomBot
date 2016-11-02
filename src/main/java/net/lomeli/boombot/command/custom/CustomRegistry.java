@@ -6,7 +6,6 @@ import com.google.common.collect.Maps;
 import java.util.Map;
 
 import net.lomeli.boombot.BoomBot;
-import net.lomeli.boombot.api.BoomAPI;
 import net.lomeli.boombot.api.data.EntityData;
 import net.lomeli.boombot.api.data.GuildData;
 import net.lomeli.boombot.api.events.Event;
@@ -65,19 +64,16 @@ public enum CustomRegistry {
 
     @Event.EventHandler
     public void readDataEvent(DataEvent.DataReadEvent event) {
-        if (BoomBot.debug)
-            BoomBot.logger.debug("Reading custom commands");
+        BoomBot.logger.debug("Reading custom commands");
         if (event.getGuildIDs() == null || event.getGuildIDs().length <= 0) return;
-        BoomBot.logger.debug("Iterating through data");
         for (String guildID : event.getGuildIDs()) {
             GuildData guildData = event.getGuildData(guildID);
             if (guildData != null && guildData.getGuildData() != null) {
                 EntityData rawData = guildData.getGuildData();
                 if (rawData != null && rawData.hasKey(CUSTOM_DATA_KEY)) {
-                    BoomBot.logger.debug("Guild {} has custom data", guildID);
+                    BoomBot.logger.debug("Loading %s's custom commands!", rawData.getString("name"));
                     EntityData commandData = rawData.getData(CUSTOM_DATA_KEY);
                     String[] commandNames = commandData.getKeys();
-                    BoomBot.logger.debug("Guild {} has {} custom entries", guildID, commandNames.length);
                     if (commandNames == null || commandNames.length <= 0) continue;
                     for (String name : commandNames) {
                         String command = commandData.getString(name);
@@ -91,8 +87,7 @@ public enum CustomRegistry {
 
     @Event.EventHandler
     public void writeDataEvent(DataEvent.DataWriteEvent event) {
-        if (BoomBot.debug)
-            BoomBot.logger.debug("Writing custom commands");
+        BoomBot.logger.debug("Writing custom commands");
         for (Map.Entry<String, Map<String, CustomContent>> entry : guildCommands.entrySet()) {
             GuildData guildData = event.getGuildData(entry.getKey());
             if (guildData == null) guildData = new GuildData(entry.getKey());

@@ -1,7 +1,7 @@
 package net.lomeli.boombot.command.test;
 
-import net.lomeli.boombot.api.commands.ICommand;
 import net.lomeli.boombot.api.commands.CommandInterface;
+import net.lomeli.boombot.api.commands.ICommand;
 
 public class TestCommand implements ICommand {
     @Override

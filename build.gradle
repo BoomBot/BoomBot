@@ -5,30 +5,20 @@ repositories {
 
 apply plugin: 'java'
 
-ext.configFile = file "build.properties"
-
-configFile.withReader {
-    def prop = new Properties()
-    prop.load(it)
-    project.ext.config = new ConfigSlurper().parse prop
-}
-
-group = config.group
-archivesBaseName = config.archiveName
-version = config.releaseVersion
+group = "${group}"
+archivesBaseName = "${archiveName}"
+version = "${releaseVersion}"
 
 dependencies {
-    compile "net.dv8tion:JDA:${config.jdaVersion}"
-    compile "com.google.code.gson:gson:${config.gsonVersion}"
-    compile "com.google.guava:guava:${config.guavaVersion}"
-    compile "commons-io:commons-io:${config.commonsIOVersion}"
-    compile "org.apache.logging.log4j:log4j-api:${config.log4jVersion}"
-    compile "org.apache.logging.log4j:log4j-core:${config.log4jVersion}"
+    compile "net.dv8tion:JDA:${jdaVersion}"
+    compile "com.google.code.gson:gson:${gsonVersion}"
+    compile "com.google.guava:guava:${guavaVersion}"
+    compile "commons-io:commons-io:${commonsIOVersion}"
 }
 
 jar {
     manifest  {
-        attributes 'Main-Class' : config.mainClass
+        attributes 'Main-Class' : "${mainClass}"
     }
 }
 
@@ -39,7 +29,7 @@ task sourceJar(type: Jar, dependsOn: classes) {
 
 task fatJar(type: Jar) {
     manifest {
-        attributes 'Main-Class': config.mainClass
+        attributes 'Main-Class': "${mainClass}"
     }
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
     with jar

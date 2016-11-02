@@ -24,7 +24,7 @@ public class EventRegistry implements IEventRegistry {
 
     @Override
     public boolean post(Event event) {
-        BoomBot.logger.debug("Firing {}", event.getClass().getSimpleName());
+        BoomBot.logger.debug("Firing %s", event.getClass().getSimpleName());
         for (Object obj : eventHandlers) {
             Method[] methods = obj.getClass().getMethods();
             for (Method method : methods) {

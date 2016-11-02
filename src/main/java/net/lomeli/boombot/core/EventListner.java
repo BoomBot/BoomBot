@@ -16,12 +16,12 @@ import java.util.List;
 
 import net.lomeli.boombot.BoomBot;
 import net.lomeli.boombot.api.BoomAPI;
-import net.lomeli.boombot.api.commands.ICommand;
 import net.lomeli.boombot.api.commands.CommandInterface;
+import net.lomeli.boombot.api.commands.ICommand;
 import net.lomeli.boombot.api.data.GuildData;
 import net.lomeli.boombot.api.util.BasicGuildUtil;
-import net.lomeli.boombot.command.custom.CustomRegistry;
 import net.lomeli.boombot.command.custom.CustomContent;
+import net.lomeli.boombot.command.custom.CustomRegistry;
 import net.lomeli.boombot.lib.util.MessageUtil;
 
 public class EventListner extends ListenerAdapter {
@@ -33,7 +33,7 @@ public class EventListner extends ListenerAdapter {
             List<Guild> guilds = event.getJDA().getGuilds();
             if (guilds != null && !guilds.isEmpty()) {
                 for (Guild guild : guilds) {
-                    BoomBot.logger.debug("Adding guild {}", guild.getName());
+                    BoomBot.logger.debug("Adding guild %s", guild.getName());
                     BoomAPI.dataRegistry.addGuild(guild.getId());
                     BoomAPI.dataRegistry.getDataForGuild(guild.getId()).getGuildData().setString("name", guild.getName());
                 }
@@ -45,7 +45,7 @@ public class EventListner extends ListenerAdapter {
     public void onGenericGuildMessage(GenericGuildMessageEvent event) {
         if (BoomBot.jda == null || BoomBot.jda.getSelfInfo() == null || event == null || event.getMessage() == null ||
                 event.getGuild() == null || event.getAuthor() == null || event.getAuthor().isBot() ||
-                (BoomBot.debug && !event.getGuild().getId().equals(BoomBot.debugGuildID) && !event.getChannel().getName().equalsIgnoreCase("test-channel")))
+                (BoomAPI.debugMode && !event.getGuild().getId().equals(BoomBot.debugGuildID) && !event.getChannel().getName().equalsIgnoreCase("test-channel")))
             return;
         Message msg = event.getMessage();
         if (msg.isEdited()) return;
@@ -104,7 +104,7 @@ public class EventListner extends ListenerAdapter {
     @Override
     public void onGuildJoin(GuildJoinEvent event) {
         if (event.getGuild() != null) {
-            BoomBot.logger.debug("Adding guild {}", event.getGuild().getName());
+            BoomBot.logger.debug("Adding guild %s", event.getGuild().getName());
             if (!BoomAPI.dataRegistry.guildHasData(event.getGuild().getId())) {
                 BoomAPI.dataRegistry.addGuild(event.getGuild().getId());
                 BoomAPI.dataRegistry.getDataForGuild(event.getGuild().getId()).getGuildData().setString("name", event.getGuild().getName());

@@ -42,7 +42,7 @@ public class BasicGuildUtil {
         return data.getGuildData().getStringArray(BANNED_USERS);
     }
 
-    public static void setGuildBanFromCommand(GuildData data, String...args) {
+    public static void setGuildBanFromCommand(GuildData data, String... args) {
         if (args != null && args.length > 0) data.getGuildData().setStringArray(BANNED_USERS, args);
     }
 
