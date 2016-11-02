@@ -10,6 +10,8 @@ public class BasicGuildUtil {
     private static final String COMMAND_KEY = "commandKey";
     private static final String ALLOW_MENTION = "allowMentions";
     private static final String ALLOW_TTS = "allowTTS";
+    private static final String ALLOW_EVERYONE = "allowEveryoneMentions";
+    private static final String ALLOW_HERE = "allowHereMentions";
     private static final String COMMAND_DELAY = "disableClearChat";
     private static final String BANNED_USERS = "banUsers";
     private static final String GUILD_LANG = "lang";
@@ -66,5 +68,21 @@ public class BasicGuildUtil {
 
     public static void setGuildAllowBotMention(GuildData data, boolean mention) {
         data.getGuildData().setBoolean(ALLOW_MENTION, mention);
+    }
+
+    public static boolean guildAllowEveryoneMention(GuildData data) {
+        return data.getGuildData().getBoolean(ALLOW_EVERYONE);
+    }
+
+    public static void setGuildAllowEveryoneMention(GuildData data, boolean mention) {
+        data.getGuildData().setBoolean(ALLOW_EVERYONE, mention);
+    }
+
+    public static boolean guildAllowHereMention(GuildData data) {
+        return data.getGuildData().getBoolean(ALLOW_HERE);
+    }
+
+    public static void setGuildAllowHereMention(GuildData data, boolean mention) {
+        data.getGuildData().setBoolean(ALLOW_HERE, mention);
     }
 }
