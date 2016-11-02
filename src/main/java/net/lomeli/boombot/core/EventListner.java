@@ -25,6 +25,7 @@ import net.lomeli.boombot.command.custom.CustomContent;
 import net.lomeli.boombot.lib.util.MessageUtil;
 
 public class EventListner extends ListenerAdapter {
+    public boolean scheduleShutdown;
 
     @Override
     public void onReady(ReadyEvent event) {
@@ -66,6 +67,7 @@ public class EventListner extends ListenerAdapter {
                 if (cmd != null) {
                     String result = formatMessage(cmd.execute(cmdInterface), msg.getAuthor(), guild, data, cmdInterface.getArgs());
                     if (!Strings.isNullOrEmpty(result)) event.getChannel().sendMessage(result);
+                    if (scheduleShutdown) event.getJDA().shutdown();
                 } else {
                     CustomContent custom = CustomRegistry.INSTANCE.getGuildCommand(event.getGuild().getId(), commandName);
                     if (custom != null) {
@@ -97,7 +99,6 @@ public class EventListner extends ListenerAdapter {
 
     @Override
     public void onGenericPrivateMessage(GenericPrivateMessageEvent event) {
-        //event.getJDA().shutdown();
     }
 
     @Override

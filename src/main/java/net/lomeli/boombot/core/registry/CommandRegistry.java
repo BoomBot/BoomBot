@@ -11,6 +11,7 @@ import java.util.Map;
 import net.lomeli.boombot.api.Addon;
 import net.lomeli.boombot.api.commands.Command;
 import net.lomeli.boombot.api.commands.ICommandRegistry;
+import net.lomeli.boombot.command.admin.ShutdownCommand;
 import net.lomeli.boombot.command.custom.MakeCommand;
 import net.lomeli.boombot.command.test.TestCommand;
 
@@ -28,6 +29,7 @@ public class CommandRegistry implements ICommandRegistry {
     private void initBuiltInCommands() {
         addBaseCommand(new TestCommand());
         addBaseCommand(new MakeCommand());
+        addBaseCommand(new ShutdownCommand());
     }
 
     private boolean addBaseCommand(Command command) {
