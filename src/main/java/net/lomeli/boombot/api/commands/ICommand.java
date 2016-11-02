@@ -1,6 +1,6 @@
 package net.lomeli.boombot.api.commands;
 
-public interface Command {
+public interface ICommand {
     String execute(CommandInterface cmd);
 
     String getName();

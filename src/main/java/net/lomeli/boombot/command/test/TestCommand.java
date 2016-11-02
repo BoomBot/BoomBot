@@ -1,9 +1,9 @@
 package net.lomeli.boombot.command.test;
 
-import net.lomeli.boombot.api.commands.Command;
+import net.lomeli.boombot.api.commands.ICommand;
 import net.lomeli.boombot.api.commands.CommandInterface;
 
-public class TestCommand implements Command {
+public class TestCommand implements ICommand {
     @Override
     public String execute(CommandInterface cmd) {
         return "This is a test command! " + cmd.getMessage();

@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import net.lomeli.boombot.api.Addon;
-import net.lomeli.boombot.api.commands.Command;
+import net.lomeli.boombot.api.commands.ICommand;
 import net.lomeli.boombot.api.commands.ICommandRegistry;
 import net.lomeli.boombot.command.admin.ShutdownCommand;
 import net.lomeli.boombot.command.custom.MakeCommand;
@@ -17,7 +17,7 @@ import net.lomeli.boombot.command.test.TestCommand;
 
 public class CommandRegistry implements ICommandRegistry {
     private final String BOOMBOT_ID = "boombot";
-    private Map<String, List<Command>> commandList;
+    private Map<String, List<ICommand>> commandList;
     private Map<String, List<String>> commandNameList;
 
     public CommandRegistry() {
@@ -32,13 +32,13 @@ public class CommandRegistry implements ICommandRegistry {
         addBaseCommand(new ShutdownCommand());
     }
 
-    private boolean addBaseCommand(Command command) {
+    private boolean addBaseCommand(ICommand command) {
         return addCommand(command, BOOMBOT_ID);
     }
 
-    private boolean addCommand(Command command, String id) {
+    private boolean addCommand(ICommand command, String id) {
         if (command == null) return false;
-        List<Command> commands = null;
+        List<ICommand> commands = null;
         List<String> names = null;
         if (commandList.containsKey(id)) commands = commandList.get(id);
         if (commandNameList.containsKey(id)) names = commandNameList.get(id);
@@ -55,7 +55,7 @@ public class CommandRegistry implements ICommandRegistry {
     }
 
     @Override
-    public boolean addCommand(Object addonInstance, Command command) {
+    public boolean addCommand(Object addonInstance, ICommand command) {
         if (addonInstance != null && command != null) {
             Addon addonInfo = addonInstance.getClass().getAnnotation(Addon.class);
             if (addonInfo != null && !addonInfo.addonID().equalsIgnoreCase(BOOMBOT_ID)) {
@@ -67,12 +67,12 @@ public class CommandRegistry implements ICommandRegistry {
     }
 
     @Override
-    public Command getCommand(String name) {
+    public ICommand getCommand(String name) {
         if (commandList == null || Strings.isNullOrEmpty(name)) return null;
-        for (Map.Entry<String, List<Command>> entry : commandList.entrySet()) {
-            List<Command> commands = entry.getValue();
+        for (Map.Entry<String, List<ICommand>> entry : commandList.entrySet()) {
+            List<ICommand> commands = entry.getValue();
             if (commands != null && commands.size() > 0) {
-                for (Command command : commands) {
+                for (ICommand command : commands) {
                     if (command != null && command.getName().equalsIgnoreCase(name))
                         return command;
                 }

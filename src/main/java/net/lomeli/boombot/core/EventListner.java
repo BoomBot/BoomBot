@@ -16,7 +16,7 @@ import java.util.List;
 
 import net.lomeli.boombot.BoomBot;
 import net.lomeli.boombot.api.BoomAPI;
-import net.lomeli.boombot.api.commands.Command;
+import net.lomeli.boombot.api.commands.ICommand;
 import net.lomeli.boombot.api.commands.CommandInterface;
 import net.lomeli.boombot.api.data.GuildData;
 import net.lomeli.boombot.api.util.BasicGuildUtil;
@@ -58,7 +58,7 @@ public class EventListner extends ListenerAdapter {
             String[] splitContent = rawContent.split(" ");
             if (splitContent != null && splitContent.length > 0) {
                 String commandName = splitContent[0].substring(1);
-                Command cmd = BoomAPI.commandRegistry.getCommand(commandName);
+                ICommand cmd = BoomAPI.commandRegistry.getCommand(commandName);
                 String message = "";
                 if (commandName.length() + 1 < rawContent.length())
                     message = rawContent.substring(commandName.length() + 2);
