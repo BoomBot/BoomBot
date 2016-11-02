@@ -3,6 +3,7 @@ package net.lomeli.boombot.core;
 import com.google.common.base.Strings;
 import net.dv8tion.jda.entities.Guild;
 import net.dv8tion.jda.entities.Message;
+import net.dv8tion.jda.entities.User;
 import net.dv8tion.jda.events.DisconnectEvent;
 import net.dv8tion.jda.events.ReadyEvent;
 import net.dv8tion.jda.events.ShutdownEvent;
@@ -18,8 +19,10 @@ import net.lomeli.boombot.api.BoomAPI;
 import net.lomeli.boombot.api.commands.Command;
 import net.lomeli.boombot.api.commands.CommandInterface;
 import net.lomeli.boombot.api.data.GuildData;
+import net.lomeli.boombot.api.util.BasicGuildUtil;
 import net.lomeli.boombot.command.custom.CustomRegistry;
 import net.lomeli.boombot.command.custom.CustomContent;
+import net.lomeli.boombot.lib.util.MessageUtil;
 
 public class EventListner extends ListenerAdapter {
 
@@ -41,7 +44,8 @@ public class EventListner extends ListenerAdapter {
     public void onGenericGuildMessage(GenericGuildMessageEvent event) {
         if (BoomBot.jda == null || BoomBot.jda.getSelfInfo() == null || event == null || event.getMessage() == null ||
                 event.getGuild() == null || event.getAuthor() == null || event.getAuthor().isBot() ||
-                (BoomBot.debug && !event.getGuild().getId().equals(BoomBot.debugGuildID) && !event.getChannel().getName().equalsIgnoreCase("test-channel"))) return;
+                (BoomBot.debug && !event.getGuild().getId().equals(BoomBot.debugGuildID) && !event.getChannel().getName().equalsIgnoreCase("test-channel")))
+            return;
         Message msg = event.getMessage();
         if (msg.isEdited()) return;
         Guild guild = event.getGuild();
@@ -60,15 +64,35 @@ public class EventListner extends ListenerAdapter {
                 CommandInterface cmdInterface = new CommandInterface(event.getAuthor().getId(), guild.getId(),
                         event.getChannel().getId(), message, Strings.isNullOrEmpty(message) ? null : message.split(" "));
                 if (cmd != null) {
-                    String result = cmd.execute(cmdInterface);
+                    String result = formatMessage(cmd.execute(cmdInterface), msg.getAuthor(), guild, data, cmdInterface.getArgs());
                     if (!Strings.isNullOrEmpty(result)) event.getChannel().sendMessage(result);
                 } else {
                     CustomContent custom = CustomRegistry.INSTANCE.getGuildCommand(event.getGuild().getId(), commandName);
-                    if (custom != null)
-                        event.getChannel().sendMessage(custom.getCommandContent());
+                    if (custom != null) {
+                        String out = formatMessage(custom.getCommandContent(), msg.getAuthor(), guild, data, cmdInterface.getArgs());
+                        event.getChannel().sendMessage(out);
+                    }
                 }
             }
         }
+    }
+
+    String formatMessage(String content, User user, Guild guild, GuildData data, Object... args) {
+        String out = content;
+        if (out.contains("%n")) out = out.replaceAll("%n", "\n");
+        boolean allowMention = BasicGuildUtil.guildAllowBotMention(data);
+        String userName = allowMention ? String.format("<@%s>", user.getId()) : user.getUsername();
+        out = out.replaceAll("%u", userName).replaceAll("%U", userName.toUpperCase());
+        out = String.format(out, args);
+        if (!allowMention)
+            out = MessageUtil.stripMentions(out, guild);
+        if (!BasicGuildUtil.guildAllowEveryoneMention(data))
+            out = MessageUtil.stripEveryoneMention(out);
+        if (!BasicGuildUtil.guildAllowHereMention(data))
+            out = MessageUtil.stripHere(out);
+        if (!BasicGuildUtil.guildAllowBotTTS(data))
+            out = MessageUtil.stripTTS(out);
+        return out;
     }
 
     @Override
