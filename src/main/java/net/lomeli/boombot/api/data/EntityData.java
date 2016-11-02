@@ -4,6 +4,7 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
 import com.google.gson.internal.LinkedTreeMap;
 
+import java.util.List;
 import java.util.Map;
 
 public class EntityData {
@@ -113,6 +114,15 @@ public class EntityData {
 
     public int[] getIntArray(String key) {
         Object value = get(key);
+        if (value instanceof List) {
+            List<Integer> list = (List) value;
+            int[] array = new int[list.size()];
+            for (int i = 0; i < list.size(); i++)
+                array[i] = list.get(i);
+            entityData.remove(key);
+            setIntArray(key, array);
+            return array;
+        }
         return (value != null && value instanceof int[]) ? (int[]) value : new int[0];
     }
 
@@ -122,6 +132,15 @@ public class EntityData {
 
     public float[] getFloatArray(String key) {
         Object value = get(key);
+        if (value instanceof List) {
+            List<Float> list = (List) value;
+            float[] array = new float[list.size()];
+            for (int i = 0; i < list.size(); i++)
+                array[i] = list.get(i);
+            entityData.remove(key);
+            setFloatArray(key, array);
+            return array;
+        }
         return (value != null && value instanceof float[]) ? (float[]) value : new float[0];
     }
 
@@ -131,6 +150,15 @@ public class EntityData {
 
     public String[] getStringArray(String key) {
         Object value = get(key);
+        if (value instanceof List) {
+            List<String> list = (List) value;
+            String[] array = new String[list.size()];
+            for (int i = 0; i < list.size(); i++)
+                array[i] = list.get(i);
+            entityData.remove(key);
+            setStringArray(key, array);
+            return array;
+        }
         return (value != null && value instanceof String[]) ? (String[]) value : new String[0];
     }
 
@@ -147,10 +175,16 @@ public class EntityData {
                 EntityData newValue = new EntityData();
                 treeMap.entrySet().stream().filter(entry -> entry != null && !Strings.isNullOrEmpty(entry.getKey()) && entry.getValue() != null)
                         .forEach(entry -> newValue.set(entry.getKey(), entry.getValue()));
+                entityData.remove(key);
+                setData(key, newValue);
                 return newValue;
             }
         }
         return (value instanceof EntityData) ? (EntityData) value : new EntityData();
+    }
+
+    public Map<String, Object> getDataClone() {
+        return Maps.newHashMap(entityData);
     }
 
     @Override
