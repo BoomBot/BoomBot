@@ -14,7 +14,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import net.lomeli.boombot.api.BoomAPI;
-import net.lomeli.boombot.lib.util.IOUtil;
 
 public class Logger {
     private static final SimpleDateFormat TIME_FORMAT = new SimpleDateFormat("HH:mm:ss");

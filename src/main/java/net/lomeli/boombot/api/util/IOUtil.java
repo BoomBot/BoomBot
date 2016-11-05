@@ -1,10 +1,9 @@
-package net.lomeli.boombot.lib.util;
+package net.lomeli.boombot.api.util;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.zip.GZIPOutputStream;
+
+import net.lomeli.boombot.api.BoomAPI;
 
 public class IOUtil {
 
@@ -19,10 +18,13 @@ public class IOUtil {
             stream.close();
             gzos.finish();
             gzos.close();
-            System.out.printf("Finished gzipping %s\n", source.getName());
+            BoomAPI.logger.info("Finished gzipping %s", source.getName());
         } catch (IOException ex) {
-            System.out.println("Failed to gzip file.");
-            ex.printStackTrace();
+            BoomAPI.logger.error("Failed to gzip file.", ex);
         }
+    }
+
+    public static InputStream getJarResource(Object object, String id, String path) {
+        return BoomAPI.class.getResourceAsStream(String.format("assets/%s/%s", id, path));
     }
 }

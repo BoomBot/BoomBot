@@ -21,11 +21,11 @@ public @interface Addon {
 
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.FIELD)
-    @interface Instance {
+    public @interface Instance {
     }
 
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.METHOD)
-    @interface Event {
+    public @interface Event {
     }
 }
