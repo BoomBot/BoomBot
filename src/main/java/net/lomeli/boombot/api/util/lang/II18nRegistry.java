@@ -5,9 +5,9 @@ public interface II18nRegistry {
 
     I18n getLang(String lang);
 
-    void loadLangFolder(String path);
+    void loadLangFolder(String id, String path);
 
     void appendLang(String path);
 
-    void reloadLangFolder(String path);
+    void reloadLangFolder(String id, String path);
 }
