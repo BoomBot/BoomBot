@@ -19,6 +19,8 @@ import net.lomeli.boombot.api.BoomAPI;
 import net.lomeli.boombot.api.commands.CommandInterface;
 import net.lomeli.boombot.api.commands.ICommand;
 import net.lomeli.boombot.api.data.GuildData;
+import net.lomeli.boombot.api.events.text.MessageEvent;
+import net.lomeli.boombot.api.events.text.command.CommandEvent;
 import net.lomeli.boombot.api.util.BasicGuildUtil;
 import net.lomeli.boombot.command.custom.CustomContent;
 import net.lomeli.boombot.command.custom.CustomRegistry;
@@ -65,18 +67,21 @@ public class EventListner extends ListenerAdapter {
                 CommandInterface cmdInterface = new CommandInterface(event.getAuthor().getId(), guild.getId(),
                         event.getChannel().getId(), message, Strings.isNullOrEmpty(message) ? null : message.split(" "));
                 if (cmd != null) {
+                    if (BoomAPI.eventRegistry.post(new CommandEvent(cmd, cmdInterface))) return;
                     String result = formatMessage(cmd.execute(cmdInterface), msg.getAuthor(), guild, data, cmdInterface.getArgs());
                     if (!Strings.isNullOrEmpty(result)) event.getChannel().sendMessage(result);
                     if (scheduleShutdown) event.getJDA().shutdown();
                 } else {
                     CustomContent custom = CustomRegistry.INSTANCE.getGuildCommand(event.getGuild().getId(), commandName);
                     if (custom != null) {
+                        if (BoomAPI.eventRegistry.post(new CommandEvent(cmd, cmdInterface))) return;
                         String out = formatMessage(custom.getCommandContent(), msg.getAuthor(), guild, data, cmdInterface.getArgs());
                         event.getChannel().sendMessage(out);
                     }
                 }
             }
-        }
+        } else if (BoomAPI.eventRegistry.post(new MessageEvent(msg.getAuthor().getId(), msg.getChannelId(), guild.getId(), msg.getRawContent(), msg.getContent())))
+            msg.deleteMessage();
     }
 
     String formatMessage(String content, User user, Guild guild, GuildData data, Object... args) {

@@ -5,10 +5,7 @@ import com.google.common.collect.Lists;
 import java.util.List;
 
 public class CommandInterface {
-    private String userID;
-    private String guildID;
-    private String channelID;
-    private String message;
+    private final String userID, guildID, channelID, message;
     private List<String> args;
 
     public CommandInterface(String userID, String guildID, String channelID, String message, String... args) {
