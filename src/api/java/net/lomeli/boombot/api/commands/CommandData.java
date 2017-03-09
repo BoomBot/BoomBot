@@ -5,11 +5,14 @@ import com.google.common.collect.Lists;
 import java.util.List;
 
 import net.lomeli.boombot.api.lib.UserProxy;
+import net.lomeli.boombot.api.nbt.NBTTagCompound;
+import net.lomeli.boombot.api.util.GuildUtil;
 
 public class CommandData {
     private final String guildID, channelID, message;
     private UserProxy user;
     private List<String> args, mentionedUserIDs;
+    private NBTTagCompound guildData, userData;
 
     public CommandData(UserProxy user, String guildID, String channelID, String message, List<String> mentionedUser, String... args) {
         this.user = user;
@@ -22,6 +25,8 @@ public class CommandData {
             this.args.remove(0);
         }
         this.mentionedUserIDs = Lists.newArrayList(mentionedUser);
+        this.guildData = GuildUtil.getGuildData(guildID);
+        this.userData = GuildUtil.getGuildMemberData(this.guildData, this.user.getUserID());
     }
 
     public UserProxy getUserInfo() {
@@ -46,5 +51,13 @@ public class CommandData {
 
     public List<String> getMentionedUserIDs() {
         return mentionedUserIDs;
+    }
+
+    public NBTTagCompound getGuildData() {
+        return guildData;
+    }
+
+    public NBTTagCompound getUserData() {
+        return userData;
     }
 }
