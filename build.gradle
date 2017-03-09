@@ -12,8 +12,8 @@ repositories {
 }
 
 group = "${group}"
-archivesBaseName = "${archiveName}"
-version = "${releaseVersion}"
+archivesBaseName = archiveName
+version = releaseVersion
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -28,7 +28,7 @@ dependencies {
 
 jar {
     manifest  {
-        attributes 'Main-Class' : "${mainClass}"
+        attributes 'Main-Class' : mainClass
     }
 }
 
@@ -44,6 +44,20 @@ task sourceJar(type: Jar, dependsOn: classes) {
 task javadocJar(type: Jar, dependsOn: javadoc) {
     classifier = 'javadoc'
     from javadoc.destinationDir
+}
+
+task apiJar(type: Jar, dependsOn: classes) {
+    classifier = 'api'
+    from sourceSets.main.allSource
+    exclude("net/lomeli/boombot/command")
+    exclude("net/lomeli/boombot/core")
+    exclude("net/lomeli/boombot/lib")
+    exclude("net/lomeli/boombot/BoomBot.java")
+    exclude("assets")
+    exclude("avatar.png")
+    exclude("avatarTest.png")
+    exclude("bomb.png")
+    exclude("logo.png")
 }
 
 bintray {
@@ -89,6 +103,7 @@ publishing {
             version releaseVersion
             artifact sourceJar
             artifact javadocJar
+            artifact apiJar
             pom.withXml {
                 def root = asNode()
                 root.appendNode('description', 'A simple Discord Bot')
@@ -117,10 +132,12 @@ build {
     dependsOn javadocJar
     dependsOn sourceJar
     dependsOn shadowJar
+    dependsOn apiJar
 
     jar.mustRunAfter clean
     javadocJar.mustRunAfter jar
     sourceJar.mustRunAfter javadocJar
     shadowJar.mustRunAfter sourceJar
+    apiJar.mustRunAfter shadowJar
 
 }
