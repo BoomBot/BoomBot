@@ -1,24 +1,22 @@
+plugins {
+    id "com.jfrog.bintray" version "1.7.3"
+    id 'java'
+    id 'maven'
+    id 'maven-publish'
+    id 'com.github.johnrengelman.shadow' version '1.2.3'
+}
+
 repositories {
     mavenCentral()
     jcenter()
 }
 
-apply plugin: 'java'
-
 group = "${group}"
 archivesBaseName = "${archiveName}"
 version = "${releaseVersion}"
 
-sourceSets {
-    main {
-        java {
-            srcDirs = ['src/main/java', 'src/api/java']
-        }
-        resources {
-            srcDirs = ['src/main/resources']
-        }
-    }
-}
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
 
 dependencies {
     compile "net.dv8tion:JDA:${jdaVersion}"
@@ -34,28 +32,77 @@ jar {
     }
 }
 
+shadowJar {
+    classifier = "withDependencies"
+}
+
 task sourceJar(type: Jar, dependsOn: classes) {
     classifier = 'sources'
     from sourceSets.main.allSource
 }
 
-task fatJar(type: Jar) {
-    manifest {
-        attributes 'Main-Class': "${mainClass}"
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+bintray {
+    user = bintrayUser
+    key = bintrayApiKey
+    publications = ["BintrayRelease"]
+    pkg {
+        repo = 'maven'
+        name = archivesBaseName
+        licenses = ['LGPL-3.0']
+        vcsUrl = "https://github.com/BoomBot/BoomBot.git"
+        publish true
+        version {
+            name = releaseVersion
+            released = new Date()
+        }
     }
-    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
-    with jar
 }
 
-task deobfJar(type: Jar) {
-    from sourceSets.main.output
-    classifier = "dev"
+def pomConfig = {
+    licenses {
+        license {
+            name "GNU Lesser General Public License"
+            url "https://www.gnu.org/licenses/lgpl-3.0.txt"
+            distribution "repo"
+        }
+    }
+    developers {
+        developer {
+            id "lomeli12"
+            name "Lomeli12"
+            email "anthony@lomeli12.net"
+        }
+    }
 }
 
-//task apiJar(type: Jar) {
-//    from sourceSets.api.output
-//    classifier = "api"
-//}
+publishing {
+    publications {
+        BintrayRelease(MavenPublication) {
+            from components.java
+            groupId group
+            artifactId archivesBaseName
+            version releaseVersion
+            artifact sourceJar
+            artifact javadocJar
+            pom.withXml {
+                def root = asNode()
+                root.appendNode('description', 'A simple Discord Bot')
+                root.appendNode('name', 'BoomBot')
+                root.appendNode('url', 'https://boombot.github.io/')
+                root.children().last() + pomConfig
+            }
+        }
+    }
+}
+
+bintrayUpload {
+    dependsOn build
+}
 
 tasks.withType(Zip) { task ->
     task.doLast {
@@ -64,4 +111,16 @@ tasks.withType(Zip) { task ->
     }
 }
 
-build.dependsOn fatJar, sourceJar, deobfJar/*, apiJar*/
+build {
+    dependsOn clean
+    dependsOn jar
+    dependsOn javadocJar
+    dependsOn sourceJar
+    dependsOn shadowJar
+
+    jar.mustRunAfter clean
+    javadocJar.mustRunAfter jar
+    sourceJar.mustRunAfter javadocJar
+    shadowJar.mustRunAfter sourceJar
+
+}
