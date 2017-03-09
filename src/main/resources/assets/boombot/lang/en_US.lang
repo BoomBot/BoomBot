@@ -35,6 +35,7 @@ boombot.command.clear.error.none=No messages to clear!
 ## Custom command Commands
 # Make command
 boombot.command.make.empty=Cannot make empty command
+boombot.command.make.error=Could not create command!
 boombot.command.make.name.used=Command name already in use
 boombot.command.make.name.missing=Command requires name
 boombot.command.make=Command %s Created%nContent: %s
