@@ -1,7 +1,8 @@
 package net.lomeli.boombot.lib.util;
 
-import net.dv8tion.jda.entities.Guild;
-import net.dv8tion.jda.entities.User;
+
+import net.dv8tion.jda.core.entities.Guild;
+import net.dv8tion.jda.core.entities.User;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -21,9 +22,9 @@ public class MessageUtil {
         while (match.find()) {
             String group = match.group();
             String id = group.substring(2, group.length() - 1);
-            User user = guild.getUserById(id);
+            User user = guild.getMemberById(id).getUser();
             if (user != null)
-                out = out.replaceAll(group, "@" + user.getUsername());
+                out = out.replaceAll(group, "@" + user.getName());
         }
         return out;
     }

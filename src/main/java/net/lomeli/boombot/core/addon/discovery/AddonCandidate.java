@@ -30,7 +30,6 @@ public class AddonCandidate {
         if (addonPath == null || !addonPath.exists()) return null;
         List<AddonContainer> addonContainers = Lists.newArrayList();
         try {
-            BoomAPI.logger.debug(addonPath.getAbsolutePath());
             if (jar) {
                 JarFile jarFile = new JarFile(addonPath.getCanonicalPath());
                 Enumeration<JarEntry> e = jarFile.entries();

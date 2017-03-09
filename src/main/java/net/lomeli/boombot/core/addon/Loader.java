@@ -36,9 +36,10 @@ public class Loader {
         addons.values().stream().forEach(c -> {
             try {
                 BoomAPI.logger.debug(c.getAddonInfo().addonID());
+                c.loadResources();
                 c.preInitAddon();
             } catch (Exception ex) {
-                BoomAPI.logger.error("Failed to load addon", ex);
+                BoomAPI.logger.error("Failed to load addon: %s", ex, c.getAddonInfo().addonID());
                 System.exit(1);
             }
         });
@@ -75,7 +76,6 @@ public class Loader {
         Arrays.sort(sources);
         for (File f : sources) {
             if (AddonHelper.ignoreFile(f.getAbsolutePath())) continue;
-            BoomAPI.logger.debug(f.getAbsolutePath());
             AddonCandidate candidate = null;
             if (f.isFile()) candidate = new AddonCandidate(f, true);
             else if (f.isDirectory()) candidate = new AddonCandidate(f, false);
@@ -86,6 +86,8 @@ public class Loader {
             }
         }
     }
+
+
 
     public void initAddons(InitEvent event) {
         addons.values().stream().forEach(c -> {

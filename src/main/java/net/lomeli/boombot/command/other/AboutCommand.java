@@ -1,26 +1,25 @@
-package net.lomeli.boombot.command.admin;
+package net.lomeli.boombot.command.other;
 
-import net.lomeli.boombot.BoomBot;
 import net.lomeli.boombot.api.commands.CommandData;
 import net.lomeli.boombot.api.commands.CommandResult;
 import net.lomeli.boombot.api.commands.ICommand;
-import net.lomeli.boombot.api.permissions.BotPermission;
+import net.lomeli.boombot.api.util.GuildUtil;
 
-public class ShutdownCommand implements ICommand {
+public class AboutCommand implements ICommand {
+
     @Override
     public CommandResult execute(CommandData cmd) {
-        BoomBot.mainListener.scheduleShutdown = true;
-        return new CommandResult("boombot.command.shutdown");
+        return new CommandResult("boombot.command.about", GuildUtil.getGuildCommandKey(cmd.getGuildID()));
     }
 
     @Override
     public String getName() {
-        return "shutdown";
+        return "about";
     }
 
     @Override
     public boolean canUserExecute(CommandData cmd) {
-        return BotPermission.isUserBoomBotAdmin(cmd.getUserInfo().getUserID());
+        return true;
     }
 
     @Override
@@ -30,6 +29,6 @@ public class ShutdownCommand implements ICommand {
 
     @Override
     public CommandResult failedToExecuteMessage(CommandData cmd) {
-        return new CommandResult("boombot.command.shutdown.failed");
+        return null;
     }
 }

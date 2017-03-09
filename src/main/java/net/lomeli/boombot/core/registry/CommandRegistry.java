@@ -7,13 +7,17 @@ import com.google.common.collect.Maps;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import net.lomeli.boombot.api.Addon;
 import net.lomeli.boombot.api.commands.ICommand;
-import net.lomeli.boombot.api.commands.ICommandRegistry;
+import net.lomeli.boombot.api.registry.ICommandRegistry;
+import net.lomeli.boombot.command.admin.SetAdminCommand;
 import net.lomeli.boombot.command.admin.ShutdownCommand;
 import net.lomeli.boombot.command.custom.MakeCommand;
-import net.lomeli.boombot.command.test.TestCommand;
+import net.lomeli.boombot.command.custom.RemoveCommand;
+import net.lomeli.boombot.command.moderate.ClearChatCommand;
+import net.lomeli.boombot.command.other.AboutCommand;
 
 public class CommandRegistry implements ICommandRegistry {
     private final String BOOMBOT_ID = "boombot";
@@ -27,9 +31,16 @@ public class CommandRegistry implements ICommandRegistry {
     }
 
     private void initBuiltInCommands() {
-        addBaseCommand(new TestCommand());
-        addBaseCommand(new MakeCommand());
+        //GENERIC COMMANDS
+        addBaseCommand(new AboutCommand());
+        //ADMIN COMMANDS
         addBaseCommand(new ShutdownCommand());
+        addBaseCommand(new SetAdminCommand());
+        //MOD COMMANDS
+        addBaseCommand(new ClearChatCommand());
+        //CUSTOM COMMANDS
+        addBaseCommand(new MakeCommand());
+        addBaseCommand(new RemoveCommand());
     }
 
     private boolean addBaseCommand(ICommand command) {
@@ -69,16 +80,11 @@ public class CommandRegistry implements ICommandRegistry {
     @Override
     public ICommand getCommand(String name) {
         if (commandList == null || Strings.isNullOrEmpty(name)) return null;
-        for (Map.Entry<String, List<ICommand>> entry : commandList.entrySet()) {
-            List<ICommand> commands = entry.getValue();
-            if (commands != null && commands.size() > 0) {
-                for (ICommand command : commands) {
-                    if (command != null && command.getName().equalsIgnoreCase(name))
-                        return command;
-                }
-            }
-        }
-        return null;
+        List<ICommand> commandList = Lists.newArrayList();
+        this.commandList.values().stream().filter(list -> list != null && !list.isEmpty()).forEach(list -> commandList.addAll(list));
+        Optional<ICommand> result = Optional.ofNullable(commandList.stream().filter(command -> command != null && command.getName().equalsIgnoreCase(name))
+                .findFirst().orElse(null));
+        return (result != null && result.isPresent())? result.get() : null;
     }
 
     @Override
@@ -91,10 +97,7 @@ public class CommandRegistry implements ICommandRegistry {
     @Override
     public List<String> getCommands() {
         List<String> commandNames = Lists.newArrayList();
-        for (Map.Entry<String, List<String>> entry : commandNameList.entrySet()) {
-            List<String> names = entry.getValue();
-            if (names != null && names.size() > 0) commandNames.addAll(names);
-        }
-        return commandNames;
+        commandNameList.values().stream().filter(list -> list != null && !list.isEmpty()).forEach(list -> commandNames.addAll(list));
+        return Collections.unmodifiableList(commandNames);
     }
 }

@@ -6,16 +6,20 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import net.lomeli.boombot.api.Addon;
+import net.lomeli.boombot.api.BoomAPI;
 import net.lomeli.boombot.api.events.bot.InitEvent;
 import net.lomeli.boombot.api.events.bot.PostInitEvent;
 import net.lomeli.boombot.api.events.bot.PreInitEvent;
 
 public class AddonContainer {
+    private static final File ASSET_FOLDER = new File("assets");
+    private Class addonClass;
     private Addon addonInfo;
     private Object addonInstance;
     private File addonPath;
 
     public AddonContainer(Class cl, File addonPath) throws IllegalAccessException, InstantiationException, InvocationTargetException {
+        this.addonClass = cl;
         this.addonPath = addonPath;
         this.addonInfo = (Addon) cl.getAnnotation(Addon.class);
         this.addonInstance = cl.newInstance();
@@ -26,8 +30,11 @@ public class AddonContainer {
         this.addonInstance = addonInstance;
     }
 
+    public void loadResources() {
+        BoomAPI.langRegistry.loadLangFolder(addonInfo.addonID(), null);
+    }
+
     public void preInitAddon() throws IllegalAccessException, InvocationTargetException {
-        //TODO: Load localization files
         Field[] fields = addonInstance.getClass().getDeclaredFields();
         for (Field f : fields) {
             if (f.getAnnotation(Addon.Instance.class) != null) {

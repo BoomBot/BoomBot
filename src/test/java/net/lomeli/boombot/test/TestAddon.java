@@ -36,6 +36,6 @@ public class TestAddon {
 
     @Event.EventHandler
     public void testMessageEvent(MessageEvent event) {
-        logger.debug("%s: %s", event.getUserID(), event.getMessage());
+        logger.debug("%s: %s", event.getUserInfo().getUserName(), event.getMessage());
     }
 }

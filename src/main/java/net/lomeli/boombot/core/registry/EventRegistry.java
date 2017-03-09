@@ -8,7 +8,7 @@ import java.util.List;
 
 import net.lomeli.boombot.BoomBot;
 import net.lomeli.boombot.api.events.Event;
-import net.lomeli.boombot.api.events.IEventRegistry;
+import net.lomeli.boombot.api.registry.IEventRegistry;
 
 public class EventRegistry implements IEventRegistry {
     private final List<Object> eventHandlers;

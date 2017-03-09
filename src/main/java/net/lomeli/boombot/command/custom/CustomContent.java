@@ -4,7 +4,7 @@ public class CustomContent {
     private String commandName, commandContent;
 
     public CustomContent(String commandName, String commandContent) {
-        this.commandName = commandName;
+        this.commandName = commandName.toLowerCase();
         this.commandContent = commandContent;
     }
 

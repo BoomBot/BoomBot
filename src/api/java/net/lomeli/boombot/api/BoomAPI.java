@@ -2,11 +2,10 @@ package net.lomeli.boombot.api;
 
 import java.io.File;
 
-import net.lomeli.boombot.api.commands.ICommandRegistry;
-import net.lomeli.boombot.api.data.IDataRegistry;
-import net.lomeli.boombot.api.events.IEventRegistry;
+import net.lomeli.boombot.api.registry.IDataRegistry;
+import net.lomeli.boombot.api.registry.IEventRegistry;
 import net.lomeli.boombot.api.util.Logger;
-import net.lomeli.boombot.api.util.lang.II18nRegistry;
+import net.lomeli.boombot.api.registry.II18nRegistry;
 
 public class BoomAPI {
     public static boolean debugMode = false;
@@ -17,6 +16,5 @@ public class BoomAPI {
 
     public static IDataRegistry dataRegistry;
     public static II18nRegistry langRegistry;
-    public static ICommandRegistry commandRegistry;
     public static IEventRegistry eventRegistry;
 }

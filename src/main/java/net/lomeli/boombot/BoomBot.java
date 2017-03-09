@@ -2,16 +2,22 @@ package net.lomeli.boombot;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
-import net.dv8tion.jda.JDA;
-import net.dv8tion.jda.JDABuilder;
+import net.dv8tion.jda.core.AccountType;
+import net.dv8tion.jda.core.JDA;
+import net.dv8tion.jda.core.JDABuilder;
+import net.dv8tion.jda.core.entities.Game;
+import net.dv8tion.jda.core.entities.impl.GameImpl;
+import net.dv8tion.jda.core.exceptions.RateLimitedException;
 
 import javax.security.auth.login.LoginException;
 import java.io.File;
 import java.util.List;
 
 import net.lomeli.boombot.api.BoomAPI;
+import net.lomeli.boombot.api.registry.ICommandRegistry;
 import net.lomeli.boombot.api.events.bot.InitEvent;
 import net.lomeli.boombot.api.events.bot.PostInitEvent;
+import net.lomeli.boombot.api.events.registry.RegisterCommandEvent;
 import net.lomeli.boombot.api.util.Logger;
 import net.lomeli.boombot.command.custom.CustomRegistry;
 import net.lomeli.boombot.core.EventListner;
@@ -31,6 +37,7 @@ public class BoomBot {
     public static JDA jda;
     public static EventListner mainListener;
     public static Loader addonLoader;
+    public static ICommandRegistry commandRegistry;
 
     public static void main(String[] args) {
         Runtime.getRuntime().addShutdownHook(new Thread(new ShutdownHook()));
@@ -53,9 +60,11 @@ public class BoomBot {
             mainListener = new EventListner();
 
             try {
-                jda = new JDABuilder().setBotToken(key).addListener(mainListener).setBulkDeleteSplittingEnabled(false).buildBlocking();
 
-                InitEvent initEvent = new InitEvent(jda.getSelfInfo().getId(), jda.getSelfInfo().getUsername(), jda.getSelfInfo().getDiscriminator());
+                jda = new JDABuilder(AccountType.BOT).setToken(key).addListener(mainListener).setBulkDeleteSplittingEnabled(false).buildBlocking();
+                BoomAPI.dataRegistry.readGuildData();
+
+                InitEvent initEvent = new InitEvent(jda.getSelfUser().getId(), jda.getSelfUser().getName(), jda.getSelfUser().getDiscriminator());
                 addonLoader.initAddons(initEvent);
 
                 // Gets the guilds boombot is currently a member of
@@ -67,14 +76,16 @@ public class BoomBot {
                 PostInitEvent postEvent = new PostInitEvent("JDA", guildIds.toArray(ids));
                 addonLoader.postInitAddon(postEvent);
 
-                jda.getAccountManager().setGame(postEvent.getCurrentGame());
+                BoomAPI.eventRegistry.post(new RegisterCommandEvent(commandRegistry));
+
+                jda.getPresence().setGame(new GameImpl("JDA", "https://github.com/DV8FromTheWorld/JDA", Game.GameType.DEFAULT));
                 logger.info("BoomBot finished loading!");
             } catch (LoginException ex) {
-                logger.error("Could not login with given key: %s", key);
-                ex.printStackTrace();
+                logger.error("Could not login with given key: %s", ex, key);
             } catch (InterruptedException ex) {
-                logger.error("JDA thread unexpectedly interrupted!");
-                ex.printStackTrace();
+                logger.error("JDA thread unexpectedly interrupted!", ex);
+            } catch (RateLimitedException ex) {
+                logger.error("BoomBot hit Discord's rate limit!", ex);
             }
         }
     }
@@ -99,10 +110,11 @@ public class BoomBot {
         BoomAPI.REV = REV;
         BoomAPI.BOOM_BOT_VERSION = String.format("%s.%s.%s", BoomAPI.MAJOR, BoomAPI.MINOR, BoomAPI.REV);
         BoomAPI.eventRegistry = new EventRegistry();
-        BoomAPI.commandRegistry = new CommandRegistry();
+        commandRegistry = new CommandRegistry();
         BoomAPI.eventRegistry.registerEventHandler(CustomRegistry.INSTANCE);
         BoomAPI.langRegistry = new I18nRegistry();
         BoomAPI.dataRegistry = new DataRegistry(new File("data"));
-        BoomAPI.dataRegistry.readGuildData();
+
+        BoomAPI.langRegistry.loadLangFolder("boombot", "");
     }
 }
