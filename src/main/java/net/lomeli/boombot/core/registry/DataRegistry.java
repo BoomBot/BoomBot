@@ -19,6 +19,7 @@ import net.lomeli.boombot.api.nbt.NBTTagList;
 import net.lomeli.boombot.api.nbt.NBTUtil;
 import net.lomeli.boombot.api.registry.IDataRegistry;
 import net.lomeli.boombot.api.util.GuildUtil;
+import net.lomeli.boombot.lib.DataKeys;
 
 public class DataRegistry implements IDataRegistry {
     private static final String BOOM_BOT_DATA = "boombot.dat";
@@ -58,7 +59,8 @@ public class DataRegistry implements IDataRegistry {
             }
         } else {
             this.boomBotData = new NBTTagCompound();
-            this.boomBotData.setTag("adminIDs", new NBTTagList(NBTTagBase.TagType.TAG_STRING));
+            this.boomBotData.setTag(DataKeys.ADMIN_IDS, new NBTTagList(NBTTagBase.TagType.TAG_STRING));
+            this.boomBotData.setLong(DataKeys.AUTO_SAVE_DELAY, 900000L);
             writeBoomBotData();
         }
     }
@@ -91,6 +93,10 @@ public class DataRegistry implements IDataRegistry {
     public void writeBoomBotData() {
         try {
             File boomBotdata = new File(BOOM_BOT_DATA);
+            if (!this.boomBotData.hasTag(DataKeys.ADMIN_IDS, NBTTagBase.TagType.TAG_LIST))
+                this.boomBotData.setTag(DataKeys.ADMIN_IDS, new NBTTagList(NBTTagBase.TagType.TAG_STRING));
+            if (!this.boomBotData.hasTag(DataKeys.AUTO_SAVE_DELAY, NBTTagBase.TagType.TAG_LONG))
+                this.boomBotData.setLong(DataKeys.AUTO_SAVE_DELAY, 900000L);
             NBTUtil.writeCompressed(this.boomBotData, new FileOutputStream(boomBotdata));
         } catch (IOException ex) {
             BoomBot.logger.error("Failed to write BoomBot base data", ex);
