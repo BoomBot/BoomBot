@@ -1,6 +1,5 @@
 package net.lomeli.boombot.core.registry;
 
-import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
 import net.dv8tion.jda.core.entities.Guild;
 import org.apache.commons.io.FilenameUtils;
@@ -13,12 +12,12 @@ import java.util.Map;
 
 import net.lomeli.boombot.BoomBot;
 import net.lomeli.boombot.api.BoomAPI;
-import net.lomeli.boombot.api.registry.IDataRegistry;
 import net.lomeli.boombot.api.events.bot.data.DataEvent;
 import net.lomeli.boombot.api.nbt.NBTTagBase;
 import net.lomeli.boombot.api.nbt.NBTTagCompound;
 import net.lomeli.boombot.api.nbt.NBTTagList;
 import net.lomeli.boombot.api.nbt.NBTUtil;
+import net.lomeli.boombot.api.registry.IDataRegistry;
 import net.lomeli.boombot.api.util.GuildUtil;
 
 public class DataRegistry implements IDataRegistry {
@@ -65,7 +64,7 @@ public class DataRegistry implements IDataRegistry {
     }
 
     @Override
-    public void readGuildData() {
+    public void readData() {
         // read BoomBot data. Addons do NOT need to read this!
         readBoomBotData();
         // Read guild data
@@ -99,7 +98,7 @@ public class DataRegistry implements IDataRegistry {
     }
 
     @Override
-    public void writeGuildData() {
+    public void writeData() {
         DataEvent.DataWriteEvent event = new DataEvent.DataWriteEvent(dataRegistry, boomBotData);
         BoomAPI.eventRegistry.post(event);
         writeBoomBotData();
@@ -109,7 +108,7 @@ public class DataRegistry implements IDataRegistry {
                 try {
                     if (!dataFolder.exists() || !dataFolder.isDirectory()) dataFolder.mkdir();
                     File guildConfig = new File(dataFolder, entry.getKey() + ".dat");
-                    NBTUtil.writeCompressed(entry.getValue(), new FileOutputStream(guildConfig)) ;
+                    NBTUtil.writeCompressed(entry.getValue(), new FileOutputStream(guildConfig));
                 } catch (IOException ex) {
                     BoomBot.logger.error("Could not write data for Guild id %s", ex, entry.getKey());
                 }
@@ -127,7 +126,7 @@ public class DataRegistry implements IDataRegistry {
                 try {
                     if (!dataFolder.exists() || !dataFolder.isDirectory()) dataFolder.mkdir();
                     File guildConfig = new File(dataFolder, guildID + ".dat");
-                    NBTUtil.writeCompressed(data, new FileOutputStream(guildConfig)) ;
+                    NBTUtil.writeCompressed(data, new FileOutputStream(guildConfig));
                 } catch (IOException ex) {
                     BoomBot.logger.error("Could not write data for Guild id %s", ex, guildID);
                 }

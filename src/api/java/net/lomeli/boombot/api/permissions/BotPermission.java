@@ -57,7 +57,7 @@ public enum BotPermission {
                 permissions.add(USE_BOT);
                 if (userData != null) userData.setIntArray(PERMISSION_KEY, new int[]{0});
             }
-            BoomAPI.dataRegistry.writeGuildData();
+            BoomAPI.dataRegistry.writeData();
         }
         return Collections.unmodifiableCollection(permissions);
     }
@@ -80,7 +80,7 @@ public enum BotPermission {
         int[] perKey = new int[perList.size()];
         for (int i = 0; i < perKey.length; i++) perKey[i] = perList.get(i).ordinal();
         data.setIntArray(PERMISSION_KEY, perKey);
-        BoomAPI.dataRegistry.writeGuildData();
+        BoomAPI.dataRegistry.writeData();
         return true;
     }
 

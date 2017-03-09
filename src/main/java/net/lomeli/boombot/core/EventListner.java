@@ -181,12 +181,12 @@ public class EventListner extends ListenerAdapter {
 
     @Override
     public void onDisconnect(DisconnectEvent event) {
-        BoomAPI.dataRegistry.writeGuildData();
+        BoomAPI.dataRegistry.writeData();
     }
 
     @Override
     public void onShutdown(ShutdownEvent event) {
         BoomBot.logger.info("BoomBot shutting down!");
-        BoomAPI.dataRegistry.writeGuildData();
+        BoomAPI.dataRegistry.writeData();
     }
 }

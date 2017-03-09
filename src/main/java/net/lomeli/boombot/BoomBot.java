@@ -20,6 +20,7 @@ import net.lomeli.boombot.api.events.bot.PostInitEvent;
 import net.lomeli.boombot.api.events.registry.RegisterCommandEvent;
 import net.lomeli.boombot.api.util.Logger;
 import net.lomeli.boombot.command.custom.CustomRegistry;
+import net.lomeli.boombot.core.AutoSaveThread;
 import net.lomeli.boombot.core.EventListner;
 import net.lomeli.boombot.core.addon.Loader;
 import net.lomeli.boombot.core.registry.CommandRegistry;
@@ -38,6 +39,7 @@ public class BoomBot {
     public static EventListner mainListener;
     public static Loader addonLoader;
     public static ICommandRegistry commandRegistry;
+    public static AutoSaveThread autoSaveThread;
 
     public static void main(String[] args) {
         Runtime.getRuntime().addShutdownHook(new Thread(new ShutdownHook()));
@@ -62,7 +64,8 @@ public class BoomBot {
             try {
 
                 jda = new JDABuilder(AccountType.BOT).setToken(key).addListener(mainListener).setBulkDeleteSplittingEnabled(false).buildBlocking();
-                BoomAPI.dataRegistry.readGuildData();
+                BoomAPI.dataRegistry.readData();
+                new Thread(autoSaveThread = new AutoSaveThread()).start();
 
                 InitEvent initEvent = new InitEvent(jda.getSelfUser().getId(), jda.getSelfUser().getName(), jda.getSelfUser().getDiscriminator());
                 addonLoader.initAddons(initEvent);

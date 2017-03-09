@@ -6,9 +6,9 @@ import net.lomeli.boombot.api.nbt.NBTTagCompound;
 public interface IDataRegistry {
     NBTTagCompound getDataForGuild(String guildID);
 
-    void readGuildData();
+    void readData();
 
-    void writeGuildData();
+    void writeData();
 
     void addGuild(String guildID);
 
