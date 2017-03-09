@@ -9,11 +9,23 @@ group = "${group}"
 archivesBaseName = "${archiveName}"
 version = "${releaseVersion}"
 
+sourceSets {
+    main {
+        java {
+            srcDirs = ['src/main/java', 'src/api/java']
+        }
+        resources {
+            srcDirs = ['src/main/resources']
+        }
+    }
+}
+
 dependencies {
     compile "net.dv8tion:JDA:${jdaVersion}"
     compile "com.google.code.gson:gson:${gsonVersion}"
     compile "com.google.guava:guava:${guavaVersion}"
     compile "commons-io:commons-io:${commonsIOVersion}"
+    compile "org.apache.commons:commons-lang3:${commonsLangVersion}"
 }
 
 jar {
@@ -35,20 +47,15 @@ task fatJar(type: Jar) {
     with jar
 }
 
-//task copyLang(type: Copy) {
-//    from 'lang'
-//    into 'build/libs/lang'
-//}
-
-//task copyNative(type: Copy) {
-//    from 'ffmpeg_native'
-//    into 'build/libs/ffmpeg_native'
-//}
-
 task deobfJar(type: Jar) {
     from sourceSets.main.output
     classifier = "dev"
 }
+
+//task apiJar(type: Jar) {
+//    from sourceSets.api.output
+//    classifier = "api"
+//}
 
 tasks.withType(Zip) { task ->
     task.doLast {
@@ -57,4 +64,4 @@ tasks.withType(Zip) { task ->
     }
 }
 
-build.dependsOn fatJar, /*copyLang, copyNative, */sourceJar, deobfJar
+build.dependsOn fatJar, sourceJar, deobfJar/*, apiJar*/
