@@ -1,15 +1,17 @@
 package net.lomeli.boombot.command.custom;
 
 import com.google.common.base.Strings;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
+import java.util.Collection;
 import java.util.Map;
 
 import net.lomeli.boombot.BoomBot;
-import net.lomeli.boombot.api.data.EntityData;
-import net.lomeli.boombot.api.data.GuildData;
 import net.lomeli.boombot.api.events.Event;
 import net.lomeli.boombot.api.events.bot.data.DataEvent;
+import net.lomeli.boombot.api.nbt.NBTTagBase;
+import net.lomeli.boombot.api.nbt.NBTTagCompound;
 
 public enum CustomRegistry {
     INSTANCE();
@@ -54,8 +56,8 @@ public enum CustomRegistry {
     public boolean removeGuildCommand(String guildID, String commandID) {
         boolean flag = false;
         Map<String, CustomContent> commands = guildCommands.get(guildID);
-        if (commands != null && !Strings.isNullOrEmpty(commandID) && commands.containsKey(commandID)) {
-            commands.remove(commandID);
+        if (commands != null && !Strings.isNullOrEmpty(commandID) && commands.containsKey(commandID.toLowerCase())) {
+            commands.remove(commandID.toLowerCase());
             guildCommands.put(guildID, commands);
             flag = true;
         }
@@ -66,40 +68,36 @@ public enum CustomRegistry {
     public void readDataEvent(DataEvent.DataReadEvent event) {
         BoomBot.logger.debug("Reading custom commands");
         if (event.getGuildIDs() == null || event.getGuildIDs().length <= 0) return;
-        for (String guildID : event.getGuildIDs()) {
-            GuildData guildData = event.getGuildData(guildID);
-            if (guildData != null && guildData.getGuildData() != null) {
-                EntityData rawData = guildData.getGuildData();
-                if (rawData != null && rawData.hasKey(CUSTOM_DATA_KEY)) {
-                    BoomBot.logger.debug("Loading %s's custom commands!", rawData.getString("name"));
-                    EntityData commandData = rawData.getData(CUSTOM_DATA_KEY);
-                    String[] commandNames = commandData.getKeys();
-                    if (commandNames == null || commandNames.length <= 0) continue;
-                    for (String name : commandNames) {
-                        String command = commandData.getString(name);
-                        if (!Strings.isNullOrEmpty(name) && !Strings.isNullOrEmpty(command))
-                            addGuildCommand(guildID, new CustomContent(name, command));
+        Lists.newArrayList(event.getGuildIDs()).stream().filter(id -> !Strings.isNullOrEmpty(id))
+                .forEach(id -> {
+                    NBTTagCompound guildData = event.getGuildData(id);
+                    if (guildData != null && guildData.hasTag(CUSTOM_DATA_KEY, NBTTagBase.TagType.TAG_COMPOUND)) {
+                        BoomBot.logger.debug("Loading %s's custom commands!", guildData.getString("name"));
+                        NBTTagCompound commandData = guildData.getTagCompound(CUSTOM_DATA_KEY);
+                        Collection<String> commandNames = commandData.getKeys();
+                        commandNames.stream().filter(name -> commandData.hasTag(name, NBTTagBase.TagType.TAG_STRING)).forEach(name -> {
+                            String command = commandData.getString(name);
+                            if (!Strings.isNullOrEmpty(name) && !Strings.isNullOrEmpty(command))
+                                addGuildCommand(id, new CustomContent(name, command));
+                        });
                     }
-                }
-            }
-        }
+                });
     }
 
     @Event.EventHandler
     public void writeDataEvent(DataEvent.DataWriteEvent event) {
         BoomBot.logger.debug("Writing custom commands");
-        for (Map.Entry<String, Map<String, CustomContent>> entry : guildCommands.entrySet()) {
-            GuildData guildData = event.getGuildData(entry.getKey());
-            if (guildData == null) guildData = new GuildData(entry.getKey());
-            EntityData rawData = guildData.getGuildData();
-            EntityData commandData = new EntityData();
+        guildCommands.entrySet().stream().forEach(entry -> {
+            NBTTagCompound guildData = event.getGuildData(entry.getKey());
+            if (guildData == null) guildData = new NBTTagCompound();
+            NBTTagCompound customCommands = new NBTTagCompound();
             Map<String, CustomContent> commands = entry.getValue();
             if (commands != null && commands.size() > 0) {
                 commands.values().stream().filter(command -> command != null)
-                        .forEach(command -> commandData.setString(command.getCommandName(), command.getCommandContent()));
+                        .forEach(command -> customCommands.setString(command.getCommandName(), command.getCommandContent()));
             }
-            rawData.setData(CUSTOM_DATA_KEY, commandData);
+            guildData.setTag(CUSTOM_DATA_KEY, customCommands);
             event.getData().put(entry.getKey(), guildData);
-        }
+        });
     }
 }

@@ -1,27 +1,37 @@
 package net.lomeli.boombot.core;
 
 import com.google.common.base.Strings;
-import net.dv8tion.jda.entities.Guild;
-import net.dv8tion.jda.entities.Message;
-import net.dv8tion.jda.entities.User;
-import net.dv8tion.jda.events.DisconnectEvent;
-import net.dv8tion.jda.events.ReadyEvent;
-import net.dv8tion.jda.events.ShutdownEvent;
-import net.dv8tion.jda.events.guild.GuildJoinEvent;
-import net.dv8tion.jda.events.message.guild.GenericGuildMessageEvent;
-import net.dv8tion.jda.events.message.priv.GenericPrivateMessageEvent;
-import net.dv8tion.jda.hooks.ListenerAdapter;
+import com.google.common.collect.Lists;
+import net.dv8tion.jda.core.entities.Guild;
+import net.dv8tion.jda.core.entities.Member;
+import net.dv8tion.jda.core.entities.Message;
+import net.dv8tion.jda.core.entities.User;
+import net.dv8tion.jda.core.events.DisconnectEvent;
+import net.dv8tion.jda.core.events.ResumedEvent;
+import net.dv8tion.jda.core.events.ShutdownEvent;
+import net.dv8tion.jda.core.events.guild.GuildJoinEvent;
+import net.dv8tion.jda.core.events.guild.GuildLeaveEvent;
+import net.dv8tion.jda.core.events.guild.member.GuildMemberJoinEvent;
+import net.dv8tion.jda.core.events.guild.member.GuildMemberLeaveEvent;
+import net.dv8tion.jda.core.events.message.guild.GenericGuildMessageEvent;
+import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
 import java.util.List;
 
 import net.lomeli.boombot.BoomBot;
 import net.lomeli.boombot.api.BoomAPI;
-import net.lomeli.boombot.api.commands.CommandInterface;
+import net.lomeli.boombot.api.commands.CommandData;
+import net.lomeli.boombot.api.commands.CommandResult;
 import net.lomeli.boombot.api.commands.ICommand;
-import net.lomeli.boombot.api.data.GuildData;
+import net.lomeli.boombot.api.events.bot.GuildEvent;
 import net.lomeli.boombot.api.events.text.MessageEvent;
 import net.lomeli.boombot.api.events.text.command.CommandEvent;
-import net.lomeli.boombot.api.util.BasicGuildUtil;
+import net.lomeli.boombot.api.events.user.UserEvent;
+import net.lomeli.boombot.api.lib.I18n;
+import net.lomeli.boombot.api.lib.UserProxy;
+import net.lomeli.boombot.api.nbt.NBTTagCompound;
+import net.lomeli.boombot.api.util.GuildUtil;
+import net.lomeli.boombot.command.custom.CustomCommand;
 import net.lomeli.boombot.command.custom.CustomContent;
 import net.lomeli.boombot.command.custom.CustomRegistry;
 import net.lomeli.boombot.lib.util.MessageUtil;
@@ -30,90 +40,142 @@ public class EventListner extends ListenerAdapter {
     public boolean scheduleShutdown;
 
     @Override
-    public void onReady(ReadyEvent event) {
+    public void onResume(ResumedEvent event) {
         if (event.getJDA() != null) {
             List<Guild> guilds = event.getJDA().getGuilds();
             if (guilds != null && !guilds.isEmpty()) {
-                for (Guild guild : guilds) {
+                guilds.stream().filter(guild -> guild != null).forEach(guild -> {
                     BoomBot.logger.debug("Adding guild %s", guild.getName());
                     BoomAPI.dataRegistry.addGuild(guild.getId());
-                    BoomAPI.dataRegistry.getDataForGuild(guild.getId()).getGuildData().setString("name", guild.getName());
-                }
+                    GuildUtil.getGuildData(guild.getId()).setString("name", guild.getName());
+                });
             }
         }
     }
 
     @Override
     public void onGenericGuildMessage(GenericGuildMessageEvent event) {
-        if (BoomBot.jda == null || BoomBot.jda.getSelfInfo() == null || event == null || event.getMessage() == null ||
+        if (BoomBot.jda == null || BoomBot.jda.getSelfUser() == null || event == null || event.getMessage() == null ||
                 event.getGuild() == null || event.getAuthor() == null || event.getAuthor().isBot() ||
                 (BoomAPI.debugMode && !event.getGuild().getId().equals(BoomBot.debugGuildID) && !event.getChannel().getName().equalsIgnoreCase("test-channel")))
             return;
         Message msg = event.getMessage();
         if (msg.isEdited()) return;
         Guild guild = event.getGuild();
-        GuildData data = BoomAPI.dataRegistry.getDataForGuild(guild.getId());
-        String key = data.getGuildData().getString("commandKey");
+        NBTTagCompound guildData = GuildUtil.getGuildData(guild.getId());
+        I18n lang = GuildUtil.getGuildLang(guildData);
+        Member member = guild.getMember(event.getAuthor());
+        UserProxy userProxy = new UserProxy(event.getAuthor().getId(), event.getAuthor().getName(), member.getNickname());
+        String key = GuildUtil.getGuildCommandKey(guildData);
         if (msg.getRawContent().startsWith(key)) {
-            String rawContent = msg.getRawContent();
-            if (Strings.isNullOrEmpty(rawContent)) return;
-            String[] splitContent = rawContent.split(" ");
-            if (splitContent != null && splitContent.length > 0) {
-                String commandName = splitContent[0].substring(1);
-                ICommand cmd = BoomAPI.commandRegistry.getCommand(commandName);
-                String message = "";
-                if (commandName.length() + 1 < rawContent.length())
-                    message = rawContent.substring(commandName.length() + 2);
-                CommandInterface cmdInterface = new CommandInterface(event.getAuthor().getId(), guild.getId(),
-                        event.getChannel().getId(), message, Strings.isNullOrEmpty(message) ? null : message.split(" "));
-                if (cmd != null) {
-                    if (BoomAPI.eventRegistry.post(new CommandEvent(cmd, cmdInterface))) return;
-                    String result = formatMessage(cmd.execute(cmdInterface), msg.getAuthor(), guild, data, cmdInterface.getArgs());
-                    if (!Strings.isNullOrEmpty(result)) event.getChannel().sendMessage(result);
-                    if (scheduleShutdown) event.getJDA().shutdown();
-                } else {
-                    CustomContent custom = CustomRegistry.INSTANCE.getGuildCommand(event.getGuild().getId(), commandName);
-                    if (custom != null) {
-                        if (BoomAPI.eventRegistry.post(new CommandEvent(cmd, cmdInterface))) return;
-                        String out = formatMessage(custom.getCommandContent(), msg.getAuthor(), guild, data, cmdInterface.getArgs());
-                        event.getChannel().sendMessage(out);
-                    }
-                }
+            String raw = msg.getRawContent();
+            if (Strings.isNullOrEmpty(raw)) return;
+            String[] splitContent = raw.split(" ");
+            if (splitContent == null || splitContent.length < 1) return;
+            String commandName = splitContent[0].substring(key.length());
+            ICommand command = BoomBot.commandRegistry.getCommand(commandName);
+            String message = "";
+            if (commandName.length() + key.length() < raw.length())
+                message = raw.substring(commandName.length() + key.length());
+            CommandData data = new CommandData(userProxy, guild.getId(),
+                    event.getChannel().getId(), message, userToIDList(msg.getMentionedUsers()), Strings.isNullOrEmpty(message) ? null : message.split(" "));
+            if (command != null) {
+                handleCommand(command, data, lang, event, guildData);
+            } else {
+                CustomContent custom = CustomRegistry.INSTANCE.getGuildCommand(event.getGuild().getId(), commandName);
+                if (custom != null) {
+                    if (BoomAPI.eventRegistry.post(new CommandEvent(new CustomCommand(custom), data))) return;
+                    String out = formatMessage(custom.getCommandContent(), msg.getAuthor(), guild, guildData, data.getArgs());
+                    event.getChannel().sendMessage(out).queue();
+                } else if (BoomAPI.eventRegistry.post(new MessageEvent(userProxy, msg.getChannel().getId(), guild.getId(), msg.getRawContent(), msg.getContent())))
+                    msg.delete().queue();
             }
-        } else if (BoomAPI.eventRegistry.post(new MessageEvent(msg.getAuthor().getId(), msg.getChannelId(), guild.getId(), msg.getRawContent(), msg.getContent())))
-            msg.deleteMessage();
+        } else if (BoomAPI.eventRegistry.post(new MessageEvent(userProxy, msg.getChannel().getId(), guild.getId(), msg.getRawContent(), msg.getContent())))
+            msg.delete().queue();
     }
 
-    String formatMessage(String content, User user, Guild guild, GuildData data, Object... args) {
+    List<String> userToIDList(List<User> initList) {
+        List<String> list = Lists.newArrayList();
+        if (initList != null)
+            initList.stream().filter(user -> user != null).forEach(user -> list.add(user.getId()));
+        return list;
+    }
+
+    void handleCommand(ICommand command, CommandData data, I18n lang, GenericGuildMessageEvent event, NBTTagCompound guildData) {
+        CommandResult result;
+        if (!command.canBotExecute(data) || !command.canUserExecute(data))
+            result = command.failedToExecuteMessage(data);
+        else {
+            if (BoomAPI.eventRegistry.post(new CommandEvent(command, data))) return;
+            result = command.execute(data);
+        }
+        if (result != null) outputResult(result, lang, event, guildData);
+    }
+
+    void outputResult(CommandResult result, I18n lang, GenericGuildMessageEvent event, NBTTagCompound guildData) {
+        String out = lang.getLocalization(result.getResult());
+        out = formatMessage(out, event.getAuthor(), event.getGuild(), guildData, result.getArgs());
+        if (!Strings.isNullOrEmpty(out)) event.getChannel().sendMessage(out).submit();
+        if (scheduleShutdown) event.getJDA().shutdown();
+    }
+
+    String formatMessage(String content, User user, Guild guild, NBTTagCompound data, Object... args) {
         String out = content;
         if (out.contains("%n")) out = out.replaceAll("%n", "\n");
-        boolean allowMention = BasicGuildUtil.guildAllowBotMention(data);
-        String userName = allowMention ? String.format("<@%s>", user.getId()) : user.getUsername();
+        boolean allowMention = GuildUtil.guildAllowBotMention(data);
+        String userName = allowMention ? String.format("<@%s>", user.getId()) : user.getName();
         out = out.replaceAll("%u", userName).replaceAll("%U", userName.toUpperCase());
-        out = String.format(out, args);
+        if (args != null && args.length > 0)
+            out = String.format(out, args);
         if (!allowMention)
             out = MessageUtil.stripMentions(out, guild);
-        if (!BasicGuildUtil.guildAllowEveryoneMention(data))
+        if (!GuildUtil.guildAllowEveryoneMention(data))
             out = MessageUtil.stripEveryoneMention(out);
-        if (!BasicGuildUtil.guildAllowHereMention(data))
+        if (!GuildUtil.guildAllowHereMention(data))
             out = MessageUtil.stripHere(out);
-        if (!BasicGuildUtil.guildAllowBotTTS(data))
+        if (!GuildUtil.guildAllowBotTTS(data))
             out = MessageUtil.stripTTS(out);
         return out;
     }
 
     @Override
-    public void onGenericPrivateMessage(GenericPrivateMessageEvent event) {
+    public void onGuildMemberJoin(GuildMemberJoinEvent event) {
+        BoomAPI.eventRegistry.post(new UserEvent.UserJoinedEvent(
+                new UserProxy(event.getMember().getUser().getId(), event.getMember().getUser().getName()), event.getGuild().getId()));
+        NBTTagCompound guildData = GuildUtil.getGuildData(event.getGuild().getId());
+        NBTTagCompound memberData = GuildUtil.getGuildMemberData(guildData, event.getMember().getUser().getId());
+        GuildUtil.setGuildMemberData(guildData, memberData);
+    }
+
+    @Override
+    public void onGuildMemberLeave(GuildMemberLeaveEvent event) {
+        BoomAPI.eventRegistry.post(new UserEvent.UserLeaveEvent(
+                new UserProxy(event.getMember().getUser().getId(), event.getMember().getUser().getName()), event.getGuild().getId()));
     }
 
     @Override
     public void onGuildJoin(GuildJoinEvent event) {
         if (event.getGuild() != null) {
+            List<String> guildIDs = Lists.newArrayList();
+            BoomBot.jda.getGuilds().stream().filter(guild -> guild != null).forEach(guild -> guildIDs.add(guild.getId()));
+            if (!guildIDs.contains(event.getGuild().getId())) guildIDs.add(event.getGuild().getId());
+            BoomAPI.eventRegistry.post(new GuildEvent.JoinedGuildEvent(guildIDs));
             BoomBot.logger.debug("Adding guild %s", event.getGuild().getName());
             if (!BoomAPI.dataRegistry.guildHasData(event.getGuild().getId())) {
                 BoomAPI.dataRegistry.addGuild(event.getGuild().getId());
-                BoomAPI.dataRegistry.getDataForGuild(event.getGuild().getId()).getGuildData().setString("name", event.getGuild().getName());
+                GuildUtil.getGuildData(event.getGuild().getId()).setString("name", event.getGuild().getName());
             }
+
+        }
+    }
+
+    @Override
+    public void onGuildLeave(GuildLeaveEvent event) {
+        if (event.getGuild() != null) {
+            List<String> guildIDs = Lists.newArrayList();
+            BoomBot.jda.getGuilds().stream().filter(guild -> guild != null).forEach(guild -> guildIDs.add(guild.getId()));
+            if (guildIDs.contains(event.getGuild().getId())) guildIDs.remove(event.getGuild().getId());
+            BoomAPI.eventRegistry.post(new GuildEvent.LeaveGuildEvent(guildIDs));
         }
     }
 
