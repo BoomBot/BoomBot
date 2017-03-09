@@ -1,16 +1,12 @@
 package net.lomeli.boombot.command.custom;
 
 import com.google.common.base.Strings;
-import net.dv8tion.jda.core.entities.Guild;
-import net.dv8tion.jda.core.entities.Member;
 
 import net.lomeli.boombot.BoomBot;
-import net.lomeli.boombot.api.BoomAPI;
 import net.lomeli.boombot.api.commands.CommandData;
 import net.lomeli.boombot.api.commands.CommandResult;
 import net.lomeli.boombot.api.commands.ICommand;
 import net.lomeli.boombot.api.permissions.BotPermission;
-import net.lomeli.boombot.core.registry.DataRegistry;
 
 public class RemoveCommand implements ICommand {
     @Override
@@ -23,8 +19,6 @@ public class RemoveCommand implements ICommand {
         CustomContent command = CustomRegistry.INSTANCE.getGuildCommand(cmd.getGuildID(), name);
         if (command == null) return new CommandResult("boombot.command.rm.error.exist", name);
         CustomRegistry.INSTANCE.removeGuildCommand(cmd.getGuildID(), name);
-        Guild guild = BoomBot.jda.getGuildById(cmd.getGuildID());
-        ((DataRegistry) BoomAPI.dataRegistry).writeGuildData(guild.getId());
         String username = cmd.getUserInfo().hasNickName() ? cmd.getUserInfo().getNickName() : cmd.getUserInfo().getUserName();
         return new CommandResult("boombot.command.rm", username, name);
     }
