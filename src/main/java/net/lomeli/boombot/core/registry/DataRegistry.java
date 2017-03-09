@@ -19,6 +19,7 @@ import net.lomeli.boombot.api.nbt.NBTTagList;
 import net.lomeli.boombot.api.nbt.NBTUtil;
 import net.lomeli.boombot.api.registry.IDataRegistry;
 import net.lomeli.boombot.api.util.GuildUtil;
+import net.lomeli.boombot.core.AutoSaveThread;
 import net.lomeli.boombot.lib.DataKeys;
 
 public class DataRegistry implements IDataRegistry {
@@ -96,7 +97,7 @@ public class DataRegistry implements IDataRegistry {
             if (!this.boomBotData.hasTag(DataKeys.ADMIN_IDS, NBTTagBase.TagType.TAG_LIST))
                 this.boomBotData.setTag(DataKeys.ADMIN_IDS, new NBTTagList(NBTTagBase.TagType.TAG_STRING));
             if (!this.boomBotData.hasTag(DataKeys.AUTO_SAVE_DELAY, NBTTagBase.TagType.TAG_LONG))
-                this.boomBotData.setLong(DataKeys.AUTO_SAVE_DELAY, 900000L);
+                this.boomBotData.setLong(DataKeys.AUTO_SAVE_DELAY, AutoSaveThread.SAVE_DELAY);
             NBTUtil.writeCompressed(this.boomBotData, new FileOutputStream(boomBotdata));
         } catch (IOException ex) {
             BoomBot.logger.error("Failed to write BoomBot base data", ex);
