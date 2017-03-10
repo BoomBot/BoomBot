@@ -34,7 +34,7 @@ public class GuildUtil {
     public static boolean isUserGuildOwner(String userID, String guildID) {
         NBTTagCompound data = getGuildData(guildID);
         String ownerID = data.getString(OWNER_ID);
-        return (data != null && !Strings.isNullOrEmpty(ownerID)) ?  ownerID.equalsIgnoreCase(userID) : false;
+        return (data != null && !Strings.isNullOrEmpty(ownerID)) ? ownerID.equalsIgnoreCase(userID) : false;
     }
 
     public static void setGuildOwner(NBTTagCompound data, String userid) {
@@ -46,8 +46,8 @@ public class GuildUtil {
         NBTTagList userData = new NBTTagList(NBTTagBase.TagType.TAG_COMPOUND);
         if (tag != null && tag instanceof NBTTagList && ((NBTTagList) tag).getType() == NBTTagBase.TagType.TAG_COMPOUND)
             userData = (NBTTagList) tag;
-        Optional<NBTTagBase> result = userData.stream().filter(nbt -> ((NBTTagCompound) nbt).getString(USER_ID).equals(userID)).findFirst();
-        NBTTagCompound userInfo = (NBTTagCompound) result.get();
+        Optional<NBTTagBase> result = Optional.ofNullable(userData.stream().filter(nbt -> ((NBTTagCompound) nbt).getString(USER_ID).equals(userID)).findFirst().orElse(null));
+        NBTTagCompound userInfo = (result != null && result.isPresent()) ? (NBTTagCompound) result.get() : null;
         if (userInfo == null) {
             userInfo = new NBTTagCompound();
             userInfo.setString(USER_ID, userID);
