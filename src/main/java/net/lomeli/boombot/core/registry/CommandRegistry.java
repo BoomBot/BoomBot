@@ -82,8 +82,9 @@ public class CommandRegistry implements ICommandRegistry {
         if (commandList == null || Strings.isNullOrEmpty(name)) return null;
         List<ICommand> commandList = Lists.newArrayList();
         this.commandList.values().stream().filter(list -> list != null && !list.isEmpty()).forEach(list -> commandList.addAll(list));
-        Optional<ICommand> result = Optional.ofNullable(commandList.stream().filter(command -> command != null && command.getName().equalsIgnoreCase(name))
-                .findFirst().orElse(null));
+        Optional<ICommand> result = Optional.ofNullable(commandList.stream().filter(command ->
+            command != null && command.getName().equalsIgnoreCase(name)
+        ).findFirst().orElse(null));
         return (result != null && result.isPresent())? result.get() : null;
     }
 
