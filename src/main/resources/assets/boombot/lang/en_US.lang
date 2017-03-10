@@ -32,6 +32,17 @@ boombot.command.clear.error.onearg=Only use one arg.
 boombot.command.clear.error.few=Must clear at least 2 messages.
 boombot.command.clear.error.much=Cannot clear more than 100 messages.
 boombot.command.clear.error.none=No messages to clear!
+# Ban 
+boombot.command.ban=%s has been banned.
+boombot.command.ban.message=You have been banned from %s.
+boombot.command.ban.message.reason=Reason: 
+boombot.command.ban.help=%sban [time of ban] [User] <optional reason>
+boombot.command.ban.error.multiple=%s users have been banned.
+boombot.command.ban.error.self=Why would you ban yourself?
+boombot.command.ban.error.owner=%s is the guild owner.
+boombot.command.ban.error.none=No player specified.
+boombot.command.ban.error.perm.self=You don't have permission to ban other users.
+boombot.command.ban.error.perm.bot=BoomBot doesn't have permission to ban users.
 ## Custom command Commands
 # Make command
 boombot.command.make.empty=Cannot make empty command

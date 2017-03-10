@@ -16,6 +16,7 @@ import net.lomeli.boombot.command.admin.SetAdminCommand;
 import net.lomeli.boombot.command.admin.ShutdownCommand;
 import net.lomeli.boombot.command.custom.MakeCommand;
 import net.lomeli.boombot.command.custom.RemoveCommand;
+import net.lomeli.boombot.command.moderate.BanCommand;
 import net.lomeli.boombot.command.moderate.ClearChatCommand;
 import net.lomeli.boombot.command.other.AboutCommand;
 
@@ -38,6 +39,7 @@ public class CommandRegistry implements ICommandRegistry {
         addBaseCommand(new SetAdminCommand());
         //MOD COMMANDS
         addBaseCommand(new ClearChatCommand());
+        addBaseCommand(new BanCommand());
         //CUSTOM COMMANDS
         addBaseCommand(new MakeCommand());
         addBaseCommand(new RemoveCommand());
