@@ -188,5 +188,7 @@ public class EventListner extends ListenerAdapter {
     public void onShutdown(ShutdownEvent event) {
         BoomBot.logger.info("BoomBot shutting down!");
         BoomAPI.dataRegistry.writeData();
+        BoomBot.logger.info("BoomBot has finished shutting down!");
+        System.exit(0);
     }
 }
