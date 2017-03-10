@@ -2,6 +2,7 @@ package net.lomeli.boombot.api;
 
 import java.io.File;
 
+import net.lomeli.boombot.api.permissions.IPermissionHelper;
 import net.lomeli.boombot.api.registry.IDataRegistry;
 import net.lomeli.boombot.api.registry.IEventRegistry;
 import net.lomeli.boombot.api.util.Logger;
@@ -17,4 +18,5 @@ public class BoomAPI {
     public static IDataRegistry dataRegistry;
     public static II18nRegistry langRegistry;
     public static IEventRegistry eventRegistry;
+    public static IPermissionHelper permissionHelper;
 }

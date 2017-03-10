@@ -24,11 +24,17 @@ public class PermissionUtil {
         return false;
     }
 
-    public static boolean boomBotHaverPermission(String guildID, Permission...permissions) {
+    public static boolean hasPermissions(String guildID, String userID, Permission...permissions) {
         Guild guild = BoomBot.jda.getGuildById(guildID);
-        Member member = null;
-        if (guild != null) member = guild.getMemberById(BoomBot.jda.getSelfUser().getId());
-        return member != null ? member.hasPermission(permissions) : false;
+        if (guild != null) {
+            Member member = guild.getMemberById(userID);
+            if (member != null) return member.hasPermission(permissions);
+        }
+        return false;
+    }
+
+    public static boolean boomBotHaverPermission(String guildID, Permission...permissions) {
+        return hasPermissions(guildID, BoomBot.jda.getSelfUser().getId(), permissions);
     }
 
     public static boolean addUserAsAdmin(String userId) {
