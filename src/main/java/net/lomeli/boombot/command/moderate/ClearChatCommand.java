@@ -21,9 +21,9 @@ public class ClearChatCommand implements ICommand {
 
     @Override
     public CommandResult execute(CommandData cmd) {
-        if (cmd.getArgs().size() > 1) return new CommandResult("boombot.command.clear.error.onearg");
+        if (cmd.getArgs().size() > 1) return new CommandResult("boombot.command.clear.error.onearg").setPrivateMessage(true);
         int i = Integer.parseInt(cmd.getArgs().get(0));
-        if (cmd.getArgs().isEmpty() || i < 1) return new CommandResult("boombot.command.clear.error.specify");
+        if (cmd.getArgs().isEmpty() || i < 1) return new CommandResult("boombot.command.clear.error.specify").setPrivateMessage(true);
         if (i > 100) return new CommandResult("boombot.command.clear.error.much");
         if (i < 2) return new CommandResult("boombot.command.clear.error.few");
         Guild guild = BoomBot.jda.getGuildById(cmd.getGuildID());
@@ -31,13 +31,13 @@ public class ClearChatCommand implements ICommand {
         RestAction<List<Message>> rest = channel.getHistory().retrievePast(i);
         try {
             List<Message> messages = rest.submit().get();
-            if (messages == null || messages.isEmpty()) return new CommandResult("boombot.command.clear.error.none");
+            if (messages == null || messages.isEmpty()) return new CommandResult("boombot.command.clear.error.none").setPrivateMessage(true);
             channel.deleteMessages(messages).queue();
         } catch (InterruptedException | ExecutionException ex) {
             BoomBot.logger.error("Could not clear %s messages", ex, i);
             return failedToExecuteMessage(cmd);
         }
-        return new CommandResult("boombot.command.clear", i);
+        return new CommandResult("boombot.command.clear", i).setPrivateMessage(true);
     }
 
 
@@ -58,6 +58,6 @@ public class ClearChatCommand implements ICommand {
 
     @Override
     public CommandResult failedToExecuteMessage(CommandData cmd) {
-        return new CommandResult("boombot.command.clear.error");
+        return new CommandResult("boombot.command.clear.error").setPrivateMessage(true);
     }
 }

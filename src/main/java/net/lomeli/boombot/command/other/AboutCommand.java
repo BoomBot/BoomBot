@@ -9,7 +9,8 @@ public class AboutCommand implements ICommand {
 
     @Override
     public CommandResult execute(CommandData cmd) {
-        return new CommandResult("boombot.command.about", GuildUtil.getGuildCommandKey(cmd.getGuildID()));
+        return new CommandResult("boombot.command.about",
+                GuildUtil.getGuildCommandKey(cmd.getGuildID())).setPrivateMessage(true);
     }
 
     @Override

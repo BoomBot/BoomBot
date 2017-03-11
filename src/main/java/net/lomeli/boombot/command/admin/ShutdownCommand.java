@@ -30,6 +30,6 @@ public class ShutdownCommand implements ICommand {
 
     @Override
     public CommandResult failedToExecuteMessage(CommandData cmd) {
-        return new CommandResult("boombot.command.shutdown.failed");
+        return new CommandResult("boombot.command.shutdown.failed").setPrivateMessage(true);
     }
 }

@@ -20,16 +20,16 @@ public class SetAdminCommand implements ICommand {
         if (mentionedUsers.isEmpty()) {
             if (PermissionUtil.addUserAsAdmin(cmd.getUserInfo().getUserID()))
                 return new CommandResult("boombot.command.setadmin", username);
-            return new CommandResult("boombot.command.setadmin.error.admin", username);
+            return new CommandResult("boombot.command.setadmin.error.admin", username).setPrivateMessage(true);
         } else if (mentionedUsers.size() > 1 || cmd.getArgs().size() > 1)
-            return new CommandResult("boombot.command.setadmin.error.multiple");
+            return new CommandResult("boombot.command.setadmin.error.multiple").setPrivateMessage(true);
         else {
             Guild guild = BoomBot.jda.getGuildById(cmd.getGuildID());
             Member user = guild.getMemberById(mentionedUsers.get(0));
-            if (user == null) return new CommandResult("boombot.command.setadmin.error.nouser");
+            if (user == null) return new CommandResult("boombot.command.setadmin.error.nouser").setPrivateMessage(true);
             if (PermissionUtil.addUserAsAdmin(user.getUser().getId()))
                 return new CommandResult("boombot.command.setadmin", username);
-            return new CommandResult("boombot.command.setadmin.error.admin", username);
+            return new CommandResult("boombot.command.setadmin.error.admin", username).setPrivateMessage(true);
         }
     }
 
@@ -50,6 +50,6 @@ public class SetAdminCommand implements ICommand {
 
     @Override
     public CommandResult failedToExecuteMessage(CommandData cmd) {
-        return new CommandResult("boombot.command.setadmin.error.set");
+        return new CommandResult("boombot.command.setadmin.error.set").setPrivateMessage(true);
     }
 }

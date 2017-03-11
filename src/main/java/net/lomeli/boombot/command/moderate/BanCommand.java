@@ -18,23 +18,23 @@ public class BanCommand implements ICommand {
     public CommandResult execute(CommandData cmd) {
         if (cmd.getArgs().isEmpty() || cmd.getArgs().get(0).equalsIgnoreCase("?") ||
                 cmd.getArgs().get(0).equalsIgnoreCase("help"))
-            return new CommandResult("boombot.command.ban.help");
-        if (cmd.getMentionedUserIDs().isEmpty()) return new CommandResult("boombot.command.ban.error.none");
+            return new CommandResult("boombot.command.ban.help").setPrivateMessage(true);
+        if (cmd.getMentionedUserIDs().isEmpty()) return new CommandResult("boombot.command.ban.error.none").setPrivateMessage(true);
         if (cmd.getMentionedUserIDs().get(0).equals(cmd.getUserInfo().getUserID()))
-            return new CommandResult("boombot.command.ban.error.self");
+            return new CommandResult("boombot.command.ban.error.self").setPrivateMessage(true);
         Guild guild = BoomBot.jda.getGuildById(cmd.getGuildID());
         GuildController controller = new GuildController(guild);
         Member owner = guild.getOwner();
         if (cmd.getMentionedUserIDs().get(0).equals(owner.getUser().getId()))
-            return new CommandResult("boombot.command.ban.error.owner", owner.getEffectiveName());
+            return new CommandResult("boombot.command.ban.error.owner", owner.getEffectiveName()).setPrivateMessage(true);
         Member member = guild.getMemberById(cmd.getMentionedUserIDs().get(0));
-        if (member == null) return new CommandResult("boombot.command.ban.error.none");
+        if (member == null) return new CommandResult("boombot.command.ban.error.none").setPrivateMessage(true);
         I18n lang = GuildUtil.getGuildLang(cmd.getGuildData());
         String msg = lang.getLocalization("boombot.command.ban.message", guild.getName());
         if (cmd.getArgs().size() > 1)
             msg += "\n" + cmd.getMessage().substring(("<@" + cmd.getMentionedUserIDs().get(0) + "> ").length());
         controller.ban(member, 0);
-        member.getUser().getPrivateChannel().sendMessage(msg);
+        member.getUser().getPrivateChannel().sendMessage(msg).submit();
         return new CommandResult("boombot.command.ban", member.getEffectiveName());
     }
 
@@ -55,7 +55,7 @@ public class BanCommand implements ICommand {
 
     @Override
     public CommandResult failedToExecuteMessage(CommandData cmd) {
-        if (canUserExecute(cmd)) return new CommandResult("boombot.command.ban.error.perm.self");
-        return new CommandResult("boombot.command.ban.error.perm.bot");
+        if (canUserExecute(cmd)) return new CommandResult("boombot.command.ban.error.perm.self").setPrivateMessage(true);
+        return new CommandResult("boombot.command.ban.error.perm.bot").setPrivateMessage(true);
     }
 }
