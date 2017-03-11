@@ -34,7 +34,8 @@ public class BanCommand implements ICommand {
         if (cmd.getArgs().size() > 1)
             msg += "\n" + cmd.getMessage().substring(("<@" + cmd.getMentionedUserIDs().get(0) + "> ").length());
         controller.ban(member, 0);
-        member.getUser().getPrivateChannel().sendMessage(msg).submit();
+        if (!member.getUser().hasPrivateChannel()) member.getUser().openPrivateChannel().queue();
+        member.getUser().getPrivateChannel().sendMessage(msg).queue();
         return new CommandResult("boombot.command.ban", member.getEffectiveName());
     }
 

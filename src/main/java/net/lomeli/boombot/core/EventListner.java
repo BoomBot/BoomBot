@@ -116,9 +116,11 @@ public class EventListner extends ListenerAdapter {
         String out = lang.getLocalization(result.getResult());
         out = formatMessage(out, event.getAuthor(), event.getGuild(), guildData, result.getArgs());
         if (!Strings.isNullOrEmpty(out)) {
-            if (result.isPrivateMessage())
-                event.getMember().getUser().getPrivateChannel().sendMessage(out).submit();
-            else event.getChannel().sendMessage(out).submit();
+            if (result.isPrivateMessage()) {
+                if (!event.getMember().getUser().hasPrivateChannel())
+                    event.getMember().getUser().openPrivateChannel().queue();
+                event.getMember().getUser().getPrivateChannel().sendMessage(out).queue();
+            } else event.getChannel().sendMessage(out).submit();
         }
         if (scheduleShutdown) event.getJDA().shutdown();
     }
