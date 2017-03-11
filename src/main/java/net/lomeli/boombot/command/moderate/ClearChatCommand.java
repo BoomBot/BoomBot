@@ -2,7 +2,6 @@ package net.lomeli.boombot.command.moderate;
 
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Guild;
-import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.requests.RestAction;
@@ -21,9 +20,11 @@ public class ClearChatCommand implements ICommand {
 
     @Override
     public CommandResult execute(CommandData cmd) {
-        if (cmd.getArgs().size() > 1) return new CommandResult("boombot.command.clear.error.onearg").setPrivateMessage(true);
+        if (cmd.getArgs().size() > 1)
+            return new CommandResult("boombot.command.clear.error.onearg").setPrivateMessage(true);
         int i = Integer.parseInt(cmd.getArgs().get(0));
-        if (cmd.getArgs().isEmpty() || i < 1) return new CommandResult("boombot.command.clear.error.specify").setPrivateMessage(true);
+        if (cmd.getArgs().isEmpty() || i < 1)
+            return new CommandResult("boombot.command.clear.error.specify").setPrivateMessage(true);
         if (i > 100) return new CommandResult("boombot.command.clear.error.much");
         if (i < 2) return new CommandResult("boombot.command.clear.error.few");
         Guild guild = BoomBot.jda.getGuildById(cmd.getGuildID());
@@ -31,8 +32,10 @@ public class ClearChatCommand implements ICommand {
         RestAction<List<Message>> rest = channel.getHistory().retrievePast(i);
         try {
             List<Message> messages = rest.submit().get();
-            if (messages == null || messages.isEmpty()) return new CommandResult("boombot.command.clear.error.none").setPrivateMessage(true);
-            channel.deleteMessages(messages).queue();
+            if (messages == null || messages.isEmpty())
+                return new CommandResult("boombot.command.clear.error.none").setPrivateMessage(true);
+            if (messages.size() >= 2 && messages.size() <= 100)
+                channel.deleteMessages(messages).queue();
         } catch (InterruptedException | ExecutionException ex) {
             BoomBot.logger.error("Could not clear %s messages", ex, i);
             return failedToExecuteMessage(cmd);
