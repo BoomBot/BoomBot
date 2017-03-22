@@ -23,6 +23,7 @@ import net.lomeli.boombot.command.custom.CustomRegistry;
 import net.lomeli.boombot.core.AutoSaveThread;
 import net.lomeli.boombot.core.EventListner;
 import net.lomeli.boombot.core.addon.Loader;
+import net.lomeli.boombot.core.handler.MessageHandler;
 import net.lomeli.boombot.core.registry.CommandRegistry;
 import net.lomeli.boombot.core.handler.DataHandler;
 import net.lomeli.boombot.core.registry.EventRegistry;
@@ -117,6 +118,7 @@ public class BoomBot {
         BoomAPI.eventRegistry.registerEventHandler(CustomRegistry.INSTANCE);
         BoomAPI.langRegistry = new I18nRegistry();
         BoomAPI.dataRegistry = new DataHandler(new File("data"));
+        BoomAPI.messageHandler = new MessageHandler();
         BoomAPI.langRegistry.loadLangFolder("boombot", "");
     }
 }
