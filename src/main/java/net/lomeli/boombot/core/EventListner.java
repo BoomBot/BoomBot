@@ -165,13 +165,12 @@ public class EventListner extends ListenerAdapter {
             List<String> guildIDs = Lists.newArrayList();
             BoomBot.jda.getGuilds().stream().filter(guild -> guild != null).forEach(guild -> guildIDs.add(guild.getId()));
             if (!guildIDs.contains(event.getGuild().getId())) guildIDs.add(event.getGuild().getId());
-            BoomAPI.eventRegistry.post(new GuildEvent.JoinedGuildEvent(guildIDs));
+            BoomAPI.eventRegistry.post(new GuildEvent.JoinedGuildEvent(guildIDs, event.getGuild().getId()));
             BoomBot.logger.debug("Adding guild %s", event.getGuild().getName());
             if (!BoomAPI.dataRegistry.guildHasData(event.getGuild().getId())) {
                 BoomAPI.dataRegistry.addGuild(event.getGuild().getId());
                 GuildUtil.getGuildData(event.getGuild().getId()).setString("name", event.getGuild().getName());
             }
-
         }
     }
 
@@ -181,7 +180,7 @@ public class EventListner extends ListenerAdapter {
             List<String> guildIDs = Lists.newArrayList();
             BoomBot.jda.getGuilds().stream().filter(guild -> guild != null).forEach(guild -> guildIDs.add(guild.getId()));
             if (guildIDs.contains(event.getGuild().getId())) guildIDs.remove(event.getGuild().getId());
-            BoomAPI.eventRegistry.post(new GuildEvent.LeaveGuildEvent(guildIDs));
+            BoomAPI.eventRegistry.post(new GuildEvent.LeaveGuildEvent(guildIDs, event.getGuild().getId()));
         }
     }
 

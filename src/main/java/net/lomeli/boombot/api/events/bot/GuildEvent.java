@@ -20,8 +20,15 @@ public class GuildEvent extends Event {
      */
     public static class JoinedGuildEvent extends GuildEvent {
 
-        public JoinedGuildEvent(List<String> guildIDs) {
+        private String guildID;
+
+        public JoinedGuildEvent(List<String> guildIDs, String guildID) {
             super(guildIDs);
+            this.guildID = guildID;
+        }
+
+        public String getNewGuildID() {
+            return guildID;
         }
     }
 
@@ -30,8 +37,15 @@ public class GuildEvent extends Event {
      */
     public static class LeaveGuildEvent extends GuildEvent {
 
-        public LeaveGuildEvent(List<String> guildIDs) {
+        private String guildID;
+
+        public LeaveGuildEvent(List<String> guildIDs, String guildID) {
             super(guildIDs);
+            this.guildID = guildID;
+        }
+
+        public String getLeftGuildID() {
+            return guildID;
         }
     }
 }
