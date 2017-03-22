@@ -1,4 +1,4 @@
-package net.lomeli.boombot.core.registry;
+package net.lomeli.boombot.core.handler;
 
 import com.google.common.collect.Maps;
 import net.dv8tion.jda.core.entities.Guild;
@@ -17,18 +17,18 @@ import net.lomeli.boombot.api.nbt.NBTTagBase;
 import net.lomeli.boombot.api.nbt.NBTTagCompound;
 import net.lomeli.boombot.api.nbt.NBTTagList;
 import net.lomeli.boombot.api.nbt.NBTUtil;
-import net.lomeli.boombot.api.registry.IDataRegistry;
+import net.lomeli.boombot.api.handlers.IDataHandler;
 import net.lomeli.boombot.api.util.GuildUtil;
 import net.lomeli.boombot.core.AutoSaveThread;
 import net.lomeli.boombot.lib.DataKeys;
 
-public class DataRegistry implements IDataRegistry {
+public class DataHandler implements IDataHandler {
     private static final String BOOM_BOT_DATA = "boombot.dat";
     private File dataFolder;
     private Map<String, NBTTagCompound> dataRegistry;
     private NBTTagCompound boomBotData;
 
-    public DataRegistry(File dataFolder) {
+    public DataHandler(File dataFolder) {
         this.dataFolder = dataFolder;
         this.dataRegistry = Maps.newHashMap();
         this.boomBotData = new NBTTagCompound();

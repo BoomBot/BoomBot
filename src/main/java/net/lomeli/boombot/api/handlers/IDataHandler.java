@@ -1,9 +1,9 @@
-package net.lomeli.boombot.api.registry;
+package net.lomeli.boombot.api.handlers;
 
 import net.lomeli.boombot.api.nbt.NBTTagCompound;
 
 
-public interface IDataRegistry {
+public interface IDataHandler {
     NBTTagCompound getDataForGuild(String guildID);
 
     void readData();
