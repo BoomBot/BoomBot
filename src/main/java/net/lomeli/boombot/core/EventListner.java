@@ -29,7 +29,7 @@ import net.lomeli.boombot.api.events.text.command.CommandEvent;
 import net.lomeli.boombot.api.events.user.UserEvent;
 import net.lomeli.boombot.api.lib.I18n;
 import net.lomeli.boombot.api.lib.UserProxy;
-import net.lomeli.boombot.api.nbt.NBTTagCompound;
+import net.lomeli.boombot.api.nbt.TagCompound;
 import net.lomeli.boombot.api.util.GuildUtil;
 import net.lomeli.boombot.command.custom.CustomCommand;
 import net.lomeli.boombot.command.custom.CustomContent;
@@ -62,7 +62,7 @@ public class EventListner extends ListenerAdapter {
         Message msg = event.getMessage();
         if (msg.isEdited()) return;
         Guild guild = event.getGuild();
-        NBTTagCompound guildData = GuildUtil.getGuildData(guild.getId());
+        TagCompound guildData = GuildUtil.getGuildData(guild.getId());
         I18n lang = GuildUtil.getGuildLang(guildData);
         Member member = guild.getMember(event.getAuthor());
         UserProxy userProxy = new UserProxy(event.getAuthor().getId(), event.getAuthor().getName(), member.getNickname());
@@ -80,7 +80,7 @@ public class EventListner extends ListenerAdapter {
             CommandData data = new CommandData(userProxy, guild.getId(),
                     event.getChannel().getId(), message, userToIDList(msg.getMentionedUsers()), Strings.isNullOrEmpty(message) ? null : message.split(" "));
             if (command != null) {
-                handleCommand(command, data, lang, event, guildData);
+                handleCommand(command, data, lang, msg.getAuthor(), event, guildData);
             } else {
                 CustomContent custom = CustomRegistry.INSTANCE.getGuildCommand(event.getGuild().getId(), commandName);
                 if (custom != null) {
@@ -101,7 +101,7 @@ public class EventListner extends ListenerAdapter {
         return list;
     }
 
-    void handleCommand(ICommand command, CommandData data, I18n lang, GenericGuildMessageEvent event, NBTTagCompound guildData) {
+    void handleCommand(ICommand command, CommandData data, I18n lang, User author, GenericGuildMessageEvent event, TagCompound guildData) {
         CommandResult result;
         if (!command.canBotExecute(data) || !command.canUserExecute(data))
             result = command.failedToExecuteMessage(data);
@@ -109,12 +109,12 @@ public class EventListner extends ListenerAdapter {
             if (BoomAPI.eventRegistry.post(new CommandEvent(command, data))) return;
             result = command.execute(data);
         }
-        if (result != null) outputResult(result, lang, event, guildData);
+        if (result != null) outputResult(result, lang, author, event, guildData);
     }
 
-    void outputResult(CommandResult result, I18n lang, GenericGuildMessageEvent event, NBTTagCompound guildData) {
+    void outputResult(CommandResult result, I18n lang, User author, GenericGuildMessageEvent event, TagCompound guildData) {
         String out = lang.getLocalization(result.getResult());
-        out = formatMessage(out, event.getAuthor(), event.getGuild(), guildData, result.getArgs());
+        out = formatMessage(out, author, event.getGuild(), guildData, result.getArgs());
         if (!Strings.isNullOrEmpty(out)) {
             if (result.isPrivateMessage()) {
                 if (!event.getMember().getUser().hasPrivateChannel())
@@ -125,7 +125,7 @@ public class EventListner extends ListenerAdapter {
         if (scheduleShutdown) event.getJDA().shutdown();
     }
 
-    String formatMessage(String content, User user, Guild guild, NBTTagCompound data, Object... args) {
+    String formatMessage(String content, User user, Guild guild, TagCompound data, Object... args) {
         String out = content;
         if (out.contains("%n")) out = out.replaceAll("%n", "\n");
         boolean allowMention = GuildUtil.guildAllowBotMention(data);
@@ -148,8 +148,8 @@ public class EventListner extends ListenerAdapter {
     public void onGuildMemberJoin(GuildMemberJoinEvent event) {
         BoomAPI.eventRegistry.post(new UserEvent.UserJoinedEvent(
                 new UserProxy(event.getMember().getUser().getId(), event.getMember().getUser().getName()), event.getGuild().getId()));
-        NBTTagCompound guildData = GuildUtil.getGuildData(event.getGuild().getId());
-        NBTTagCompound memberData = GuildUtil.getGuildMemberData(guildData, event.getMember().getUser().getId());
+        TagCompound guildData = GuildUtil.getGuildData(event.getGuild().getId());
+        TagCompound memberData = GuildUtil.getGuildMemberData(guildData, event.getMember().getUser().getId());
         GuildUtil.setGuildMemberData(guildData, memberData);
     }
 
