@@ -55,17 +55,16 @@ public class EventListner extends ListenerAdapter {
 
     @Override
     public void onGenericGuildMessage(GenericGuildMessageEvent event) {
-        if (BoomBot.jda == null || BoomBot.jda.getSelfUser() == null || event == null || event.getMessage() == null ||
-                event.getGuild() == null || event.getAuthor() == null || event.getAuthor().isBot() ||
+        if (BoomBot.jda == null || BoomBot.jda.getSelfUser() == null || event == null || event.getGuild() == null ||
                 (BoomAPI.debugMode && !event.getGuild().getId().equals(BoomBot.debugGuildID) && !event.getChannel().getName().equalsIgnoreCase("test-channel")))
             return;
-        Message msg = event.getMessage();
-        if (msg.isEdited()) return;
+        Message msg = event.getChannel().getMessageById(event.getMessageId()).complete();
+        if (msg == null || msg.getAuthor() == null || msg.getAuthor().isBot() || msg.isEdited()) return;
         Guild guild = event.getGuild();
         TagCompound guildData = GuildUtil.getGuildData(guild.getId());
         I18n lang = GuildUtil.getGuildLang(guildData);
-        Member member = guild.getMember(event.getAuthor());
-        UserProxy userProxy = new UserProxy(event.getAuthor().getId(), event.getAuthor().getName(), member.getNickname());
+        Member member = guild.getMember(msg.getAuthor());
+        UserProxy userProxy = new UserProxy(msg.getAuthor().getId(), msg.getAuthor().getName(), member.getNickname());
         String key = GuildUtil.getGuildCommandKey(guildData);
         if (msg.getRawContent().startsWith(key)) {
             String raw = msg.getRawContent();
@@ -117,9 +116,9 @@ public class EventListner extends ListenerAdapter {
         out = formatMessage(out, author, event.getGuild(), guildData, result.getArgs());
         if (!Strings.isNullOrEmpty(out)) {
             if (result.isPrivateMessage()) {
-                if (!event.getMember().getUser().hasPrivateChannel())
-                    event.getMember().getUser().openPrivateChannel().queue();
-                event.getMember().getUser().getPrivateChannel().sendMessage(out).queue();
+                if (!author.hasPrivateChannel())
+                    author.openPrivateChannel().queue();
+                author.getPrivateChannel().sendMessage(out).queue();
             } else event.getChannel().sendMessage(out).submit();
         }
         if (scheduleShutdown) event.getJDA().shutdown();
