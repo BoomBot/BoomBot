@@ -28,12 +28,12 @@ boombot.command.setadmin.error.nouser=User does not exist.
 boombot.command.setadmin.error.admin=%s is already admin!
 ## Mod commands
 # Clear chat
-boombot.command.clear=Cleared %s messages.
-boombot.command.clear.error=Could not clear messages.
+boombot.command.clear=Cleared %s message(s).
+boombot.command.clear.error=Could not clear message(s).
 boombot.command.clear.error.specify=Specify how many messages to clear.
 boombot.command.clear.error.onearg=Only use one arg.
-boombot.command.clear.error.few=Must clear at least 2 messages.
-boombot.command.clear.error.much=Cannot clear more than 100 messages.
+boombot.command.clear.error.few=Must clear at least 1 message.
+boombot.command.clear.error.much=Cannot clear more than 99 messages.
 boombot.command.clear.error.none=No messages to clear!
 # Ban 
 boombot.command.ban=%s has been banned.

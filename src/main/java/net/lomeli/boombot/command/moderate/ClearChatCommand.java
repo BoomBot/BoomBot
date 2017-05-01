@@ -25,16 +25,17 @@ public class ClearChatCommand implements ICommand {
         int i = Integer.parseInt(cmd.getArgs().get(0));
         if (cmd.getArgs().isEmpty() || i < 1)
             return new CommandResult("boombot.command.clear.error.specify").setPrivateMessage(true);
-        if (i > 100) return new CommandResult("boombot.command.clear.error.much");
-        if (i < 2) return new CommandResult("boombot.command.clear.error.few");
+        if (i > 99) return new CommandResult("boombot.command.clear.error.much");
+        if (i < 1) return new CommandResult("boombot.command.clear.error.few");
         Guild guild = BoomBot.jda.getGuildById(cmd.getGuildID());
         TextChannel channel = guild.getTextChannelById(cmd.getChannelID());
-        RestAction<List<Message>> rest = channel.getHistory().retrievePast(i);
+        RestAction<List<Message>> rest = channel.getHistory().retrievePast(i + 1);
         try {
             List<Message> messages = rest.submit().get();
             if (messages == null || messages.isEmpty())
                 return new CommandResult("boombot.command.clear.error.none").setPrivateMessage(true);
-            if (messages.size() >= 2 && messages.size() <= 100)
+            int size = messages.size();
+            if (size >= 2 && size <= 100)
                 channel.deleteMessages(messages).queue();
         } catch (InterruptedException | ExecutionException ex) {
             BoomBot.logger.error("Could not clear %s messages", ex, i);
