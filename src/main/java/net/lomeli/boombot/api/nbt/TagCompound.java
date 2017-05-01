@@ -8,14 +8,14 @@ import java.io.DataOutput;
 import java.io.IOException;
 import java.util.*;
 
-public class NBTTagCompound extends NBTTagBase<Map<String, NBTTagBase>> {
-    private Map<String, NBTTagBase> tagList;
+public class TagCompound extends TagBase<Map<String, TagBase>> {
+    private Map<String, TagBase> tagList;
 
-    public NBTTagCompound() {
+    public TagCompound() {
         tagList = Maps.newHashMap();
     }
 
-    public void setTag(String key, NBTTagBase tag) {
+    public void setTag(String key, TagBase tag) {
         if (tag != null)
             tagList.put(key, tag);
     }
@@ -33,124 +33,124 @@ public class NBTTagCompound extends NBTTagBase<Map<String, NBTTagBase>> {
     }
 
     public boolean hasTag(String key, TagType type) {
-        return hasTag(key) && getTag(key).getID() == type.getId();
+        return hasTag(key) && getTag(key).getTagType() == type;
     }
 
     public void setByte(String key, byte value) {
-        setTag(key, new NBTTagByte(value));
+        setTag(key, new TagByte(value));
     }
 
     public void setByteArray(String key, byte[] value) {
-        setTag(key, new NBTTagByteArray(value));
+        setTag(key, new TagByteArray(value));
     }
 
     public void setDouble(String key, double value) {
-        setTag(key, new NBTTagDouble(value));
+        setTag(key, new TagDouble(value));
     }
 
     public void setFloat(String key, float value) {
-        setTag(key, new NBTTagFloat(value));
+        setTag(key, new TagFloat(value));
     }
 
     public void setInt(String key, int value) {
-        setTag(key, new NBTTagInt(value));
+        setTag(key, new TagInt(value));
     }
 
     public void setLong(String key, long value) {
-        setTag(key, new NBTTagLong(value));
+        setTag(key, new TagLong(value));
     }
 
     public void setShort(String key, short value) {
-        setTag(key, new NBTTagShort(value));
+        setTag(key, new TagShort(value));
     }
 
     public void setString(String key, String value) {
-        setTag(key, new NBTTagString(value));
+        setTag(key, new TagString(value));
     }
 
     public void setIntArray(String key, int[] value) {
-        setTag(key, new NBTTagIntArray(value));
+        setTag(key, new TagIntArray(value));
     }
 
-    public NBTTagBase getTag(String key) {
+    public TagBase getTag(String key) {
         return tagList.containsKey(key) ? tagList.get(key) : null;
     }
 
     public byte getByte(String key) {
-        NBTTagBase tag = getTag(key);
-        if (tag == null || !(tag instanceof NBTTagByte))
+        TagBase tag = getTag(key);
+        if (tag == null || !(tag instanceof TagByte))
             return 0;
-        return ((NBTTagByte) tag).getValue();
+        return ((TagByte) tag).getValue();
     }
 
     public byte[] getByteArray(String key) {
-        NBTTagBase tag = getTag(key);
-        if (tag == null || !(tag instanceof NBTTagByteArray))
+        TagBase tag = getTag(key);
+        if (tag == null || !(tag instanceof TagByteArray))
             return null;
-        return ((NBTTagByteArray) tag).getValue();
+        return ((TagByteArray) tag).getValue();
     }
 
-    public NBTTagCompound getTagCompound(String key) {
-        NBTTagBase tag = getTag(key);
-        if (tag == null || !(tag instanceof NBTTagCompound))
+    public TagCompound getTagCompound(String key) {
+        TagBase tag = getTag(key);
+        if (tag == null || !(tag instanceof TagCompound))
             return null;
-        return (NBTTagCompound) tag;
+        return (TagCompound) tag;
     }
 
     public double getDouble(String key) {
-        NBTTagBase tag = getTag(key);
-        if (tag == null || !(tag instanceof NBTTagDouble))
+        TagBase tag = getTag(key);
+        if (tag == null || !(tag instanceof TagDouble))
             return 0;
-        return ((NBTTagDouble) tag).getValue();
+        return ((TagDouble) tag).getValue();
     }
 
     public float getFloat(String key) {
-        NBTTagBase tag = getTag(key);
-        if (tag == null || !(tag instanceof NBTTagFloat))
+        TagBase tag = getTag(key);
+        if (tag == null || !(tag instanceof TagFloat))
             return 0f;
-        return ((NBTTagFloat) tag).getValue();
+        return ((TagFloat) tag).getValue();
     }
 
     public int[] getIntArray(String key) {
-        NBTTagBase tag = getTag(key);
-        if (tag == null || !(tag instanceof NBTTagIntArray))
+        TagBase tag = getTag(key);
+        if (tag == null || !(tag instanceof TagIntArray))
             return null;
-        return ((NBTTagIntArray) tag).getValue();
+        return ((TagIntArray) tag).getValue();
     }
 
     public long getLong(String key) {
-        NBTTagBase tag = getTag(key);
-        if (tag == null || !(tag instanceof NBTTagLong))
+        TagBase tag = getTag(key);
+        if (tag == null || !(tag instanceof TagLong))
             return 0;
-        return ((NBTTagLong) tag).getValue();
+        return ((TagLong) tag).getValue();
     }
 
     public short getShort(String key) {
-        NBTTagBase tag = getTag(key);
-        if (tag == null || !(tag instanceof NBTTagShort))
+        TagBase tag = getTag(key);
+        if (tag == null || !(tag instanceof TagShort))
             return 0;
-        return ((NBTTagShort) tag).getValue();
+        return ((TagShort) tag).getValue();
     }
 
     public int getInt(String key) {
-        NBTTagBase tag = getTag(key);
-        if (tag == null || !(tag instanceof NBTTagInt))
+        TagBase tag = getTag(key);
+        if (tag == null || !(tag instanceof TagInt))
             return 0;
-        return ((NBTTagInt) tag).getValue();
+        return ((TagInt) tag).getValue();
     }
 
     public String getString(String key) {
-        NBTTagBase tag = getTag(key);
-        if (tag == null || !(tag instanceof NBTTagString))
+        TagBase tag = getTag(key);
+        if (tag == null || !(tag instanceof TagString))
             return null;
-        return ((NBTTagString) tag).getValue();
+        return ((TagString) tag).getValue();
     }
 
-    public List<NBTTagBase> getList(String key) {
-        NBTTagBase tag = getTag(key);
-        if (tag == null || !(tag instanceof NBTTagList))
+    public List<TagBase> getList(String key) {
+        TagBase tag = getTag(key);
+        if (tag == null || !(tag instanceof TagList))
             return Collections.EMPTY_LIST;
-        return ((NBTTagList) tag).getValue();
+        return ((TagList) tag).getValue();
     }
 
     @Override
@@ -158,9 +158,9 @@ public class NBTTagCompound extends NBTTagBase<Map<String, NBTTagBase>> {
         Iterator<String> iterator = this.tagList.keySet().iterator();
         while (iterator.hasNext()) {
             String key = iterator.next();
-            NBTTagBase tag = tagList.get(key);
-            stream.writeByte(tag.getID());
-            if (tag.getID() != 0) {
+            TagBase tag = tagList.get(key);
+            stream.writeByte(tag.getTagType().getId());
+            if (tag.getTagType() != TagType.TAG_END) {
                 stream.writeUTF(key);
                 tag.write(stream);
             }
@@ -173,7 +173,7 @@ public class NBTTagCompound extends NBTTagBase<Map<String, NBTTagBase>> {
         byte b0 = stream.readByte();
         while (b0 != TagType.TAG_END.getId()) {
             String key = stream.readUTF();
-            NBTTagBase tag = NBTUtil.getTagFromID(b0);
+            TagBase tag = NBTUtil.getTagFromID(b0);
             if (tag != null) {
                 tag.read(stream);
                 tagList.put(key, tag);
@@ -183,18 +183,18 @@ public class NBTTagCompound extends NBTTagBase<Map<String, NBTTagBase>> {
     }
 
     @Override
-    public byte getID() {
-        return TagType.TAG_COMPOUND.getId();
+    public TagType getTagType() {
+        return TagType.TAG_COMPOUND;
     }
 
     @Override
-    public Map<String, NBTTagBase> getValue() {
+    public Map<String, TagBase> getValue() {
         return Collections.unmodifiableMap(this.tagList);
     }
 
-    public NBTTagCompound copy() {
-        NBTTagCompound copy = new NBTTagCompound();
-        copy.tagList = Collections.unmodifiableMap(this.tagList);
+    public TagCompound copy() {
+        TagCompound copy = new TagCompound();
+        copy.tagList.putAll(getValue());
         return copy;
     }
 }

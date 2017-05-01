@@ -4,13 +4,13 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
-public class NBTTagIntArray extends NBTTagBase<int[]> {
+public class TagIntArray extends TagBase<int[]> {
     private int[] value;
 
-    public NBTTagIntArray() {
+    public TagIntArray() {
     }
 
-    public NBTTagIntArray(int[] value) {
+    public TagIntArray(int[] value) {
         this.value = value;
     }
 
@@ -35,7 +35,7 @@ public class NBTTagIntArray extends NBTTagBase<int[]> {
     }
 
     @Override
-    public byte getID() {
-        return TagType.TAG_INT_ARRAY.getId();
+    public TagType getTagType() {
+        return TagType.TAG_INT_ARRAY;
     }
 }

@@ -4,33 +4,33 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
-public class NBTTagLong extends NBTTagBase<Long> {
-    private long value;
+public class TagDouble extends TagBase<Double> {
+    private double value;
 
-    public NBTTagLong() {
+    public TagDouble() {
     }
 
-    public NBTTagLong(long value) {
+    public TagDouble(double value) {
         this.value = value;
     }
 
     @Override
-    public Long getValue() {
+    public Double getValue() {
         return value;
     }
 
     @Override
     public void write(DataOutput stream) throws IOException {
-        stream.writeLong(value);
+        stream.writeDouble(value);
     }
 
     @Override
     public void read(DataInput stream) throws IOException {
-        value = stream.readLong();
+        value = stream.readDouble();
     }
 
     @Override
-    public byte getID() {
-        return TagType.TAG_LONG.getId();
+    public TagType getTagType() {
+        return TagType.TAG_DOUBLE;
     }
 }

@@ -4,7 +4,7 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
-public abstract class NBTTagBase<T> {
+public abstract class TagBase<TagValue> {
     /**
      * Write tag value to stream
      *
@@ -21,19 +21,19 @@ public abstract class NBTTagBase<T> {
      */
     public abstract void read(DataInput stream) throws IOException;
 
-    public abstract byte getID();
+    public abstract TagType getTagType();
 
-    public abstract T getValue();
+    public abstract TagValue getValue();
 
     @Override
     public int hashCode() {
-        return getID();
+        return getTagType().getId();
     }
 
     @Override
     public boolean equals(Object obj) {
-        if (obj != null && obj instanceof NBTTagBase)
-            return this.getID() == ((NBTTagBase) obj).getID();
+        if (obj != null && obj instanceof TagBase)
+            return this.getTagType() == ((TagBase) obj).getTagType();
         return false;
     }
 

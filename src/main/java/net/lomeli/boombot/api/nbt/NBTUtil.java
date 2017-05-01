@@ -5,40 +5,45 @@ import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
 public class NBTUtil {
+    public static TagBase getTagFromType(TagBase.TagType type) {
+        switch (type) {
+            case TAG_END:
+                return new TagEnd();
+            case TAG_BYTE:
+                return new TagByte();
+            case TAG_SHORT:
+                return new TagShort();
+            case TAG_INT:
+                return new TagInt();
+            case TAG_LONG:
+                return new TagLong();
+            case TAG_FLOAT:
+                return new TagFloat();
+            case TAG_DOUBLE:
+                return new TagDouble();
+            case TAG_BYTE_ARRAY:
+                return new TagByteArray();
+            case TAG_STRING:
+                return new TagString();
+            case TAG_LIST:
+                return new TagList();
+            case TAG_COMPOUND:
+                return new TagCompound();
+            case TAG_INT_ARRAY:
+                return new TagIntArray();
+            default:
+                return null;
+        }
+    }
+
     /**
      * Get blank instance of tag based on id
      *
      * @param id
      * @return
      */
-    public static NBTTagBase getTagFromID(byte id) {
-        switch (id) {
-            case 0:
-                return new NBTTagEnd();
-            case 1:
-                return new NBTTagByte();
-            case 2:
-                return new NBTTagShort();
-            case 3:
-                return new NBTTagInt();
-            case 4:
-                return new NBTTagLong();
-            case 5:
-                return new NBTTagFloat();
-            case 6:
-                return new NBTTagDouble();
-            case 7:
-                return new NBTTagByteArray();
-            case 8:
-                return new NBTTagString();
-            case 9:
-                return new NBTTagList();
-            case 10:
-                return new NBTTagCompound();
-            case 11:
-                return new NBTTagIntArray();
-        }
-        return null;
+    public static TagBase getTagFromID(byte id) {
+        return getTagFromType(TagBase.TagType.getTagFromByte(id));
     }
 
     /**
@@ -48,7 +53,7 @@ public class NBTUtil {
      * @param stream
      * @throws IOException
      */
-    public static void writeCompressed(NBTTagCompound baseTag, OutputStream stream) throws IOException {
+    public static void writeCompressed(TagCompound baseTag, OutputStream stream) throws IOException {
         DataOutputStream outStream = new DataOutputStream(new GZIPOutputStream(stream));
         write(baseTag, outStream);
     }
@@ -60,8 +65,12 @@ public class NBTUtil {
      * @param file
      * @throws IOException
      */
-    public static void writeUncompressed(NBTTagCompound baseTag, File file) throws IOException {
-        DataOutputStream outStream = new DataOutputStream(new FileOutputStream(file));
+    public static void writeUncompressed(TagCompound baseTag, File file) throws IOException {
+        writeUncompressed(baseTag, new FileOutputStream(file));
+    }
+
+    public static void writeUncompressed(TagCompound baseTag, FileOutputStream out) throws IOException {
+        DataOutputStream outStream = new DataOutputStream(out);
         write(baseTag, outStream);
     }
 
@@ -72,12 +81,13 @@ public class NBTUtil {
      * @param outStream
      * @throws IOException
      */
-    public static void write(NBTTagCompound baseTag, DataOutputStream outStream) throws IOException {
+    public static void write(TagCompound baseTag, DataOutputStream outStream) throws IOException {
         try {
             outStream.writeByte(10);
             outStream.writeUTF("");
             baseTag.write(outStream);
         } finally {
+            outStream.flush();
             outStream.close();
         }
     }
@@ -89,8 +99,12 @@ public class NBTUtil {
      * @return
      * @throws IOException
      */
-    public static NBTTagCompound readUncompressed(File file) throws IOException {
-        DataInputStream inStream = new DataInputStream(new FileInputStream(file));
+    public static TagCompound readUncompressed(File file) throws IOException {
+        return readUncompressed(new FileInputStream(file));
+    }
+
+    public static TagCompound readUncompressed(FileInputStream in) throws IOException {
+        DataInputStream inStream = new DataInputStream(in);
         return read(inStream);
     }
 
@@ -101,7 +115,7 @@ public class NBTUtil {
      * @return
      * @throws IOException
      */
-    public static NBTTagCompound readCompressed(InputStream stream) throws IOException {
+    public static TagCompound readCompressed(InputStream stream) throws IOException {
         DataInputStream inStream = new DataInputStream(new GZIPInputStream(stream));
         return read(inStream);
     }
@@ -113,10 +127,10 @@ public class NBTUtil {
      * @return
      * @throws IOException
      */
-    public static NBTTagCompound read(DataInputStream inStream) throws IOException {
-        NBTTagCompound tag = new NBTTagCompound();
+    public static TagCompound read(DataInputStream inStream) throws IOException {
+        TagCompound tag = new TagCompound();
         try {
-            if (inStream.readByte() == NBTTagBase.TagType.TAG_COMPOUND.getId()) {
+            if (inStream.readByte() == TagBase.TagType.TAG_COMPOUND.getId()) {
                 inStream.readUTF();
                 tag.read(inStream);
             }

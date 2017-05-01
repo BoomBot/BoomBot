@@ -4,33 +4,33 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
-public class NBTTagByte extends NBTTagBase<Byte> {
-    private byte value;
+public class TagShort extends TagBase<Short> {
+    private short value;
 
-    public NBTTagByte() {
+    public TagShort() {
     }
 
-    public NBTTagByte(byte value) {
+    public TagShort(short value) {
         this.value = value;
     }
 
     @Override
-    public Byte getValue() {
+    public Short getValue() {
         return value;
     }
 
     @Override
     public void write(DataOutput stream) throws IOException {
-        stream.writeByte(value);
+        stream.writeShort(value);
     }
 
     @Override
     public void read(DataInput stream) throws IOException {
-        value = stream.readByte();
+        value = stream.readShort();
     }
 
     @Override
-    public byte getID() {
-        return TagType.TAG_BYTE.getId();
+    public TagType getTagType() {
+        return TagType.TAG_SHORT;
     }
 }

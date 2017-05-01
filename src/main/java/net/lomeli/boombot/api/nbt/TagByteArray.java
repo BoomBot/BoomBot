@@ -4,13 +4,13 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
-public class NBTTagByteArray extends NBTTagBase<byte[]> {
+public class TagByteArray extends TagBase<byte[]> {
     private byte[] value;
 
-    public NBTTagByteArray() {
+    public TagByteArray() {
     }
 
-    public NBTTagByteArray(byte[] value) {
+    public TagByteArray(byte[] value) {
         this.value = value;
     }
 
@@ -33,7 +33,7 @@ public class NBTTagByteArray extends NBTTagBase<byte[]> {
     }
 
     @Override
-    public byte getID() {
-        return TagType.TAG_BYTE_ARRAY.getId();
+    public TagType getTagType() {
+        return TagType.TAG_BYTE_ARRAY;
     }
 }

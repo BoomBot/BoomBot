@@ -4,7 +4,7 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
-public class NBTTagEnd extends NBTTagBase<Object> {
+public class TagEnd extends TagBase<Object> {
 
     @Override
     public Object getValue() {
@@ -20,7 +20,7 @@ public class NBTTagEnd extends NBTTagBase<Object> {
     }
 
     @Override
-    public byte getID() {
-        return TagType.TAG_END.getId();
+    public TagType getTagType() {
+        return TagType.TAG_END;
     }
 }

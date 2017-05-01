@@ -4,33 +4,33 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
-public class NBTTagString extends NBTTagBase<String> {
-    private String value;
+public class TagInt extends TagBase<Integer> {
+    private int value;
 
-    public NBTTagString() {
+    public TagInt() {
     }
 
-    public NBTTagString(String value) {
+    public TagInt(int value) {
         this.value = value;
     }
 
     @Override
     public void write(DataOutput stream) throws IOException {
-        stream.writeUTF(value);
+        stream.writeInt(this.value);
     }
 
     @Override
     public void read(DataInput stream) throws IOException {
-        this.value = stream.readUTF();
+        this.value = stream.readInt();
     }
 
     @Override
-    public String getValue() {
+    public Integer getValue() {
         return value;
     }
 
     @Override
-    public byte getID() {
-        return TagType.TAG_STRING.getId();
+    public TagType getTagType() {
+        return TagType.TAG_INT;
     }
 }

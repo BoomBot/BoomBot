@@ -8,30 +8,30 @@ import java.io.IOException;
 import java.util.List;
 import java.util.stream.Stream;
 
-public class NBTTagList extends NBTTagBase<List<NBTTagBase>> {
-    private List<NBTTagBase> list;
+public class TagList extends TagBase<List<TagBase>> {
+    private List<TagBase> list;
     private TagType type;
 
-    public NBTTagList(TagType type) {
+    public TagList(TagType type) {
         this.type = type;
         list = Lists.newArrayList();
     }
 
-    public NBTTagList() {
+    public TagList() {
         this(TagType.TAG_END);
     }
 
-    public boolean add(NBTTagBase tag) {
+    public boolean add(TagBase tag) {
         if (tag != null) {
-            if (type.getId() == 0)
-                type = TagType.getTagFromByte(tag.getID());
-            if (tag.getID() == type.getId())
+            if (type == TagType.TAG_END)
+                type = tag.getTagType();
+            if (tag.getTagType() == type)
                 return list.add(tag);
         }
         return false;
     }
 
-    public boolean remove(NBTTagBase tag) {
+    public boolean remove(TagBase tag) {
         return list.remove(tag);
     }
 
@@ -39,7 +39,7 @@ public class NBTTagList extends NBTTagBase<List<NBTTagBase>> {
         return type;
     }
 
-    public Stream<NBTTagBase> stream() {
+    public Stream<TagBase> stream() {
         return list.stream();
     }
 
@@ -48,15 +48,15 @@ public class NBTTagList extends NBTTagBase<List<NBTTagBase>> {
     }
 
     @Override
-    public List<NBTTagBase> getValue() {
+    public List<TagBase> getValue() {
         return list;
     }
 
     @Override
     public void write(DataOutput stream) throws IOException {
+        stream.writeByte(type.getId());
+        stream.writeInt(list.size());
         if (!list.isEmpty()) {
-            stream.writeByte(type.getId());
-            stream.writeInt(list.size());
             for (int i = 0; i < list.size(); i++)
                 list.get(i).write(stream);
         }
@@ -64,10 +64,11 @@ public class NBTTagList extends NBTTagBase<List<NBTTagBase>> {
 
     @Override
     public void read(DataInput stream) throws IOException {
-        type = TagType.getTagFromByte(stream.readByte());
+        byte typeID = stream.readByte();
+        type = TagType.getTagFromByte(typeID);
         int size = stream.readInt();
         for (int i = 0; i < size; i++) {
-            NBTTagBase tag = NBTUtil.getTagFromID(type.getId());
+            TagBase tag = NBTUtil.getTagFromID(typeID);
             if (tag != null) {
                 tag.read(stream);
                 add(tag);
@@ -76,7 +77,7 @@ public class NBTTagList extends NBTTagBase<List<NBTTagBase>> {
     }
 
     @Override
-    public byte getID() {
-        return TagType.TAG_LIST.getId();
+    public TagType getTagType() {
+        return TagType.TAG_LIST;
     }
 }

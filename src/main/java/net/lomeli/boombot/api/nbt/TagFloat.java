@@ -4,33 +4,33 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
-public class NBTTagDouble extends NBTTagBase<Double> {
-    private double value;
+public class TagFloat extends TagBase<Float> {
+    private float value;
 
-    public NBTTagDouble() {
+    public TagFloat() {
     }
 
-    public NBTTagDouble(double value) {
+    public TagFloat(float value) {
         this.value = value;
     }
 
     @Override
-    public Double getValue() {
+    public Float getValue() {
         return value;
     }
 
     @Override
     public void write(DataOutput stream) throws IOException {
-        stream.writeDouble(value);
+        stream.writeFloat(value);
     }
 
     @Override
     public void read(DataInput stream) throws IOException {
-        value = stream.readDouble();
+        value = stream.readFloat();
     }
 
     @Override
-    public byte getID() {
-        return TagType.TAG_DOUBLE.getId();
+    public TagType getTagType() {
+        return TagType.TAG_FLOAT;
     }
 }
