@@ -131,14 +131,15 @@ tasks.withType(Zip) { task ->
 build {
     dependsOn clean
     dependsOn jar
-    dependsOn javadocJar
+    //dependsOn javadocJar
     dependsOn sourceJar
     dependsOn shadowJar
     dependsOn apiJar
 
     jar.mustRunAfter clean
-    javadocJar.mustRunAfter jar
-    sourceJar.mustRunAfter javadocJar
+    //javadocJar.mustRunAfter jar
+    sourceJar.mustRunAfter jar
+    //sourceJar.mustRunAfter javadocJar
     shadowJar.mustRunAfter sourceJar
     apiJar.mustRunAfter shadowJar
 
