@@ -5,14 +5,14 @@ import com.google.common.collect.Lists;
 import java.util.List;
 
 import net.lomeli.boombot.api.lib.UserProxy;
-import net.lomeli.boombot.api.nbt.NBTTagCompound;
+import net.lomeli.boombot.api.nbt.TagCompound;
 import net.lomeli.boombot.api.util.GuildUtil;
 
 public class CommandData {
     private final String guildID, channelID, message;
     private UserProxy user;
     private List<String> args, mentionedUserIDs;
-    private NBTTagCompound guildData, userData;
+    private TagCompound guildData, userData;
 
     public CommandData(UserProxy user, String guildID, String channelID, String message, List<String> mentionedUser, String... args) {
         this.user = user;
@@ -53,11 +53,11 @@ public class CommandData {
         return mentionedUserIDs;
     }
 
-    public NBTTagCompound getGuildData() {
+    public TagCompound getGuildData() {
         return guildData;
     }
 
-    public NBTTagCompound getUserData() {
+    public TagCompound getUserData() {
         return userData;
     }
 }

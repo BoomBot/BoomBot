@@ -3,18 +3,18 @@ package net.lomeli.boombot.api.events.bot.data;
 import java.util.Map;
 
 import net.lomeli.boombot.api.events.Event;
-import net.lomeli.boombot.api.nbt.NBTTagCompound;
+import net.lomeli.boombot.api.nbt.TagCompound;
 
 public class DataEvent extends Event {
-    protected final Map<String, NBTTagCompound> dataRegistry;
-    protected final NBTTagCompound boomBotData;
+    protected final Map<String, TagCompound> dataRegistry;
+    protected final TagCompound boomBotData;
 
-    private DataEvent(Map<String, NBTTagCompound> dataRegistry, NBTTagCompound boomBotData) {
+    private DataEvent(Map<String, TagCompound> dataRegistry, TagCompound boomBotData) {
         this.dataRegistry = dataRegistry;
         this.boomBotData = boomBotData;
     }
 
-    public NBTTagCompound getGuildData(String id) {
+    public TagCompound getGuildData(String id) {
         return dataRegistry.get(id);
     }
 
@@ -26,15 +26,15 @@ public class DataEvent extends Event {
      * Fires right before BoomBot saves guild data.
      */
     public static class DataWriteEvent extends DataEvent {
-        public DataWriteEvent(Map<String, NBTTagCompound> dataRegistry, NBTTagCompound boomBotData) {
+        public DataWriteEvent(Map<String, TagCompound> dataRegistry, TagCompound boomBotData) {
             super(dataRegistry, boomBotData);
         }
 
-        public Map<String, NBTTagCompound> getData() {
+        public Map<String, TagCompound> getData() {
             return dataRegistry;
         }
 
-        public NBTTagCompound getBotData() {
+        public TagCompound getBotData() {
             return boomBotData;
         }
     }
@@ -43,14 +43,14 @@ public class DataEvent extends Event {
      * Fires right after BoomBot has read all guild data.
      */
     public static class DataReadEvent extends DataEvent {
-        public DataReadEvent(Map<String, NBTTagCompound> dataRegistry, NBTTagCompound boomBotData) {
+        public DataReadEvent(Map<String, TagCompound> dataRegistry, TagCompound boomBotData) {
             super(dataRegistry, boomBotData);
         }
 
         /**
          * @return Unmodifiable Bot data
          */
-        public NBTTagCompound getBotData() {
+        public TagCompound getBotData() {
            return boomBotData;
         }
     }

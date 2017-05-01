@@ -6,19 +6,19 @@ import net.dv8tion.jda.core.entities.Member;
 
 import net.lomeli.boombot.BoomBot;
 import net.lomeli.boombot.api.BoomAPI;
-import net.lomeli.boombot.api.nbt.NBTTagBase;
-import net.lomeli.boombot.api.nbt.NBTTagCompound;
-import net.lomeli.boombot.api.nbt.NBTTagList;
-import net.lomeli.boombot.api.nbt.NBTTagString;
+import net.lomeli.boombot.api.nbt.TagBase;
+import net.lomeli.boombot.api.nbt.TagCompound;
+import net.lomeli.boombot.api.nbt.TagList;
+import net.lomeli.boombot.api.nbt.TagString;
 import net.lomeli.boombot.lib.DataKeys;
 
 public class PermissionUtil {
     public static boolean isBotAdminSet() {
-        NBTTagCompound boomBotData = BoomAPI.dataRegistry.getBoomBotData();
+        TagCompound boomBotData = BoomAPI.dataRegistry.getBoomBotData();
         if (boomBotData == null) return false;
-        NBTTagBase adminIDs = boomBotData.getTag(DataKeys.ADMIN_IDS);
-        if (adminIDs != null && adminIDs instanceof NBTTagList) {
-            NBTTagList list = (NBTTagList) adminIDs;
+        TagBase adminIDs = boomBotData.getTag(DataKeys.ADMIN_IDS);
+        if (adminIDs != null && adminIDs instanceof TagList) {
+            TagList list = (TagList) adminIDs;
             return list.getTagCount() > 0;
         }
         return false;
@@ -38,15 +38,15 @@ public class PermissionUtil {
     }
 
     public static boolean addUserAsAdmin(String userId) {
-        NBTTagCompound boomBotData = BoomAPI.dataRegistry.getBoomBotData();
+        TagCompound boomBotData = BoomAPI.dataRegistry.getBoomBotData();
         if (boomBotData == null) return false;
-        NBTTagBase adminTag = boomBotData.getTag(DataKeys.ADMIN_IDS);
-        NBTTagList adminList = new NBTTagList(NBTTagBase.TagType.TAG_STRING);
-        if (adminTag instanceof NBTTagList && ((NBTTagList) adminTag).getType() == NBTTagBase.TagType.TAG_STRING)
-            adminList = (NBTTagList) adminTag;
+        TagBase adminTag = boomBotData.getTag(DataKeys.ADMIN_IDS);
+        TagList adminList = new TagList(TagBase.TagType.TAG_STRING);
+        if (adminTag instanceof TagList && ((TagList) adminTag).getType() == TagBase.TagType.TAG_STRING)
+            adminList = (TagList) adminTag;
         boolean isAdmin = adminList.getValue().stream().filter(tag -> tag != null && tag.getValue() == userId).findAny().isPresent();
         if (!isAdmin) {
-            adminList.add(new NBTTagString(userId));
+            adminList.add(new TagString(userId));
             boomBotData.setTag(DataKeys.ADMIN_IDS, adminList);
             return true;
         }

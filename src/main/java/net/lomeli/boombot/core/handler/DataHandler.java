@@ -13,9 +13,9 @@ import java.util.Map;
 import net.lomeli.boombot.BoomBot;
 import net.lomeli.boombot.api.BoomAPI;
 import net.lomeli.boombot.api.events.bot.data.DataEvent;
-import net.lomeli.boombot.api.nbt.NBTTagBase;
-import net.lomeli.boombot.api.nbt.NBTTagCompound;
-import net.lomeli.boombot.api.nbt.NBTTagList;
+import net.lomeli.boombot.api.nbt.TagBase;
+import net.lomeli.boombot.api.nbt.TagCompound;
+import net.lomeli.boombot.api.nbt.TagList;
 import net.lomeli.boombot.api.nbt.NBTUtil;
 import net.lomeli.boombot.api.handlers.IDataHandler;
 import net.lomeli.boombot.api.util.GuildUtil;
@@ -25,13 +25,13 @@ import net.lomeli.boombot.lib.DataKeys;
 public class DataHandler implements IDataHandler {
     private static final String BOOM_BOT_DATA = "boombot.dat";
     private File dataFolder;
-    private Map<String, NBTTagCompound> dataRegistry;
-    private NBTTagCompound boomBotData;
+    private Map<String, TagCompound> dataRegistry;
+    private TagCompound boomBotData;
 
     public DataHandler(File dataFolder) {
         this.dataFolder = dataFolder;
         this.dataRegistry = Maps.newHashMap();
-        this.boomBotData = new NBTTagCompound();
+        this.boomBotData = new TagCompound();
         if (dataFolder != null && !dataFolder.exists()) {
             BoomBot.logger.info("Creating data folder");
             dataFolder.mkdir();
@@ -39,13 +39,13 @@ public class DataHandler implements IDataHandler {
     }
 
     @Override
-    public NBTTagCompound getDataForGuild(String guildID) {
+    public TagCompound getDataForGuild(String guildID) {
         addGuild(guildID);
         return dataRegistry.get(guildID);
     }
 
     @Override
-    public NBTTagCompound getBoomBotData() {
+    public TagCompound getBoomBotData() {
         return boomBotData;
     }
 
@@ -54,13 +54,13 @@ public class DataHandler implements IDataHandler {
         File boomBotdata = new File(BOOM_BOT_DATA);
         if (boomBotdata.exists()) {
             try {
-                this.boomBotData = NBTUtil.readCompressed(new FileInputStream(boomBotdata));
+                this.boomBotData = NBTUtil.readUncompressed(boomBotdata);
             } catch (IOException ex) {
                 BoomBot.logger.error("Could not read boombot config!", ex);
             }
         } else {
-            this.boomBotData = new NBTTagCompound();
-            this.boomBotData.setTag(DataKeys.ADMIN_IDS, new NBTTagList(NBTTagBase.TagType.TAG_STRING));
+            this.boomBotData = new TagCompound();
+            this.boomBotData.setTag(DataKeys.ADMIN_IDS, new TagList(TagBase.TagType.TAG_STRING));
             this.boomBotData.setLong(DataKeys.AUTO_SAVE_DELAY, 900000L);
             writeBoomBotData();
         }
@@ -79,7 +79,7 @@ public class DataHandler implements IDataHandler {
                         String id = FilenameUtils.getBaseName(file.getCanonicalPath());
                         Guild guild = BoomBot.jda.getGuildById(id);
                         if (guild != null) {
-                            NBTTagCompound tag = NBTUtil.readCompressed(new FileInputStream(file));
+                            TagCompound tag = NBTUtil.readCompressed(new FileInputStream(file));
                             dataRegistry.put(id, tag);
                         } else file.delete();
                     } catch (IOException ex) {
@@ -94,11 +94,11 @@ public class DataHandler implements IDataHandler {
     public void writeBoomBotData() {
         try {
             File boomBotdata = new File(BOOM_BOT_DATA);
-            if (!this.boomBotData.hasTag(DataKeys.ADMIN_IDS, NBTTagBase.TagType.TAG_LIST))
-                this.boomBotData.setTag(DataKeys.ADMIN_IDS, new NBTTagList(NBTTagBase.TagType.TAG_STRING));
-            if (!this.boomBotData.hasTag(DataKeys.AUTO_SAVE_DELAY, NBTTagBase.TagType.TAG_LONG))
+            if (!this.boomBotData.hasTag(DataKeys.ADMIN_IDS, TagBase.TagType.TAG_LIST))
+                this.boomBotData.setTag(DataKeys.ADMIN_IDS, new TagList(TagBase.TagType.TAG_STRING));
+            if (!this.boomBotData.hasTag(DataKeys.AUTO_SAVE_DELAY, TagBase.TagType.TAG_LONG))
                 this.boomBotData.setLong(DataKeys.AUTO_SAVE_DELAY, AutoSaveThread.SAVE_DELAY);
-            NBTUtil.writeCompressed(this.boomBotData, new FileOutputStream(boomBotdata));
+            NBTUtil.writeUncompressed(this.boomBotData, boomBotdata);
         } catch (IOException ex) {
             BoomBot.logger.error("Failed to write BoomBot base data", ex);
         }
@@ -111,7 +111,7 @@ public class DataHandler implements IDataHandler {
         writeBoomBotData();
         dataRegistry.putAll(event.getData());
         if (dataRegistry.size() > 0) {
-            for (Map.Entry<String, NBTTagCompound> entry : dataRegistry.entrySet()) {
+            for (Map.Entry<String, TagCompound> entry : dataRegistry.entrySet()) {
                 try {
                     if (!dataFolder.exists() || !dataFolder.isDirectory()) dataFolder.mkdir();
                     File guildConfig = new File(dataFolder, entry.getKey() + ".dat");
@@ -128,7 +128,7 @@ public class DataHandler implements IDataHandler {
             DataEvent.DataWriteEvent event = new DataEvent.DataWriteEvent(dataRegistry, boomBotData);
             BoomAPI.eventRegistry.post(event);
             dataRegistry.putAll(event.getData());
-            NBTTagCompound data = getDataForGuild(guildID);
+            TagCompound data = getDataForGuild(guildID);
             if (data != null) {
                 try {
                     if (!dataFolder.exists() || !dataFolder.isDirectory()) dataFolder.mkdir();
@@ -146,7 +146,7 @@ public class DataHandler implements IDataHandler {
         if (!guildHasData(guildID)) {
             Guild guild = BoomBot.jda.getGuildById(guildID);
             if (guild != null) {
-                NBTTagCompound data = new NBTTagCompound();
+                TagCompound data = new TagCompound();
                 GuildUtil.setGuildOwner(data, guild.getOwner().getUser().getId());
                 GuildUtil.setGuildLang(data, GuildUtil.DEFAULT_LANG);
                 GuildUtil.setGuildCommandKey(data, GuildUtil.DEFAULT_KEY);

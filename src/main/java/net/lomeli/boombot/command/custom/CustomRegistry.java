@@ -10,8 +10,8 @@ import java.util.Map;
 import net.lomeli.boombot.BoomBot;
 import net.lomeli.boombot.api.events.Event;
 import net.lomeli.boombot.api.events.bot.data.DataEvent;
-import net.lomeli.boombot.api.nbt.NBTTagBase;
-import net.lomeli.boombot.api.nbt.NBTTagCompound;
+import net.lomeli.boombot.api.nbt.TagBase;
+import net.lomeli.boombot.api.nbt.TagCompound;
 
 public enum CustomRegistry {
     INSTANCE();
@@ -70,12 +70,12 @@ public enum CustomRegistry {
         if (event.getGuildIDs() == null || event.getGuildIDs().length <= 0) return;
         Lists.newArrayList(event.getGuildIDs()).stream().filter(id -> !Strings.isNullOrEmpty(id))
                 .forEach(id -> {
-                    NBTTagCompound guildData = event.getGuildData(id);
-                    if (guildData != null && guildData.hasTag(CUSTOM_DATA_KEY, NBTTagBase.TagType.TAG_COMPOUND)) {
+                    TagCompound guildData = event.getGuildData(id);
+                    if (guildData != null && guildData.hasTag(CUSTOM_DATA_KEY, TagBase.TagType.TAG_COMPOUND)) {
                         BoomBot.logger.debug("Loading %s's custom commands!", guildData.getString("name"));
-                        NBTTagCompound commandData = guildData.getTagCompound(CUSTOM_DATA_KEY);
+                        TagCompound commandData = guildData.getTagCompound(CUSTOM_DATA_KEY);
                         Collection<String> commandNames = commandData.getKeys();
-                        commandNames.stream().filter(name -> commandData.hasTag(name, NBTTagBase.TagType.TAG_STRING)).forEach(name -> {
+                        commandNames.stream().filter(name -> commandData.hasTag(name, TagBase.TagType.TAG_STRING)).forEach(name -> {
                             String command = commandData.getString(name);
                             if (!Strings.isNullOrEmpty(name) && !Strings.isNullOrEmpty(command))
                                 addGuildCommand(id, new CustomContent(name, command));
@@ -88,9 +88,9 @@ public enum CustomRegistry {
     public void writeDataEvent(DataEvent.DataWriteEvent event) {
         BoomBot.logger.debug("Writing custom commands");
         guildCommands.entrySet().stream().forEach(entry -> {
-            NBTTagCompound guildData = event.getGuildData(entry.getKey());
-            if (guildData == null) guildData = new NBTTagCompound();
-            NBTTagCompound customCommands = new NBTTagCompound();
+            TagCompound guildData = event.getGuildData(entry.getKey());
+            if (guildData == null) guildData = new TagCompound();
+            TagCompound customCommands = new TagCompound();
             Map<String, CustomContent> commands = entry.getValue();
             if (commands != null && commands.size() > 0) {
                 commands.values().stream().filter(command -> command != null)

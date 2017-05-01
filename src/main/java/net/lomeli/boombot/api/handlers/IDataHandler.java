@@ -1,10 +1,10 @@
 package net.lomeli.boombot.api.handlers;
 
-import net.lomeli.boombot.api.nbt.NBTTagCompound;
+import net.lomeli.boombot.api.nbt.TagCompound;
 
 
 public interface IDataHandler {
-    NBTTagCompound getDataForGuild(String guildID);
+    TagCompound getDataForGuild(String guildID);
 
     void readData();
 
@@ -14,7 +14,7 @@ public interface IDataHandler {
 
     boolean guildHasData(String id);
 
-    NBTTagCompound getBoomBotData();
+    TagCompound getBoomBotData();
 
     void readBoomBotData();
 }

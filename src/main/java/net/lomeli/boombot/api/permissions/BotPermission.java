@@ -8,10 +8,10 @@ import java.util.Collections;
 import java.util.List;
 
 import net.lomeli.boombot.api.BoomAPI;
-import net.lomeli.boombot.api.nbt.NBTTagBase;
-import net.lomeli.boombot.api.nbt.NBTTagCompound;
-import net.lomeli.boombot.api.nbt.NBTTagList;
-import net.lomeli.boombot.api.nbt.NBTTagString;
+import net.lomeli.boombot.api.nbt.TagBase;
+import net.lomeli.boombot.api.nbt.TagCompound;
+import net.lomeli.boombot.api.nbt.TagList;
+import net.lomeli.boombot.api.nbt.TagString;
 import net.lomeli.boombot.api.util.GuildUtil;
 
 public enum BotPermission {
@@ -41,7 +41,7 @@ public enum BotPermission {
      */
     public static Collection<BotPermission> getUserPermissions(String userID, String guildID) {
         List<BotPermission> permissions = Lists.newArrayList();
-        NBTTagCompound userData = GuildUtil.getGuildMemberData(guildID, userID);
+        TagCompound userData = GuildUtil.getGuildMemberData(guildID, userID);
         int[] permissionData = userData.getIntArray(PERMISSION_KEY);
         if (permissionData != null && permissionData.length > 0) {
             for (int p : permissionData) {
@@ -71,9 +71,9 @@ public enum BotPermission {
      */
     public static boolean addPermission(String userID, String guildID, BotPermission...permissions) {
         if (permissions == null || permissions.length < 1 || Strings.isNullOrEmpty(userID) || Strings.isNullOrEmpty(guildID)) return false;
-        NBTTagCompound data = GuildUtil.getGuildMemberData(guildID, userID);
+        TagCompound data = GuildUtil.getGuildMemberData(guildID, userID);
         List<BotPermission> perList = Lists.newArrayList(permissions);
-        if (!data.hasTag(PERMISSION_KEY, NBTTagBase.TagType.TAG_INT_ARRAY)) {
+        if (!data.hasTag(PERMISSION_KEY, TagBase.TagType.TAG_INT_ARRAY)) {
             BotPermission extraPerm = GuildUtil.isUserGuildOwner(userID, guildID) ? GUILD_ADMIN : USE_BOT;
             if (!perList.contains(extraPerm)) perList.add(extraPerm);
         }
@@ -105,14 +105,14 @@ public enum BotPermission {
      * @return
      */
     public static boolean isUserBoomBotAdmin(String userID) {
-        NBTTagCompound boomBotData = BoomAPI.dataRegistry.getBoomBotData();
+        TagCompound boomBotData = BoomAPI.dataRegistry.getBoomBotData();
         if (boomBotData == null) return false;
-        NBTTagBase adminIDs = boomBotData.getTag("adminIDs");
-        if (adminIDs != null && adminIDs instanceof NBTTagList) {
-            NBTTagList list = (NBTTagList) adminIDs;
-            if (list.getType() != NBTTagBase.TagType.TAG_STRING || list.getTagCount() < 1) return false;
-            return list.stream().filter(tag -> tag instanceof NBTTagString)
-                    .anyMatch(tag -> ((NBTTagString) tag).getValue().equalsIgnoreCase(userID));
+        TagBase adminIDs = boomBotData.getTag("adminIDs");
+        if (adminIDs != null && adminIDs instanceof TagList) {
+            TagList list = (TagList) adminIDs;
+            if (list.getType() != TagBase.TagType.TAG_STRING || list.getTagCount() < 1) return false;
+            return list.stream().filter(tag -> tag instanceof TagString)
+                    .anyMatch(tag -> ((TagString) tag).getValue().equalsIgnoreCase(userID));
         }
         return false;
     }

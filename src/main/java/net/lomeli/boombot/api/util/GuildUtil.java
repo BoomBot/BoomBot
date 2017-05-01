@@ -6,9 +6,9 @@ import java.util.Optional;
 
 import net.lomeli.boombot.api.BoomAPI;
 import net.lomeli.boombot.api.lib.I18n;
-import net.lomeli.boombot.api.nbt.NBTTagBase;
-import net.lomeli.boombot.api.nbt.NBTTagCompound;
-import net.lomeli.boombot.api.nbt.NBTTagList;
+import net.lomeli.boombot.api.nbt.TagBase;
+import net.lomeli.boombot.api.nbt.TagCompound;
+import net.lomeli.boombot.api.nbt.TagList;
 
 public class GuildUtil {
     private static final String COMMAND_KEY = "commandKey";
@@ -27,51 +27,51 @@ public class GuildUtil {
     public static final String DEFAULT_KEY = "!?";
     public static final String DEFAULT_LANG = "en_US";
 
-    public static NBTTagCompound getGuildData(String id) {
+    public static TagCompound getGuildData(String id) {
         return BoomAPI.dataRegistry.getDataForGuild(id);
     }
 
     public static boolean isUserGuildOwner(String userID, String guildID) {
-        NBTTagCompound data = getGuildData(guildID);
+        TagCompound data = getGuildData(guildID);
         String ownerID = data.getString(OWNER_ID);
         return (data != null && !Strings.isNullOrEmpty(ownerID)) ? ownerID.equalsIgnoreCase(userID) : false;
     }
 
-    public static void setGuildOwner(NBTTagCompound data, String userid) {
+    public static void setGuildOwner(TagCompound data, String userid) {
         data.setString(OWNER_ID, userid);
     }
 
-    public static NBTTagCompound getGuildMemberData(NBTTagCompound data, String userID) {
-        NBTTagBase tag = data.getTag(USER_DATA);
-        NBTTagList userData = new NBTTagList(NBTTagBase.TagType.TAG_COMPOUND);
-        if (tag != null && tag instanceof NBTTagList && ((NBTTagList) tag).getType() == NBTTagBase.TagType.TAG_COMPOUND)
-            userData = (NBTTagList) tag;
-        Optional<NBTTagBase> result = Optional.ofNullable(userData.stream().filter(nbt -> ((NBTTagCompound) nbt).getString(USER_ID).equals(userID)).findFirst().orElse(null));
-        NBTTagCompound userInfo = (result != null && result.isPresent()) ? (NBTTagCompound) result.get() : null;
+    public static TagCompound getGuildMemberData(TagCompound data, String userID) {
+        TagBase tag = data.getTag(USER_DATA);
+        TagList userData = new TagList(TagBase.TagType.TAG_COMPOUND);
+        if (tag != null && tag instanceof TagList && ((TagList) tag).getType() == TagBase.TagType.TAG_COMPOUND)
+            userData = (TagList) tag;
+        Optional<TagBase> result = Optional.ofNullable(userData.stream().filter(nbt -> ((TagCompound) nbt).getString(USER_ID).equals(userID)).findFirst().orElse(null));
+        TagCompound userInfo = (result != null && result.isPresent()) ? (TagCompound) result.get() : null;
         if (userInfo == null) {
-            userInfo = new NBTTagCompound();
+            userInfo = new TagCompound();
             userInfo.setString(USER_ID, userID);
         }
         return userInfo;
     }
 
-    public static NBTTagCompound getGuildMemberData(String guildID, String userID) {
+    public static TagCompound getGuildMemberData(String guildID, String userID) {
         return getGuildMemberData(getGuildData(guildID), userID);
     }
 
-    public static void setGuildMemberData(NBTTagCompound data, NBTTagCompound userInfo) {
-        NBTTagBase tag = data.getTag(USER_DATA);
-        NBTTagList userData = new NBTTagList(NBTTagBase.TagType.TAG_COMPOUND);
-        if (tag != null && tag instanceof NBTTagList && ((NBTTagList) tag).getType() == NBTTagBase.TagType.TAG_COMPOUND)
-            userData = (NBTTagList) tag;
-        NBTTagCompound old = (NBTTagCompound) userData.stream().filter(nbt -> ((NBTTagCompound) nbt).getString(USER_ID).equals(userInfo.getString(USER_ID)))
+    public static void setGuildMemberData(TagCompound data, TagCompound userInfo) {
+        TagBase tag = data.getTag(USER_DATA);
+        TagList userData = new TagList(TagBase.TagType.TAG_COMPOUND);
+        if (tag != null && tag instanceof TagList && ((TagList) tag).getType() == TagBase.TagType.TAG_COMPOUND)
+            userData = (TagList) tag;
+        TagCompound old = (TagCompound) userData.stream().filter(nbt -> ((TagCompound) nbt).getString(USER_ID).equals(userInfo.getString(USER_ID)))
                 .findAny().get();
         userData.remove(old);
         userData.add(userInfo);
         data.setTag(USER_DATA, userData);
     }
 
-    public static void setGuildMemberData(String guildID, NBTTagCompound userInfo) {
+    public static void setGuildMemberData(String guildID, TagCompound userInfo) {
         setGuildMemberData(getGuildData(guildID), userInfo);
     }
 
@@ -79,7 +79,7 @@ public class GuildUtil {
         return getGuildLang(getGuildData(id));
     }
 
-    public static I18n getGuildLang(NBTTagCompound data) {
+    public static I18n getGuildLang(TagCompound data) {
         String langKey = data.getString(GUILD_LANG);
         if (!BoomAPI.langRegistry.hasLang(langKey)) langKey = DEFAULT_LANG;
         return BoomAPI.langRegistry.getLang(langKey);
@@ -89,7 +89,7 @@ public class GuildUtil {
         setGuildLang(getGuildData(id), lang);
     }
 
-    public static void setGuildLang(NBTTagCompound data, String lang) {
+    public static void setGuildLang(TagCompound data, String lang) {
         data.setString(GUILD_LANG, lang);
     }
 
@@ -97,7 +97,7 @@ public class GuildUtil {
         return getGuildCommandKey(getGuildData(id));
     }
 
-    public static String getGuildCommandKey(NBTTagCompound data) {
+    public static String getGuildCommandKey(TagCompound data) {
         String key = data.getString(COMMAND_KEY);
         return Strings.isNullOrEmpty(key) ? DEFAULT_KEY : key;
     }
@@ -106,47 +106,47 @@ public class GuildUtil {
         setGuildCommandKey(getGuildData(id), key);
     }
 
-    public static void setGuildCommandKey(NBTTagCompound data, String key) {
+    public static void setGuildCommandKey(TagCompound data, String key) {
         data.setString(COMMAND_KEY, key);
     }
 
-    public static int getGuildCommandDelay(NBTTagCompound data) {
+    public static int getGuildCommandDelay(TagCompound data) {
         return data.getInt(COMMAND_DELAY);
     }
 
-    public static void setGuildCommandDelay(NBTTagCompound data, int delay) {
+    public static void setGuildCommandDelay(TagCompound data, int delay) {
         if (delay >= 0) data.setInt(COMMAND_DELAY, delay);
     }
 
-    public static boolean guildAllowBotTTS(NBTTagCompound data) {
+    public static boolean guildAllowBotTTS(TagCompound data) {
         return data.getInt(ALLOW_TTS) == 1;
     }
 
-    public static void setGuildAllowBotTTS(NBTTagCompound data, boolean tts) {
+    public static void setGuildAllowBotTTS(TagCompound data, boolean tts) {
         data.setInt(ALLOW_TTS, tts ? 1 : 0);
     }
 
-    public static boolean guildAllowBotMention(NBTTagCompound data) {
+    public static boolean guildAllowBotMention(TagCompound data) {
         return data.getInt(ALLOW_MENTION) == 1;
     }
 
-    public static void setGuildAllowBotMention(NBTTagCompound data, boolean mention) {
+    public static void setGuildAllowBotMention(TagCompound data, boolean mention) {
         data.setInt(ALLOW_MENTION, mention ? 1 : 0);
     }
 
-    public static boolean guildAllowEveryoneMention(NBTTagCompound data) {
+    public static boolean guildAllowEveryoneMention(TagCompound data) {
         return data.getInt(ALLOW_EVERYONE) == 1;
     }
 
-    public static void setGuildAllowEveryoneMention(NBTTagCompound data, boolean mention) {
+    public static void setGuildAllowEveryoneMention(TagCompound data, boolean mention) {
         data.setInt(ALLOW_EVERYONE, mention ? 1 : 0);
     }
 
-    public static boolean guildAllowHereMention(NBTTagCompound data) {
+    public static boolean guildAllowHereMention(TagCompound data) {
         return data.getInt(ALLOW_HERE) == 1;
     }
 
-    public static void setGuildAllowHereMention(NBTTagCompound data, boolean mention) {
+    public static void setGuildAllowHereMention(TagCompound data, boolean mention) {
         data.setInt(ALLOW_HERE, mention ? 1 : 0);
     }
 }
