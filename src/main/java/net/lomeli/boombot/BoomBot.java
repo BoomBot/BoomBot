@@ -64,7 +64,7 @@ public class BoomBot {
 
             try {
 
-                jda = new JDABuilder(AccountType.BOT).setToken(key).addListener(mainListener).setBulkDeleteSplittingEnabled(false).buildBlocking();
+                jda = new JDABuilder(AccountType.BOT).setToken(key).addEventListener(mainListener).setBulkDeleteSplittingEnabled(false).buildBlocking();
                 BoomAPI.dataRegistry.readData();
                 new Thread(autoSaveThread = new AutoSaveThread()).start();
 
