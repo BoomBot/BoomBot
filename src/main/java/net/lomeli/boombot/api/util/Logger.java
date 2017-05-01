@@ -1,5 +1,6 @@
 package net.lomeli.boombot.api.util;
 
+import com.google.common.base.Strings;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
@@ -61,6 +62,8 @@ public class Logger {
     public void error(String msg, Exception ex, Object... args) {
         StackTraceElement[] elements = ex.getStackTrace();
         log(Level.FATAL, msg, args);
+        if (!Strings.isNullOrEmpty(ex.getLocalizedMessage()))
+            error(ex.getLocalizedMessage());
         for (StackTraceElement ele : elements) {
             error("\tat " + ele);
         }
