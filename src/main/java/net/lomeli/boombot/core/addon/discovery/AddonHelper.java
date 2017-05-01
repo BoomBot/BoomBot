@@ -18,6 +18,7 @@ import net.lomeli.boombot.core.addon.exceptions.WrongBotVersionException;
 
 public class AddonHelper {
     private static List<String> ignoreList;
+    private static List<String> ignoreClassList;
 
     static {
         ignoreList = Lists.newArrayList();
@@ -51,30 +52,37 @@ public class AddonHelper {
         ignoreList.add("resources.jar");
         ignoreList.add("rt.jar");
         ignoreList.add("gragent.jar");
-        ignoreList.add("net.dv8tion");
-        ignoreList.add("com.google.code.gson");
-        ignoreList.add("com.google.guava");
-        ignoreList.add("commons-io");
-        ignoreList.add("net.sourceforge.jaadec");
-        ignoreList.add("jflac");
-        ignoreList.add("com.mashape.unirest");
-        ignoreList.add("org.apache.commons");
-        ignoreList.add("net.java.dev.jna");
-        ignoreList.add("org.tritonus");
-        ignoreList.add("com.googlecode.soundlibs");
-        ignoreList.add("com.googlecode.soundlibs");
-        ignoreList.add("org.json");
-        ignoreList.add("com.neovisionaries");
-        ignoreList.add("org.apache.httpcomponents");
-        ignoreList.add("org.apache.httpcomponents");
-        ignoreList.add("org.apache.httpcomponents");
-        ignoreList.add("com.googlecode.soundlibs");
-        ignoreList.add("org.apache.httpcomponents");
-        ignoreList.add("commons-logging");
-        ignoreList.add("commons-codec");
-        ignoreList.add("org.apache.httpcomponents");
-        ignoreList.add("junit");
         ignoreList.add("BoomBot.jar");
+
+        ignoreClassList = Lists.newArrayList();
+        ignoreClassList.add("net/dv8tion");
+        ignoreClassList.add("com/google/code/gson");
+        ignoreClassList.add("com/google/gson");
+        ignoreClassList.add("com/google/common");
+        ignoreClassList.add("com/google/guava");
+        ignoreClassList.add("com/google/thirdparty");
+        ignoreClassList.add("commons-io");
+        ignoreClassList.add("net/sourceforge/jaadec");
+        ignoreClassList.add("jflac");
+        ignoreClassList.add("com/mashape/unirest");
+        ignoreClassList.add("org/apache/commons");
+        ignoreClassList.add("net/java/dev/jna");
+        ignoreClassList.add("org/tritonus");
+        ignoreClassList.add("com/googlecode/soundlibs");
+        ignoreClassList.add("org/json");
+        ignoreClassList.add("com/neovisionaries");
+        ignoreClassList.add("org/apache/httpcomponents");
+        ignoreClassList.add("com/googlecode/soundlibs");
+        ignoreClassList.add("org/apache/httpcomponents");
+        ignoreClassList.add("commons-logging");
+        ignoreClassList.add("commons-codec");
+        ignoreClassList.add("org/apache/httpcomponents");
+        ignoreClassList.add("com/iwebpp/crypto");
+        ignoreClassList.add("tomp2p/opuswrapper");
+        ignoreClassList.add("junit");
+        ignoreClassList.add("gnu/trove");
+        ignoreClassList.add("com/sun/jna");
+        ignoreClassList.add("org/apache/http");
     }
 
     public static List<String> getClassesInFile(File file) {
@@ -142,11 +150,11 @@ public class AddonHelper {
         throw new WrongBotVersionException(addon.name(), addon.acceptedBoomBotVersion(), BoomAPI.BOOM_BOT_VERSION);
     }
 
+    public static boolean ignoreClass(String className) {
+        return ignoreClassList.stream().anyMatch(s -> className.startsWith(s));
+    }
+
     public static boolean ignoreFile(String name) {
-        for (String s : ignoreList) {
-            if (name.contains(s))
-                return true;
-        }
-        return false;
+        return ignoreList.stream().anyMatch(s -> name.contains(s));
     }
 }
