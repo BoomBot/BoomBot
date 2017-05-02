@@ -5,14 +5,14 @@ public class CommandResult {
     private Object[] args;
     private boolean privateMessage;
 
-    public CommandResult(String out, Object...args) {
+    public CommandResult(String out, Object... args) {
         this.out = out;
         this.args = new Object[0];
         if (args != null && args.length > 0)
             this.args = args;
     }
 
-    public CommandResult(String out){
+    public CommandResult(String out) {
         this.out = out;
         this.args = new Object[0];
     }

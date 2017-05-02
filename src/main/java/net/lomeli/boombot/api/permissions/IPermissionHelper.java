@@ -12,7 +12,7 @@ public interface IPermissionHelper {
      * MANAGE_CHANNEL ------------ 4
      * MANAGE_SERVER ------------- 5
      * MESSAGE_ADD_REACTION ------ 6
-     *
+     * <p>
      * MESSAGE_READ -------------- 10
      * MESSAGE_WRITE ------------- 11
      * MESSAGE_TTS --------------- 12
@@ -22,26 +22,26 @@ public interface IPermissionHelper {
      * MESSAGE_HISTORY ----------- 16
      * MESSAGE_MENTION_EVERYONE -- 17
      * MESSAGE_EXT_EMOJI --------- 18
-     *
+     * <p>
      * VOICE_CONNECT ------------- 20
      * VOICE_SPEAK --------------- 21
      * VOICE_MUTE_OTHERS --------- 22
      * VOICE_DEAF_OTHERS --------- 23
      * VOICE_MOVE_OTHERS --------- 24
      * VOICE_USE_VAD ------------- 25
-     *
+     * <p>
      * NICKNAME_CHANGE ----------- 26
      * NICKNAME_MANAGE ----------- 27
-     *
+     * <p>
      * MANAGE_ROLES -------------- 28
      * MANAGE_PERMISSIONS -------- 28
      * MANAGE_WEBHOOKS ----------- 29
      * MANAGE_EMOTES ------------- 30
-     *
+     * <p>
      * UNKNOWN ------------------- -1
      **/
 
-    boolean userHasPermission(String guildID, String userID, int...permisssionIDs);
+    boolean userHasPermission(String guildID, String userID, int... permisssionIDs);
 
-    boolean boomBotHasPermission(String guildID, int...permissionIDs);
+    boolean boomBotHasPermission(String guildID, int... permissionIDs);
 }

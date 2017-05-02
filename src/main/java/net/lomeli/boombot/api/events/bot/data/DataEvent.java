@@ -51,7 +51,7 @@ public class DataEvent extends Event {
          * @return Unmodifiable Bot data
          */
         public TagCompound getBotData() {
-           return boomBotData;
+            return boomBotData;
         }
     }
 }

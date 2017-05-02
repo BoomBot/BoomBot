@@ -1,7 +1,7 @@
 package net.lomeli.boombot.api.events.registry;
 
-import net.lomeli.boombot.api.registry.ICommandRegistry;
 import net.lomeli.boombot.api.events.Event;
+import net.lomeli.boombot.api.registry.ICommandRegistry;
 
 /**
  * Use this event to register addon commands.

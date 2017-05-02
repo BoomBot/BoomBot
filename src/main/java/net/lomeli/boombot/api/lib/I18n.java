@@ -38,7 +38,8 @@ public class I18n {
                 }
             }
             br.close();
-            if (Strings.isNullOrEmpty(name) && translations.containsKey("langfile.langauage")) name = translations.get("langfile.langauage");
+            if (Strings.isNullOrEmpty(name) && translations.containsKey("langfile.langauage"))
+                name = translations.get("langfile.langauage");
         } catch (IOException ex) {
             BoomAPI.logger.error("Could not load localization file %s", ex, localizationFile.getName());
         }
@@ -56,7 +57,7 @@ public class I18n {
         return translations.containsKey(key) ? translations.get(key) : key;
     }
 
-    public String getLocalization(String key, Object...args) {
+    public String getLocalization(String key, Object... args) {
         String translation = getLocalization(key);
         return String.format(translation, args);
     }

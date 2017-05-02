@@ -64,13 +64,15 @@ public enum BotPermission {
 
     /**
      * Add one or more permissions to a user.
+     *
      * @param userID
      * @param guildID
      * @param permissions
      * @return
      */
-    public static boolean addPermission(String userID, String guildID, BotPermission...permissions) {
-        if (permissions == null || permissions.length < 1 || Strings.isNullOrEmpty(userID) || Strings.isNullOrEmpty(guildID)) return false;
+    public static boolean addPermission(String userID, String guildID, BotPermission... permissions) {
+        if (permissions == null || permissions.length < 1 || Strings.isNullOrEmpty(userID) || Strings.isNullOrEmpty(guildID))
+            return false;
         TagCompound data = GuildUtil.getGuildMemberData(guildID, userID);
         List<BotPermission> perList = Lists.newArrayList(permissions);
         if (!data.hasTag(PERMISSION_KEY, TagBase.TagType.TAG_INT_ARRAY)) {

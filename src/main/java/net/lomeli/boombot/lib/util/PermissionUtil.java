@@ -24,7 +24,7 @@ public class PermissionUtil {
         return false;
     }
 
-    public static boolean hasPermissions(String guildID, String userID, Permission...permissions) {
+    public static boolean hasPermissions(String guildID, String userID, Permission... permissions) {
         Guild guild = BoomBot.jda.getGuildById(guildID);
         if (guild != null) {
             Member member = guild.getMemberById(userID);
@@ -33,7 +33,7 @@ public class PermissionUtil {
         return false;
     }
 
-    public static boolean boomBotHaverPermission(String guildID, Permission...permissions) {
+    public static boolean boomBotHaverPermission(String guildID, Permission... permissions) {
         return hasPermissions(guildID, BoomBot.jda.getSelfUser().getId(), permissions);
     }
 

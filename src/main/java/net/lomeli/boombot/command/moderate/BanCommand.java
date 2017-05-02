@@ -19,7 +19,8 @@ public class BanCommand implements ICommand {
         if (cmd.getArgs().isEmpty() || cmd.getArgs().get(0).equalsIgnoreCase("?") ||
                 cmd.getArgs().get(0).equalsIgnoreCase("help"))
             return new CommandResult("boombot.command.ban.help").setPrivateMessage(true);
-        if (cmd.getMentionedUserIDs().isEmpty()) return new CommandResult("boombot.command.ban.error.none").setPrivateMessage(true);
+        if (cmd.getMentionedUserIDs().isEmpty())
+            return new CommandResult("boombot.command.ban.error.none").setPrivateMessage(true);
         if (cmd.getMentionedUserIDs().get(0).equals(cmd.getUserInfo().getUserID()))
             return new CommandResult("boombot.command.ban.error.self").setPrivateMessage(true);
         Guild guild = BoomBot.jda.getGuildById(cmd.getGuildID());
@@ -56,7 +57,8 @@ public class BanCommand implements ICommand {
 
     @Override
     public CommandResult failedToExecuteMessage(CommandData cmd) {
-        if (canUserExecute(cmd)) return new CommandResult("boombot.command.ban.error.perm.self").setPrivateMessage(true);
+        if (canUserExecute(cmd))
+            return new CommandResult("boombot.command.ban.error.perm.self").setPrivateMessage(true);
         return new CommandResult("boombot.command.ban.error.perm.bot").setPrivateMessage(true);
     }
 }

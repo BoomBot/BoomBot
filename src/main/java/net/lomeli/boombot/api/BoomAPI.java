@@ -2,12 +2,12 @@ package net.lomeli.boombot.api;
 
 import java.io.File;
 
+import net.lomeli.boombot.api.handlers.IDataHandler;
 import net.lomeli.boombot.api.handlers.IMessageHandler;
 import net.lomeli.boombot.api.permissions.IPermissionHelper;
-import net.lomeli.boombot.api.handlers.IDataHandler;
 import net.lomeli.boombot.api.registry.IEventRegistry;
-import net.lomeli.boombot.api.util.Logger;
 import net.lomeli.boombot.api.registry.II18nRegistry;
+import net.lomeli.boombot.api.util.Logger;
 
 public class BoomAPI {
     public static boolean debugMode = false;
