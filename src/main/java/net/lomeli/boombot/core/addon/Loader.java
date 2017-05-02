@@ -86,7 +86,7 @@ public class Loader {
             }
         }
     }
-    
+
     public void initAddons(InitEvent event) {
         addons.values().stream().forEach(c -> {
             try {
