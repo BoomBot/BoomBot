@@ -12,6 +12,7 @@ import java.util.Optional;
 import net.lomeli.boombot.api.Addon;
 import net.lomeli.boombot.api.commands.ICommand;
 import net.lomeli.boombot.api.registry.ICommandRegistry;
+import net.lomeli.boombot.command.admin.SaveDelayCommand;
 import net.lomeli.boombot.command.admin.SetAdminCommand;
 import net.lomeli.boombot.command.admin.ShutdownCommand;
 import net.lomeli.boombot.command.custom.MakeCommand;
@@ -39,6 +40,7 @@ public class CommandRegistry implements ICommandRegistry {
         //ADMIN COMMANDS
         addBaseCommand(new ShutdownCommand());
         addBaseCommand(new SetAdminCommand());
+        addBaseCommand(new SaveDelayCommand());
         //MOD COMMANDS
         addBaseCommand(new ClearChatCommand());
         addBaseCommand(new BanCommand());

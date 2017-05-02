@@ -26,6 +26,11 @@ boombot.command.setadmin.error.set=Admin is already set.
 boombot.command.setadmin.error.multiple=Can only add one admin at a time.
 boombot.command.setadmin.error.nouser=User does not exist.
 boombot.command.setadmin.error.admin=%s is already admin!
+# Set Auto Save Delay command
+boombot.command.savedelay.error.specify=Specify how long between auto saves (in milliseconds)
+boombot.command.savedelay.error.onearg=Only use one arg.
+boombot.command.savedelay.error.few=Delay must be 5 minutes (300000 msec)or longer.
+boombot.command.savedelay=BoomBot will now auto save every %sms (approx. %s min).
 ## Mod commands
 # Clear chat
 boombot.command.clear=Cleared %s message(s).
