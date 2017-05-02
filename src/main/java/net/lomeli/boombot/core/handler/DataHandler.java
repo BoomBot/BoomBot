@@ -54,7 +54,7 @@ public class DataHandler implements IDataHandler {
         File boomBotdata = new File(BOOM_BOT_DATA);
         if (boomBotdata.exists()) {
             try {
-                this.boomBotData = NBTUtil.readUncompressed(boomBotdata);
+                this.boomBotData = NBTUtil.readCompressed(new FileInputStream(boomBotdata));
             } catch (IOException ex) {
                 BoomBot.logger.error("Could not read boombot config!", ex);
             }
@@ -98,7 +98,7 @@ public class DataHandler implements IDataHandler {
                 this.boomBotData.setTag(DataKeys.ADMIN_IDS, new TagList(TagBase.TagType.TAG_STRING));
             if (!this.boomBotData.hasTag(DataKeys.AUTO_SAVE_DELAY, TagBase.TagType.TAG_LONG))
                 this.boomBotData.setLong(DataKeys.AUTO_SAVE_DELAY, AutoSaveThread.SAVE_DELAY);
-            NBTUtil.writeUncompressed(this.boomBotData, boomBotdata);
+            NBTUtil.writeCompressed(this.boomBotData, new FileOutputStream(boomBotdata));
         } catch (IOException ex) {
             BoomBot.logger.error("Failed to write BoomBot base data", ex);
         }
