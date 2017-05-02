@@ -7,7 +7,7 @@ boombot.ready=BoomBot is ready!
 
 ## Commands
 # About
-boombot.command.about=Hi, I'm BoomBot. I was made by <@98616246483812352> as a fun little project.%nYou can find out more about me at https://github.com/BoomBot/BoomBot%nBoomBot was made in Java using JDA, which can be found at https://github.com/DV8FromTheWorld/JDA%nUse %shelp to see all available commands.
+boombot.command.about=Hi, I'm BoomBot. I was made by <@98616246483812352> as a fun little project.%nYou can find out more about me at https://github.com/BoomBot/BoomBot%nBoomBot was made in Java using JDA, which can be found at https://github.com/DV8FromTheWorld/JDA%nUse %slist to see all available commands.
 # List
 boombot.command.list=Here are the currently available commands:
 boombot.command.list.commands=**%s commands**:%n%s
