@@ -123,24 +123,6 @@ public class DataHandler implements IDataHandler {
         }
     }
 
-    public void writeGuildData(String guildID) {
-        if (guildHasData(guildID)) {
-            DataEvent.DataWriteEvent event = new DataEvent.DataWriteEvent(dataRegistry, boomBotData);
-            BoomAPI.eventRegistry.post(event);
-            dataRegistry.putAll(event.getData());
-            TagCompound data = getDataForGuild(guildID);
-            if (data != null) {
-                try {
-                    if (!dataFolder.exists() || !dataFolder.isDirectory()) dataFolder.mkdir();
-                    File guildConfig = new File(dataFolder, guildID + ".dat");
-                    NBTUtil.writeCompressed(data, new FileOutputStream(guildConfig));
-                } catch (IOException ex) {
-                    BoomBot.logger.error("Could not write data for Guild id %s", ex, guildID);
-                }
-            }
-        }
-    }
-
     @Override
     public void addGuild(String guildID) {
         if (!guildHasData(guildID)) {
