@@ -166,10 +166,8 @@ public class EventListner extends ListenerAdapter {
             if (!guildIDs.contains(event.getGuild().getId())) guildIDs.add(event.getGuild().getId());
             BoomAPI.eventRegistry.post(new GuildEvent.JoinedGuildEvent(guildIDs, event.getGuild().getId()));
             BoomBot.logger.debug("Adding guild %s", event.getGuild().getName());
-            if (!BoomAPI.dataRegistry.guildHasData(event.getGuild().getId())) {
-                BoomAPI.dataRegistry.addGuild(event.getGuild().getId());
+            if (BoomAPI.dataRegistry.addGuild(event.getGuild().getId()))
                 GuildUtil.getGuildData(event.getGuild().getId()).setString("name", event.getGuild().getName());
-            }
         }
     }
 

@@ -2,7 +2,6 @@ package net.lomeli.boombot.api.handlers;
 
 import net.lomeli.boombot.api.nbt.TagCompound;
 
-
 public interface IDataHandler {
     TagCompound getDataForGuild(String guildID);
 

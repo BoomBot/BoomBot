@@ -11,7 +11,5 @@ public interface II18nRegistry {
 
     void loadLangFolder(String addonID, File addon);
 
-    void appendLang(String path);
-
     void reloadLangFolder(String addonID, File addon);
 }

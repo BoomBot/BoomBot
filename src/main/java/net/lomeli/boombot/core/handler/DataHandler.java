@@ -124,7 +124,7 @@ public class DataHandler implements IDataHandler {
     }
 
     @Override
-    public void addGuild(String guildID) {
+    public boolean addGuild(String guildID) {
         if (!guildHasData(guildID)) {
             Guild guild = BoomBot.jda.getGuildById(guildID);
             if (guild != null) {
@@ -139,8 +139,10 @@ public class DataHandler implements IDataHandler {
                 GuildUtil.setGuildAllowEveryoneMention(data, false);
 
                 dataRegistry.put(guildID, data);
+                return true;
             }
         }
+        return false;
     }
 
     @Override

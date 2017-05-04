@@ -112,11 +112,4 @@ public class CommandRegistry implements ICommandRegistry {
     public Map<String, List<String>> getFullCommandList() {
         return Collections.unmodifiableMap(this.commandNameList);
     }
-
-    @Override
-    public List<String> getListForAddon(String addonID) {
-        return this.commandNameList.containsKey(addonID) ?
-                Collections.unmodifiableList(this.commandNameList.get(addonID)) :
-                Collections.EMPTY_LIST;
-    }
 }

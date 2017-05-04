@@ -6,7 +6,6 @@ import java.util.zip.GZIPOutputStream;
 import net.lomeli.boombot.api.BoomAPI;
 
 public class IOUtil {
-
     public static void gzipFile(File source, File target) {
         byte[] buffer = new byte[1024];
         try {
@@ -22,9 +21,5 @@ public class IOUtil {
         } catch (IOException ex) {
             BoomAPI.logger.error("Failed to gzip file.", ex);
         }
-    }
-
-    public static InputStream getJarResource(Object object, String id, String path) {
-        return BoomAPI.class.getResourceAsStream(String.format("assets/%s/%s", id, path));
     }
 }

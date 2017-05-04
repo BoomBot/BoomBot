@@ -15,6 +15,4 @@ public interface ICommandRegistry {
     List<String> getCommands();
 
     Map<String, List<String>> getFullCommandList();
-
-    List<String> getListForAddon(String addonID);
 }

@@ -21,14 +21,12 @@ public class UserEvent extends Event {
     }
 
     public static class UserJoinedEvent extends UserEvent {
-
         public UserJoinedEvent(UserProxy userProxy, String guildID) {
             super(userProxy, guildID);
         }
     }
 
     public static class UserLeaveEvent extends UserEvent {
-
         public UserLeaveEvent(UserProxy userProxy, String guildID) {
             super(userProxy, guildID);
         }

@@ -22,7 +22,7 @@ public class ListCommand implements ICommand {
         String key = GuildUtil.getGuildCommandKey(cmd.getGuildData());
         StringBuilder out = new StringBuilder();
         out.append(lang.getLocalization("boombot.command.list"));
-        addCommandList(out, lang, key, "BoomBot", BoomBot.commandRegistry.getListForAddon(CommandRegistry.BOOMBOT_ID));
+        addCommandList(out, lang, key, "BoomBot", BoomBot.commandRegistry.getAddonCommands(CommandRegistry.BOOMBOT_ID));
         Map<String, List<String>> commandsMap = BoomBot.commandRegistry.getFullCommandList();
         commandsMap.entrySet().stream().filter(entry -> !Strings.isNullOrEmpty(entry.getKey())
                 && !entry.getKey().equalsIgnoreCase(CommandRegistry.BOOMBOT_ID) &&
