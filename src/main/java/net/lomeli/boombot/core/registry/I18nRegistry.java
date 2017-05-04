@@ -86,10 +86,6 @@ public class I18nRegistry implements II18nRegistry {
     }
 
     @Override
-    public void appendLang(String path) {
-    }
-
-    @Override
     public void reloadLangFolder(String id, File addon) {
         translations.clear();
         loadLangFolder(id, addon);

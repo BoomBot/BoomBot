@@ -2,6 +2,9 @@ package net.lomeli.boombot.api.events.bot;
 
 import net.lomeli.boombot.api.events.Event;
 
+/**
+ * Fires once BoomBot has finished connecting to Discord.
+ */
 public class InitEvent extends Event {
     private String boomBotID;
     private String boomBotName;

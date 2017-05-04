@@ -6,6 +6,9 @@ import java.util.zip.GZIPOutputStream;
 import net.lomeli.boombot.api.BoomAPI;
 
 public class IOUtil {
+    /**
+     * Used to compress files into Gzip format
+     */
     public static void gzipFile(File source, File target) {
         byte[] buffer = new byte[1024];
         try {

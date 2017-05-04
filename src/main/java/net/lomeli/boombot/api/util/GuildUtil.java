@@ -102,6 +102,30 @@ public class GuildUtil {
         return Strings.isNullOrEmpty(key) ? DEFAULT_KEY : key;
     }
 
+    public static TagCompound getTextChannelData(String id, String channelID) {
+        return getTextChannelData(getGuildData(id), channelID);
+    }
+
+    public static TagCompound getTextChannelData(TagCompound data, String channelID) {
+        TagCompound textData = data.getTagCompound(TEXT_CHANNEL_DATA);
+        if (textData == null) textData = new TagCompound();
+        TagCompound channelData = textData.getTagCompound(channelID);
+        if (channelData == null) channelData = new TagCompound();
+        return channelData;
+    }
+
+    public static TagCompound getVoiceChannelData(String id, String channelID) {
+        return getVoiceChannelData(getGuildData(id), channelID);
+    }
+
+    public static TagCompound getVoiceChannelData(TagCompound data, String channelID) {
+        TagCompound voiceData = data.getTagCompound(VOICE_CHANNEL_DATA);
+        if (voiceData == null) voiceData = new TagCompound();
+        TagCompound channelData = voiceData.getTagCompound(channelID);
+        if (channelData == null) channelData = new TagCompound();
+        return channelData;
+    }
+
     public static void setGuildCommandKey(String id, String key) {
         setGuildCommandKey(getGuildData(id), key);
     }
@@ -148,5 +172,27 @@ public class GuildUtil {
 
     public static void setGuildAllowHereMention(TagCompound data, boolean mention) {
         data.setInt(ALLOW_HERE, mention ? 1 : 0);
+    }
+
+    public static void setTextChannelData(String id, TagCompound channelData, String channelID) {
+        setTextChannelData(getGuildData(id), channelData, channelID);
+    }
+
+    public static void setTextChannelData(TagCompound data, TagCompound channelData, String channelID) {
+        TagCompound textData = data.getTagCompound(TEXT_CHANNEL_DATA);
+        if (textData == null) textData = new TagCompound();
+        textData.setTag(channelID, channelData);
+        data.setTag(TEXT_CHANNEL_DATA, textData);
+    }
+
+    public static void setVoiceChannelData(String id, TagCompound channelData, String channelID) {
+        setVoiceChannelData(getGuildData(id), channelData, channelID);
+    }
+
+    public static void setVoiceChannelData(TagCompound data, TagCompound channelData, String channelID) {
+        TagCompound voiceData = data.getTagCompound(VOICE_CHANNEL_DATA);
+        if (voiceData == null) voiceData = new TagCompound();
+        voiceData.setTag(channelID, channelData);
+        data.setTag(VOICE_CHANNEL_DATA, voiceData);
     }
 }

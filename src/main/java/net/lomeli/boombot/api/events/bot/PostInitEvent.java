@@ -7,6 +7,10 @@ import java.util.List;
 
 import net.lomeli.boombot.api.events.Event;
 
+/**
+ * Fires once BoomBot has received all its basic information
+ * from Discord.
+ */
 public class PostInitEvent extends Event {
     private String currentGame;
     private List<String> guildIDs;
