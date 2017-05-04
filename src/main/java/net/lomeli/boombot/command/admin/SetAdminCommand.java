@@ -16,7 +16,7 @@ public class SetAdminCommand implements ICommand {
     @Override
     public CommandResult execute(CommandData cmd) {
         List<String> mentionedUsers = cmd.getMentionedUserIDs();
-        String username = cmd.getUserInfo().hasNickName() ? cmd.getUserInfo().getNickName() : cmd.getUserInfo().getUserName();
+        String username = cmd.getUserInfo().getEffectiveName();
         if (mentionedUsers.isEmpty()) {
             if (PermissionUtil.addUserAsAdmin(cmd.getUserInfo().getUserID()))
                 return new CommandResult("boombot.command.setadmin", username);

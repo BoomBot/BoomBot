@@ -33,4 +33,8 @@ public class UserProxy {
     public String getNickName() {
         return nickName;
     }
+
+    public String getEffectiveName() {
+        return hasNickName() ? getNickName() : getUserName();
+    }
 }

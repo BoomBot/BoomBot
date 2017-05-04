@@ -19,7 +19,7 @@ public class RemoveCommand implements ICommand {
         CustomContent command = CustomRegistry.INSTANCE.getGuildCommand(cmd.getGuildID(), name);
         if (command == null) return new CommandResult("boombot.command.rm.error.exist", name);
         CustomRegistry.INSTANCE.removeGuildCommand(cmd.getGuildID(), name);
-        String username = cmd.getUserInfo().hasNickName() ? cmd.getUserInfo().getNickName() : cmd.getUserInfo().getUserName();
+        String username = cmd.getUserInfo().getEffectiveName();
         return new CommandResult("boombot.command.rm", username, name);
     }
 
