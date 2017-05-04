@@ -19,7 +19,7 @@ public class AutoSaveThread implements Runnable {
         while (true) {
             long currentTime = System.currentTimeMillis();
             if (currentTime >= lastTime + SAVE_DELAY) {
-                BoomAPI.dataRegistry.writeData();
+                //BoomAPI.dataRegistry.writeData();
                 lastTime = currentTime;
             }
         }
