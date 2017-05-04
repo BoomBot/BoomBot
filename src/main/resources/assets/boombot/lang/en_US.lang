@@ -19,7 +19,7 @@ boombot.command.help.restricted=Custom commands are restricted in the %s channel
 ## Admin Commands
 # Shutdown
 boombot.command.shutdown=%u is shutting down BoomBot
-boombot.command.shutdown.failed=%s does not have permissions to edit BoomBot.
+boombot.command.shutdown.failed=You don't have permissions to edit BoomBot.
 # Set admin
 boombot.command.setadmin=%s is now a BoomBot admin.
 boombot.command.setadmin.error.set=Admin is already set.
