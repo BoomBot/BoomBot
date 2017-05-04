@@ -3,10 +3,7 @@ package net.lomeli.boombot.api.lib;
 import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.HashMap;
 
 import net.lomeli.boombot.api.BoomAPI;

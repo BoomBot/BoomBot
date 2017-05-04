@@ -1,5 +1,7 @@
 package net.lomeli.boombot.api.registry;
 
+import java.io.File;
+
 import net.lomeli.boombot.api.lib.I18n;
 
 public interface II18nRegistry {

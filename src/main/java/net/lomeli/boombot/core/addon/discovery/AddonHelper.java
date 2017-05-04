@@ -27,6 +27,7 @@ public class AddonHelper {
         ignoreList.add("build/classes/main/net/lomeli/boombot/core");
         ignoreList.add("build/classes/main/net/lomeli/boombot/lib");
         ignoreList.add("build/classes/main/net/lomeli/boombot/BoomBot.class");
+        ignoreList.add("net/lomeli/boombot/BoomBot.class");
         ignoreList.add("build/resources/main");
         ignoreList.add("charsets.jar");
         ignoreList.add("deploy.jar");

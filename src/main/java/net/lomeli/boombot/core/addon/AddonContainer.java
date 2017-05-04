@@ -10,28 +10,32 @@ import net.lomeli.boombot.api.BoomAPI;
 import net.lomeli.boombot.api.events.bot.InitEvent;
 import net.lomeli.boombot.api.events.bot.PostInitEvent;
 import net.lomeli.boombot.api.events.bot.PreInitEvent;
+import net.lomeli.boombot.core.addon.discovery.AddonType;
 
 public class AddonContainer {
-    private static final File ASSET_FOLDER = new File("assets");
     private Class addonClass;
     private Addon addonInfo;
     private Object addonInstance;
     private File addonPath;
+    private AddonType addonType;
 
-    public AddonContainer(Class cl, File addonPath) throws IllegalAccessException, InstantiationException, InvocationTargetException {
+    public AddonContainer(Class cl, File addonPath, AddonType addonType) throws IllegalAccessException, InstantiationException, InvocationTargetException {
         this.addonClass = cl;
         this.addonPath = addonPath;
-        this.addonInfo = (Addon) cl.getAnnotation(Addon.class);
+        this.addonInfo = (Addon) this.addonClass.getAnnotation(Addon.class);
         this.addonInstance = cl.newInstance();
+        this.addonType = addonType;
     }
 
-    public AddonContainer(Object addonInstance) {
+    public AddonContainer(Object addonInstance, AddonType addonType) {
         this.addonInfo = addonInstance.getClass().getAnnotation(Addon.class);
         this.addonInstance = addonInstance;
+        this.addonType = addonType;
     }
 
     public void loadResources() {
-        BoomAPI.langRegistry.loadLangFolder(addonInfo.addonID(), null);
+        if (getAddonType().isJar())
+            BoomAPI.langRegistry.loadLangFolder(addonInfo.addonID(), addonPath);
     }
 
     public void preInitAddon() throws IllegalAccessException, InvocationTargetException {
@@ -78,5 +82,9 @@ public class AddonContainer {
 
     public Object getAddonInstance() {
         return addonInstance;
+    }
+
+    public AddonType getAddonType() {
+        return addonType;
     }
 }

@@ -19,18 +19,18 @@ import net.lomeli.boombot.core.addon.exceptions.WrongBotVersionException;
 
 public class AddonCandidate {
     private File addonPath;
-    private boolean jar;
+    private AddonType addonType;
 
-    public AddonCandidate(File path, boolean jar) {
+    public AddonCandidate(File path, AddonType addonType) {
         this.addonPath = path;
-        this.jar = jar;
+        this.addonType = addonType;
     }
 
     public List<AddonContainer> findAddons() {
         if (addonPath == null || !addonPath.exists()) return null;
         List<AddonContainer> addonContainers = Lists.newArrayList();
         try {
-            if (jar) {
+            if (addonType.isJar()) {
                 JarFile jarFile = new JarFile(addonPath.getCanonicalPath());
                 Enumeration<JarEntry> e = jarFile.entries();
                 URL[] urls = {new URL("jar:file:" + addonPath.getCanonicalPath() + "!/")};
@@ -40,9 +40,9 @@ public class AddonCandidate {
                     if (je.isDirectory() || !je.getName().endsWith(".class")) continue;
                     String className = je.getName().substring(0, je.getName().length() - 6);
                     if (AddonHelper.ignoreClass(className)) continue;
-                    Class cl = loader.loadClass(className);
+                    Class cl = loader.loadClass(className.replace('/', '.'));
                     if (cl != null && AddonHelper.isAddonClass(cl)) {
-                        addonContainers.add(new AddonContainer(cl, addonPath));
+                        addonContainers.add(new AddonContainer(cl, addonPath, addonType));
                         break;
                     }
                 }
@@ -55,11 +55,7 @@ public class AddonCandidate {
                     String className = dirtyClassName.substring(1, dirtyClassName.length() - 6).replace('/', '.').replace('\\', '.');
                     Class cl = loader.loadClass(className);
                     if (cl != null && AddonHelper.isAddonClass(cl))
-                        addonContainers.add(new AddonContainer(cl, addonPath));
-                    //classNames.addAll(AddonHelper.getClassesInPath(addonPath, addonPath));
-                    //classes.addAll(AddonHelper.findAddonClass(classNames, loader));
-                    //for (Class cl : classes)
-                    //    addonContainers.add(new AddonContainer(cl));
+                        addonContainers.add(new AddonContainer(cl, addonPath, addonType));
                 }
             }
         } catch (IOException ex) {

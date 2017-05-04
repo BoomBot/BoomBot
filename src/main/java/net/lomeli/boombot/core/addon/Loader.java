@@ -5,6 +5,7 @@ import org.apache.commons.io.FilenameUtils;
 
 import java.io.File;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -14,6 +15,8 @@ import net.lomeli.boombot.api.events.bot.InitEvent;
 import net.lomeli.boombot.api.events.bot.PostInitEvent;
 import net.lomeli.boombot.core.addon.discovery.AddonCandidate;
 import net.lomeli.boombot.core.addon.discovery.AddonHelper;
+import net.lomeli.boombot.core.addon.discovery.AddonType;
+import net.lomeli.boombot.core.registry.I18nRegistry;
 
 public class Loader {
     private AddonClassLoader classLoader;
@@ -32,7 +35,9 @@ public class Loader {
     public void loadAddons() {
         BoomAPI.logger.info("Looking for addons");
         discoverAddons();
-
+        try {
+            registerAddon(new DummyContainer());
+        } catch (Exception ex){}
         addons.values().stream().forEach(c -> {
             try {
                 BoomAPI.logger.debug(c.getAddonInfo().addonID());
@@ -43,6 +48,7 @@ public class Loader {
                 System.exit(1);
             }
         });
+        ((I18nRegistry) BoomAPI.langRegistry).loadAssetLang();
     }
 
     private void discoverAddons() {
@@ -60,10 +66,10 @@ public class Loader {
         if (files != null && files.length > 0) {
             for (File f : files) {
                 if (f.isFile()) {
-                    AddonCandidate candidate = new AddonCandidate(f, true);
+                    AddonCandidate candidate = new AddonCandidate(f, AddonType.JAR);
                     List<AddonContainer> addons = candidate.findAddons();
                     if (addons != null && addons.size() > 0)
-                        addons.stream().forEach(addon -> this.addons.put(addon.getAddonInfo().addonID().toLowerCase(), addon));
+                        addons.stream().forEach(addon -> registerAddon(addon));
                 }
             }
         }
@@ -77,12 +83,12 @@ public class Loader {
         for (File f : sources) {
             if (AddonHelper.ignoreFile(f.getAbsolutePath())) continue;
             AddonCandidate candidate = null;
-            if (f.isFile()) candidate = new AddonCandidate(f, true);
-            else if (f.isDirectory()) candidate = new AddonCandidate(f, false);
+            if (f.isFile()) candidate = new AddonCandidate(f, AddonType.JAR);
+            else if (f.isDirectory()) candidate = new AddonCandidate(f, AddonType.CLASS);
             if (candidate != null) {
                 List<AddonContainer> addons = candidate.findAddons();
                 if (addons != null && addons.size() > 0)
-                    addons.stream().forEach(addon -> this.addons.put(addon.getAddonInfo().addonID().toLowerCase(), addon));
+                    addons.stream().forEach(addon -> registerAddon(addon));
             }
         }
     }
@@ -107,5 +113,9 @@ public class Loader {
                 System.exit(1);
             }
         });
+    }
+
+    public Map<String, AddonContainer> getAddons() {
+        return Collections.unmodifiableMap(addons);
     }
 }

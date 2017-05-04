@@ -13,6 +13,7 @@ import javax.security.auth.login.LoginException;
 import java.io.File;
 import java.util.List;
 
+import net.lomeli.boombot.api.Addon;
 import net.lomeli.boombot.api.BoomAPI;
 import net.lomeli.boombot.api.events.bot.InitEvent;
 import net.lomeli.boombot.api.events.bot.PostInitEvent;
@@ -30,11 +31,11 @@ import net.lomeli.boombot.core.registry.EventRegistry;
 import net.lomeli.boombot.core.registry.I18nRegistry;
 import net.lomeli.boombot.lib.ShutdownHook;
 
+@Addon(addonID = "boombot", name = "BoomBot", version = BoomBot.BOOM_BOT_VERSION)
 public class BoomBot {
-
     public static String debugGuildID;
     public static final int MAJOR = 3, MINOR = 0, REV = 0;
-    public static final String BOOM_BOT_VERSION = String.format("%s.%s.%s", MAJOR, MINOR, REV);
+    public static final String BOOM_BOT_VERSION = MAJOR + "." + MINOR + "." + REV;
     public static Logger logger;
     public static JDA jda;
     public static EventListner mainListener;
@@ -63,7 +64,6 @@ public class BoomBot {
             mainListener = new EventListner();
 
             try {
-
                 jda = new JDABuilder(AccountType.BOT).setToken(key).addEventListener(mainListener).setBulkDeleteSplittingEnabled(false).buildBlocking();
                 BoomAPI.dataRegistry.readData();
                 new Thread(autoSaveThread = new AutoSaveThread()).start();
@@ -119,6 +119,8 @@ public class BoomBot {
         BoomAPI.langRegistry = new I18nRegistry();
         BoomAPI.dataRegistry = new DataHandler(new File("data"));
         BoomAPI.messageHandler = new MessageHandler();
-        BoomAPI.langRegistry.loadLangFolder("boombot", "");
+        if (!BoomAPI.debugMode)
+        BoomAPI.langRegistry.loadLangFolder("boombot",
+                new File(BoomBot.class.getProtectionDomain().getCodeSource().getLocation().getPath()));
     }
 }
