@@ -37,7 +37,8 @@ public class Loader {
         discoverAddons();
         try {
             registerAddon(new DummyContainer());
-        } catch (Exception ex){}
+        } catch (Exception ex) {
+        }
         addons.values().stream().forEach(c -> {
             try {
                 BoomAPI.logger.debug(c.getAddonInfo().addonID());

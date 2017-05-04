@@ -1,6 +1,9 @@
 package net.lomeli.boombot.api.util;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.zip.GZIPOutputStream;
 
 import net.lomeli.boombot.api.BoomAPI;

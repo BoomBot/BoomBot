@@ -122,7 +122,7 @@ public class BoomBot {
         BoomAPI.messageHandler = new MessageHandler();
         BoomAPI.permissionHelper = new PermissionHelper();
         if (!BoomAPI.debugMode)
-        BoomAPI.langRegistry.loadLangFolder("boombot",
-                new File(BoomBot.class.getProtectionDomain().getCodeSource().getLocation().getPath()));
+            BoomAPI.langRegistry.loadLangFolder("boombot",
+                    new File(BoomBot.class.getProtectionDomain().getCodeSource().getLocation().getPath()));
     }
 }

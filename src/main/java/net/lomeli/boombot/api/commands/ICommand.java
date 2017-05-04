@@ -3,6 +3,7 @@ package net.lomeli.boombot.api.commands;
 public interface ICommand {
     /**
      * Processes the command arguments and executes the command.
+     *
      * @param data - Basic information about the user,
      *             the guild, channel, arguments, and the full message.
      * @return null or a CommandResult. CommandResult will send a message

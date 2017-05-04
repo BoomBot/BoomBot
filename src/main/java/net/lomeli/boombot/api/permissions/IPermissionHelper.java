@@ -1,39 +1,38 @@
 package net.lomeli.boombot.api.permissions;
+
 /**
- * <center>=============================<p>
- * == Int to Permission Guide ==<p>
- * =============================<p></center>
- * <li>
- * <ul>CREATE_INSTANT_INVITE ----- 0</ul>
- * <ul>KICK_MEMBERS -------------- 1</ul>
- * <ul>BAN_MEMBERS --------------- 2</ul>
- * <ul>ADMINISTRATOR ------------- 3</ul>
- * <ul>MANAGE_CHANNEL ------------ 4</ul>
- * <ul>MANAGE_SERVER ------------- 5</ul>
- * <ul>MESSAGE_ADD_REACTION ------ 6</ul>
- * <ul>MESSAGE_READ -------------- 10</ul>
- * <ul>MESSAGE_WRITE ------------- 11</ul>
- * <ul>MESSAGE_TTS --------------- 12</ul>
- * <ul>MESSAGE_MANAGE ------------ 13</ul>
- * <ul>MESSAGE_EMBED_LINKS ------- 14</ul>
- * <ul>MESSAGE_ATTACH_FILES ------ 15</ul>
- * <ul>MESSAGE_HISTORY ----------- 16</ul>
- * <ul>MESSAGE_MENTION_EVERYONE -- 17</ul>
- * <ul>MESSAGE_EXT_EMOJI --------- 18</ul>
- * <ul>VOICE_CONNECT ------------- 20</ul>
- * <ul>VOICE_SPEAK --------------- 21</ul>
- * <ul>VOICE_MUTE_OTHERS --------- 22</ul>
- * <ul>VOICE_DEAF_OTHERS --------- 23</ul>
- * <ul>VOICE_MOVE_OTHERS --------- 24</ul>
- * <ul>VOICE_USE_VAD ------------- 25</ul>
- * <ul>NICKNAME_CHANGE ----------- 26</ul>
- * <ul>NICKNAME_MANAGE ----------- 27</ul>
- * <ul>MANAGE_ROLES -------------- 28</ul>
- * <ul>MANAGE_PERMISSIONS -------- 28</ul>
- * <ul>MANAGE_WEBHOOKS ----------- 29</ul>
- * <ul>MANAGE_EMOTES ------------- 30</ul>
- * <ul>UNKNOWN ------------------- -1</ul>
- * </li>
+ * ===================
+ * <p>== Int to Permission Guide ==</p>
+ * <p>===================</p>
+ * <p>CREATE_INSTANT_INVITE ----- 0</p>
+ * <p>KICK_MEMBERS -------------- 1</p>
+ * <p>BAN_MEMBERS --------------- 2</p>
+ * <p>ADMINISTRATOR ------------- 3</p>
+ * <p>MANAGE_CHANNEL ------------ 4</p>
+ * <p>MANAGE_SERVER ------------- 5</p>
+ * <p>MESSAGE_ADD_REACTION ------ 6</p>
+ * <p>MESSAGE_READ -------------- 10</p>
+ * <p>MESSAGE_WRITE ------------- 11</p>
+ * <p>MESSAGE_TTS --------------- 12</p>
+ * <p>MESSAGE_MANAGE ------------ 13</p>
+ * <p>MESSAGE_EMBED_LINKS ------- 14</p>
+ * <p>MESSAGE_ATTACH_FILES ------ 15</p>
+ * <p>MESSAGE_HISTORY ----------- 16</p>
+ * <p>MESSAGE_MENTION_EVERYONE -- 17</p>
+ * <p>MESSAGE_EXT_EMOJI --------- 18</p>
+ * <p>VOICE_CONNECT ------------- 20</p>
+ * <p>VOICE_SPEAK --------------- 21</p>
+ * <p>VOICE_MUTE_OTHERS --------- 22</p>
+ * <p>VOICE_DEAF_OTHERS --------- 23</p>
+ * <p>VOICE_MOVE_OTHERS --------- 24</p>
+ * <p>VOICE_USE_VAD ------------- 25</p>
+ * <p>NICKNAME_CHANGE ----------- 26</p>
+ * <p>NICKNAME_MANAGE ----------- 27</p>
+ * <p>MANAGE_ROLES -------------- 28</p>
+ * <p>MANAGE_PERMISSIONS -------- 28</p>
+ * <p>MANAGE_WEBHOOKS ----------- 29</p>
+ * <p>MANAGE_EMOTES ------------- 30</p>
+ * <p>UNKNOWN ------------------- -1</p>
  **/
 public interface IPermissionHelper {
     /**
