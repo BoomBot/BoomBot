@@ -18,27 +18,40 @@ public class I18n {
         this.id = id;
     }
 
+    public void readBuffer(BufferedReader br) throws IOException {
+        String line;
+        while ((line = br.readLine()) != null) {
+            if (!line.isEmpty() && !line.startsWith("#") && line.contains("=")) {
+                String[] info = line.split("=");
+                if (info != null && info.length >= 2) {
+                    String key = info[0];
+                    String translate = "";
+                    for (int i = 1; i < info.length; i++)
+                        translate += (i > 1 ? "=" : "") + info[i];
+                    if (!translations.containsKey(key)) translations.put(key, translate);
+                }
+            }
+        }
+        br.close();
+        if (Strings.isNullOrEmpty(name) && translations.containsKey("langfile.langauage"))
+            name = translations.get("langfile.langauage");
+    }
+
     public void loadTranslations(File localizationFile) {
         try {
             BufferedReader br = new BufferedReader(new FileReader(localizationFile));
-            String line;
-            while ((line = br.readLine()) != null) {
-                if (!line.isEmpty() && !line.startsWith("#") && line.contains("=")) {
-                    String[] info = line.split("=");
-                    if (info != null && info.length >= 2) {
-                        String key = info[0];
-                        String translate = "";
-                        for (int i = 1; i < info.length; i++)
-                            translate += (i > 1 ? "=" : "") + info[i];
-                        if (!translations.containsKey(key)) translations.put(key, translate);
-                    }
-                }
-            }
-            br.close();
-            if (Strings.isNullOrEmpty(name) && translations.containsKey("langfile.langauage"))
-                name = translations.get("langfile.langauage");
+            readBuffer(br);
         } catch (IOException ex) {
             BoomAPI.logger.error("Could not load localization file %s", ex, localizationFile.getName());
+        }
+    }
+
+    public void loadTranslations(InputStream stream) {
+        try {
+            BufferedReader br = new BufferedReader(new InputStreamReader(stream, "UTF-8"));
+            readBuffer(br);
+        } catch (IOException ex) {
+            BoomAPI.logger.error("Could not read localization from stream!", ex);
         }
     }
 
