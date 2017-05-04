@@ -30,6 +30,7 @@ import net.lomeli.boombot.core.registry.CommandRegistry;
 import net.lomeli.boombot.core.registry.EventRegistry;
 import net.lomeli.boombot.core.registry.I18nRegistry;
 import net.lomeli.boombot.lib.ShutdownHook;
+import net.lomeli.boombot.lib.util.PermissionHelper;
 
 @Addon(addonID = "boombot", name = "BoomBot", version = BoomBot.BOOM_BOT_VERSION)
 public class BoomBot {
@@ -119,6 +120,7 @@ public class BoomBot {
         BoomAPI.langRegistry = new I18nRegistry();
         BoomAPI.dataRegistry = new DataHandler(new File("data"));
         BoomAPI.messageHandler = new MessageHandler();
+        BoomAPI.permissionHelper = new PermissionHelper();
         if (!BoomAPI.debugMode)
         BoomAPI.langRegistry.loadLangFolder("boombot",
                 new File(BoomBot.class.getProtectionDomain().getCodeSource().getLocation().getPath()));
