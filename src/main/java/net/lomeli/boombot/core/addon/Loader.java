@@ -56,7 +56,7 @@ public class Loader {
             BoomAPI.ADDON_FOLDER.mkdir();
             return;
         }
-        File[] files = BoomAPI.ADDON_FOLDER.listFiles((dir, name) -> FilenameUtils.isExtension(name, "cfg"));
+        File[] files = BoomAPI.ADDON_FOLDER.listFiles((dir, name) -> FilenameUtils.isExtension(name, "jar") || FilenameUtils.isExtension(name, "zip"));
         if (files != null && files.length > 0) {
             for (File f : files) {
                 if (f.isFile()) {
