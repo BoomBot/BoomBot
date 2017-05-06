@@ -2,6 +2,8 @@ package net.lomeli.boombot.core;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
+import net.dv8tion.jda.core.EmbedBuilder;
+import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Message;
@@ -17,6 +19,7 @@ import net.dv8tion.jda.core.events.message.guild.GenericGuildMessageEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
 import java.util.List;
+import java.util.regex.Pattern;
 
 import net.lomeli.boombot.BoomBot;
 import net.lomeli.boombot.api.BoomAPI;
@@ -38,6 +41,7 @@ import net.lomeli.boombot.lib.util.MessageUtil;
 
 public class EventListner extends ListenerAdapter {
     public boolean scheduleShutdown;
+    public static final Pattern IMAGE = Pattern.compile("(?:([^:/?#]+):)?(?://([^/?#]*))?([^?#]*\\.(?:jpg|gif|png))(?:\\?([^#]*))?(?:#(.*))?");
 
     @Override
     public void onResume(ResumedEvent event) {
@@ -85,7 +89,10 @@ public class EventListner extends ListenerAdapter {
                 if (custom != null) {
                     if (BoomAPI.eventRegistry.post(new CommandEvent(new CustomCommand(custom), data))) return;
                     String out = formatMessage(custom.getCommandContent(), msg.getAuthor(), guild, guildData, data.getArgs());
-                    event.getChannel().sendMessage(out).queue();
+                    if (IMAGE.matcher(out).matches()) {
+                        EmbedBuilder embedBuilder = new EmbedBuilder().setImage(out);
+                        event.getChannel().sendMessage(embedBuilder.build()).submit();
+                    } else event.getChannel().sendMessage(out).submit();
                 } else if (BoomAPI.eventRegistry.post(new MessageEvent(userProxy, msg.getChannel().getId(), guild.getId(), msg.getRawContent(), msg.getContent())))
                     msg.delete().queue();
             }
