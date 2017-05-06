@@ -25,13 +25,9 @@ public enum CustomRegistry {
     }
 
     public CustomContent getGuildCommand(String guildID, String commandID) {
-        CustomContent command = null;
-        if (guildCommands.containsKey(guildID)) {
-            Map<String, CustomContent> commands = guildCommands.get(guildID);
-            if (commands != null && commands.containsKey(commandID))
-                command = commands.get(commandID);
-        }
-        return command;
+        Map<String, CustomContent> commands = guildCommands.get(guildID);
+        if (commands != null && commands.size() > 0) return commands.get(commandID.toLowerCase());
+        return null;
     }
 
     /**
@@ -41,9 +37,9 @@ public enum CustomRegistry {
         boolean flag = false;
         Map<String, CustomContent> commands = guildCommands.get(guildID);
         if (commands == null) commands = Maps.newHashMap();
-        if (commandContent != null && !Strings.isNullOrEmpty(commandContent.getCommandName()) &&
+        if (!Strings.isNullOrEmpty(commandContent.getCommandName()) &&
                 !Strings.isNullOrEmpty(commandContent.getCommandContent()) && !commands.containsKey(commandContent.getCommandName())) {
-            commands.put(commandContent.getCommandName(), commandContent);
+            commands.put(commandContent.getCommandName().toLowerCase(), commandContent);
             guildCommands.put(guildID, commands);
             flag = true;
         }
