@@ -55,10 +55,10 @@ public class CommandRegistry implements ICommandRegistry {
 
     private boolean addCommand(ICommand command, String id) {
         if (command == null) return false;
-        List<ICommand> commands = Lists.newArrayList();
-        List<String> names = Lists.newArrayList();
-        if (commandList.containsKey(id)) commands = commandList.get(id);
-        if (commandNameList.containsKey(id)) names = commandNameList.get(id);
+        List<ICommand> commands = commandList.get(id);
+        List<String> names = commandNameList.get(id);
+        if (commands == null) commands = Lists.newArrayList();
+        if (names == null) names = Lists.newArrayList();
         if (!names.contains(command.getName().toLowerCase())) {
             commands.add(command);
             names.add(command.getName().toLowerCase());
