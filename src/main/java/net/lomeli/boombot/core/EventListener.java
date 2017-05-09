@@ -39,7 +39,7 @@ import net.lomeli.boombot.command.custom.CustomContent;
 import net.lomeli.boombot.command.custom.CustomRegistry;
 import net.lomeli.boombot.lib.util.MessageUtil;
 
-public class EventListner extends ListenerAdapter {
+public class EventListener extends ListenerAdapter {
     public boolean scheduleShutdown;
     public static final Pattern IMAGE = Pattern.compile("(?:([^:/?#]+):)?(?://([^/?#]*))?([^?#]*\\.(?:jpg|gif|png))(?:\\?([^#]*))?(?:#(.*))?");
 
