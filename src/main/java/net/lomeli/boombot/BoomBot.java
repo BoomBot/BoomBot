@@ -22,7 +22,7 @@ import net.lomeli.boombot.api.registry.ICommandRegistry;
 import net.lomeli.boombot.api.util.Logger;
 import net.lomeli.boombot.command.custom.CustomRegistry;
 import net.lomeli.boombot.core.AutoSaveThread;
-import net.lomeli.boombot.core.EventListner;
+import net.lomeli.boombot.core.EventListener;
 import net.lomeli.boombot.core.addon.Loader;
 import net.lomeli.boombot.core.handler.DataHandler;
 import net.lomeli.boombot.core.handler.MessageHandler;
@@ -39,7 +39,7 @@ public class BoomBot {
     public static final String BOOM_BOT_VERSION = MAJOR + "." + MINOR + "." + REV;
     public static Logger logger;
     public static JDA jda;
-    public static EventListner mainListener;
+    public static EventListener mainListener;
     public static Loader addonLoader;
     public static ICommandRegistry commandRegistry;
     public static AutoSaveThread autoSaveThread;
@@ -62,7 +62,7 @@ public class BoomBot {
             addonLoader.loadAddons();
 
             logger.info("Setting up main listener");
-            mainListener = new EventListner();
+            mainListener = new EventListener();
 
             try {
                 jda = new JDABuilder(AccountType.BOT).setToken(key).addEventListener(mainListener).setBulkDeleteSplittingEnabled(false).buildBlocking();
